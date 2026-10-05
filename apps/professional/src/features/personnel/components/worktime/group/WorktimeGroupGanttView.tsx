@@ -80,7 +80,7 @@ export function WorktimeGroupGanttView({
 						type="button"
 						onClick={handleZoomOut}
 						className="h-7 w-7 rounded-md border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 shadow-2xs cursor-pointer"
-						title={t(localizationConstants.zoomOut)}
+						title={t(localizationConstants.worktimeGroupZoomOut)}
 					>
 						<ZoomOut className="w-3.5 h-3.5" />
 					</button>
@@ -88,7 +88,7 @@ export function WorktimeGroupGanttView({
 						type="button"
 						onClick={handleZoomIn}
 						className="h-7 w-7 rounded-md border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 shadow-2xs cursor-pointer"
-						title={t(localizationConstants.zoomIn)}
+						title={t(localizationConstants.worktimeGroupZoomIn)}
 					>
 						<ZoomIn className="w-3.5 h-3.5" />
 					</button>

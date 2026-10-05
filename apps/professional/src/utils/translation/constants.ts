@@ -11265,6 +11265,23 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupToastRejected: string;
 	worktimeGroupToastReminded: string;
 	worktimeGroupEmptyEmployees: string;
+	worktimeGroupColProjectOrder: string;
+	worktimeGroupColCustomer: string;
+	worktimeGroupColOtTim: string;
+	worktimeGroupColAtaTim: string;
+	worktimeGroupColLoggedTim: string;
+	worktimeGroupColNumPersons: string;
+	worktimeGroupColDaysWorked: string;
+	worktimeGroupColFlags: string;
+	worktimeGroupPersonsSuffix: string;
+	worktimeGroupFooterProjects: string;
+	worktimeGroupEmptyProjects: string;
+	worktimeGroupZoomIn: string;
+	worktimeGroupZoomOut: string;
+	worktimeGroupPrevRange: string;
+	worktimeGroupNextRange: string;
+	worktimeGroupExpandRow: string;
+	worktimeGroupCollapseRow: string;
 };
 
 // Material storage – overview (TFS-1072)

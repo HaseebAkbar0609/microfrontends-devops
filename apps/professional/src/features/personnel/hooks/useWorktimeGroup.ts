@@ -10,20 +10,35 @@ import {
 	EmployeeGroupSummary,
 } from "../types/worktimeGroup.types";
 import { initialWorktimeGroupData } from "../constants/worktimeGroup.mock";
+import { useWorktimeProjectGroup } from "./useWorktimeProjectGroup";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
 
 export function useWorktimeGroup() {
 	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState<GroupViewTab>("kalender");
-	const [groupByMode, setGroupByMode] = useState<GroupByMode>("person");
+	const [groupByMode, setGroupByMode] = useState<GroupByMode>("project");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showExceptionsOnly, setShowExceptionsOnly] = useState(false);
 	const [ganttTimeRange, setGanttTimeRange] = useState<GanttTimeRange>("vecka");
-	const [groupData, setGroupData] = useState<WorktimeGroupData>(initialWorktimeGroupData);
+	const [groupData, setGroupData] = useState<WorktimeGroupData>(
+		initialWorktimeGroupData
+	);
+
+	// Project Group Sub-hook
+	const {
+		projectData,
+		expandedProjects,
+		filteredProjects,
+		handleToggleProject,
+		handleExpandAllProjects,
+		handleCollapseAllProjects,
+	} = useWorktimeProjectGroup({ searchQuery, showExceptionsOnly });
 
 	// Expanded state for list view (default employee 1 expanded as in Figma)
-	const [expandedEmployees, setExpandedEmployees] = useState<Record<string, boolean>>({
+	const [expandedEmployees, setExpandedEmployees] = useState<
+		Record<string, boolean>
+	>({
 		"emp-1": true,
 	});
 
@@ -50,16 +65,24 @@ export function useWorktimeGroup() {
 	}, []);
 
 	const handleExpandAll = useCallback(() => {
-		const expanded: Record<string, boolean> = {};
-		groupData.employees.forEach((emp) => {
-			expanded[emp.id] = true;
-		});
-		setExpandedEmployees(expanded);
-	}, [groupData.employees]);
+		if (groupByMode === "project") {
+			handleExpandAllProjects();
+		} else {
+			const expanded: Record<string, boolean> = {};
+			groupData.employees.forEach((emp) => {
+				expanded[emp.id] = true;
+			});
+			setExpandedEmployees(expanded);
+		}
+	}, [groupByMode, handleExpandAllProjects, groupData.employees]);
 
 	const handleCollapseAll = useCallback(() => {
-		setExpandedEmployees({});
-	}, []);
+		if (groupByMode === "project") {
+			handleCollapseAllProjects();
+		} else {
+			setExpandedEmployees({});
+		}
+	}, [groupByMode, handleCollapseAllProjects]);
 
 	const handleToggleExceptions = useCallback(() => {
 		setShowExceptionsOnly((prev) => !prev);
@@ -118,12 +141,15 @@ export function useWorktimeGroup() {
 					if (day.id !== dayId) return day;
 					return {
 						...day,
-						actionStatus: (action === "approve" ? "approved" : "rejected") as "approved" | "rejected",
-						status: (action === "approve" ? "approved" : "rejected") as "approved" | "rejected",
+						actionStatus: (action === "approve"
+							? "approved"
+							: "rejected") as "approved" | "rejected",
+						status: (action === "approve"
+							? "approved"
+							: "rejected") as "approved" | "rejected",
 					};
 				});
 
-				// Recompute employee status if all are approved
 				const allApproved = updatedDays.every((d) => d.status === "approved");
 				return {
 					...emp,
@@ -147,30 +173,6 @@ export function useWorktimeGroup() {
 		setConfirmAction(null);
 	}, [confirmAction, t]);
 
-	const handleRemind = useCallback(
-		(_employeeId: string) => {
-			toast.info(t(localizationConstants.worktimeGroupToastReminded));
-		},
-		[t]
-	);
-
-	// Navigation
-	const handlePrevWeek = useCallback(() => {
-		setGroupData((prev) => ({
-			...prev,
-			weekNumber: prev.weekNumber > 1 ? prev.weekNumber - 1 : 52,
-			dateRange: prev.weekNumber > 1 ? "16 Dec - 22 Dec" : "23 Dec - 29 Dec",
-		}));
-	}, []);
-
-	const handleNextWeek = useCallback(() => {
-		setGroupData((prev) => ({
-			...prev,
-			weekNumber: prev.weekNumber < 52 ? prev.weekNumber + 1 : 1,
-			dateRange: prev.weekNumber < 52 ? "30 Dec - 05 Jan" : "23 Dec - 29 Dec",
-		}));
-	}, []);
-
 	const handleResetThisWeek = useCallback(() => {
 		setGroupData(initialWorktimeGroupData);
 	}, []);
@@ -184,10 +186,14 @@ export function useWorktimeGroup() {
 		groupData,
 		filteredEmployees,
 		expandedEmployees,
+		projectData,
+		filteredProjects,
+		expandedProjects,
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
 		handleToggleEmployee,
+		handleToggleProject,
 		handleExpandAll,
 		handleCollapseAll,
 		handleToggleExceptions,
@@ -197,9 +203,6 @@ export function useWorktimeGroup() {
 		handleOpenRejectDay,
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
-		handleRemind,
-		handlePrevWeek,
-		handleNextWeek,
 		handleResetThisWeek,
 	};
 }

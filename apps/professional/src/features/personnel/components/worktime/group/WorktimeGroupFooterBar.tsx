@@ -5,16 +5,18 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
 interface WorktimeGroupFooterBarProps {
-	totalEmployees: number;
-	weekNumber: number;
-	year: number;
-	totalLogged: number;
-	totalOt: number;
-	totalAta: number;
+	totalCount: number;
+	itemType?: "employee" | "project";
+	weekNumber?: number;
+	year?: number;
+	totalLogged: number | string;
+	totalOt: number | string;
+	totalAta: number | string;
 }
 
 export function WorktimeGroupFooterBar({
-	totalEmployees,
+	totalCount,
+	itemType = "employee",
 	weekNumber,
 	year,
 	totalLogged,
@@ -23,12 +25,19 @@ export function WorktimeGroupFooterBar({
 }: WorktimeGroupFooterBarProps) {
 	return (
 		<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500 pt-1 pb-4 px-1">
-			{/* Left: Showing 4 employees • Week 52, 2024 matching Figma */}
+			{/* Left: Showing X employees/projects */}
 			<div>
-				<Translate text={localizationConstants.worktimeGroupFooterShowing} />{" "}
-				{totalEmployees}{" "}
-				<Translate text={localizationConstants.worktimeGroupFooterEmployees} /> •{" "}
-				<Translate text={localizationConstants.worktimeGroupFooterWeek} /> {weekNumber}, {year}
+				<Translate text={localizationConstants.worktimeGroupFooterShowing} /> {totalCount}{" "}
+				{itemType === "project" ? (
+					<Translate text={localizationConstants.worktimeGroupFooterProjects} />
+				) : (
+					<Translate text={localizationConstants.worktimeGroupFooterEmployees} />
+				)}
+				{weekNumber && year && itemType !== "project" && (
+					<>
+						{" "}• <Translate text={localizationConstants.worktimeGroupFooterWeek} /> {weekNumber}, {year}
+					</>
+				)}
 			</div>
 
 			{/* Right: Total Logged, Total OT, Total ATA matching Figma */}
@@ -37,7 +46,9 @@ export function WorktimeGroupFooterBar({
 					<span>
 						<Translate text={localizationConstants.worktimeGroupFooterTotalLogged} />:{" "}
 					</span>
-					<strong className="text-slate-900 font-bold">{totalLogged}h</strong>
+					<strong className="text-slate-900 font-bold">
+						{typeof totalLogged === "number" ? `${totalLogged}h` : totalLogged.endsWith("h") ? totalLogged : `${totalLogged}h`}
+					</strong>
 				</div>
 
 				<div>

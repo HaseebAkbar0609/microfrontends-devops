@@ -11565,6 +11565,23 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupToastRejected: "Arbetstiden har avböjts",
 	worktimeGroupToastReminded: "Påminnelse har skickats till den anställde",
 	worktimeGroupEmptyEmployees: "Inga anställda matchar dina sökkriterier.",
+	worktimeGroupColProjectOrder: "PROJEKT / ORDER",
+	worktimeGroupColCustomer: "KUND",
+	worktimeGroupColOtTim: "ÖT TIM",
+	worktimeGroupColAtaTim: "ATA TIM",
+	worktimeGroupColLoggedTim: "LOGGAT TIM",
+	worktimeGroupColNumPersons: "# PERSONER",
+	worktimeGroupColDaysWorked: "DAGAR ARBETADE",
+	worktimeGroupColFlags: "FLAGGOR",
+	worktimeGroupPersonsSuffix: "pers",
+	worktimeGroupFooterProjects: "projekt",
+	worktimeGroupEmptyProjects: "Inga projekt matchar dina sökkriterier.",
+	worktimeGroupZoomIn: "Zooma in",
+	worktimeGroupZoomOut: "Zooma ut",
+	worktimeGroupPrevRange: "Föregående period",
+	worktimeGroupNextRange: "Nästa period",
+	worktimeGroupExpandRow: "Expandera rad",
+	worktimeGroupCollapseRow: "Kollapsa rad",
 };
 
 export const sv: Translation = {

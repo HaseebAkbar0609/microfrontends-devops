@@ -11544,6 +11544,23 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupToastRejected: "Worktime has been rejected",
 	worktimeGroupToastReminded: "Reminder has been sent to the employee",
 	worktimeGroupEmptyEmployees: "No employees match your search criteria.",
+	worktimeGroupColProjectOrder: "PROJECT / ORDER",
+	worktimeGroupColCustomer: "CUSTOMER",
+	worktimeGroupColOtTim: "OT HOURS",
+	worktimeGroupColAtaTim: "ATA HOURS",
+	worktimeGroupColLoggedTim: "LOGGED HOURS",
+	worktimeGroupColNumPersons: "# PERSONS",
+	worktimeGroupColDaysWorked: "DAYS WORKED",
+	worktimeGroupColFlags: "FLAGS",
+	worktimeGroupPersonsSuffix: "pers",
+	worktimeGroupFooterProjects: "projects",
+	worktimeGroupEmptyProjects: "No projects match your search criteria.",
+	worktimeGroupZoomIn: "Zoom in",
+	worktimeGroupZoomOut: "Zoom out",
+	worktimeGroupPrevRange: "Previous period",
+	worktimeGroupNextRange: "Next period",
+	worktimeGroupExpandRow: "Expand row",
+	worktimeGroupCollapseRow: "Collapse row",
 };
 
 export const en: Translation = {
