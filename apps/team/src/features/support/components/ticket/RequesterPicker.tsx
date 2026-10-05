@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { Check, Search } from "lucide-react";
 import type { Control } from "react-hook-form";
 import { useController, useWatch } from "react-hook-form";
@@ -13,6 +13,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -20,13 +21,36 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { REQUESTER_SEARCH_DEBOUNCE_MS } from "../../constants/support.constants";
 import type { SupportTicketFormValues } from "../../schemas/supportTicket.schema";
 import type { SupportCustomerType } from "../../types";
-import { searchRequesters } from "../../utils/requesterSearch";
+import { searchRequesters, type Requester } from "../../utils/requesterSearch";
 
 /** Each register searches different columns, so the placeholder names the ones that match. */
 const PLACEHOLDER_KEYS: Record<SupportCustomerType, TranslationKeys> = {
 	private: localizationConstants.supportFieldCustomerPlaceholderPrivate,
 	professional: localizationConstants.supportFieldCustomerPlaceholderProfessional,
 };
+
+const MUTED = "text-slate-500";
+
+/** Where the field stands, as one line: linked, searching, failed, empty, or the hint. */
+function getStatusLine(
+	linked: boolean,
+	searching: boolean,
+	results: UseQueryResult<Requester[]>,
+): { textKey: TranslationKeys; className: string } {
+	if (linked) {
+		return { textKey: localizationConstants.supportRequesterLinked, className: "font-medium text-emerald-700" };
+	}
+	if (searching && results.isPending) {
+		return { textKey: localizationConstants.supportRequesterSearching, className: MUTED };
+	}
+	if (searching && results.isError) {
+		return { textKey: localizationConstants.supportRequesterSearchFailed, className: "text-red-600" };
+	}
+	if (searching && results.data?.length === 0) {
+		return { textKey: localizationConstants.supportRequesterNoResults, className: MUTED };
+	}
+	return { textKey: localizationConstants.supportRequesterHint, className: MUTED };
+}
 
 type RequesterPickerProps = {
 	control: Control<SupportTicketFormValues>;
@@ -50,6 +74,8 @@ export function RequesterPicker({ control, customerType }: RequesterPickerProps)
 		queryFn: () => searchRequesters(customerType, term),
 		enabled,
 	});
+	const linked = Boolean(idField.value);
+	const status = getStatusLine(linked, enabled, results);
 
 	return (
 		<FormField
@@ -76,32 +102,14 @@ export function RequesterPicker({ control, customerType }: RequesterPickerProps)
 						</FormControl>
 					</div>
 
-					{idField.value ? (
-						<p className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700">
-							<Check className="h-3.5 w-3.5" />
-							<Translate text={localizationConstants.supportRequesterLinked} />
-						</p>
-					) : (
-						<p className="text-xs text-slate-500">
-							<Translate text={localizationConstants.supportRequesterHint} />
-						</p>
-					)}
-
-					{enabled && results.isPending ? (
-						<p className="text-sm text-slate-500">
-							<Translate text={localizationConstants.supportRequesterSearching} />
-						</p>
-					) : null}
-					{enabled && results.isError ? (
-						<p className="text-sm text-red-600">
-							<Translate text={localizationConstants.supportRequesterSearchFailed} />
-						</p>
-					) : null}
-					{enabled && results.data?.length === 0 ? (
-						<p className="text-sm text-slate-500">
-							<Translate text={localizationConstants.supportRequesterNoResults} />
-						</p>
-					) : null}
+					{/* Always mounted, so screen readers announce each change of state. */}
+					<p
+						role="status"
+						className={cn("inline-flex items-center gap-1.5 text-xs", status.className)}
+					>
+						{linked ? <Check className="h-3.5 w-3.5" /> : null}
+						<Translate text={status.textKey} />
+					</p>
 					{enabled && results.data?.length ? (
 						<ul className="grid gap-2 @2xl:grid-cols-2">
 							{results.data.map((requester) => (
