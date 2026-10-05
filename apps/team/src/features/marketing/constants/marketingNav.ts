@@ -1,6 +1,9 @@
+import { LayoutGrid, Mail, type LucideIcon } from "lucide-react";
 import type { ModuleTabItem } from "@/components/layout/navigation";
 import type { BreadcrumbItem } from "@/types/common";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import type { MarketingGroup, MarketingGroupId } from "../types";
 import {
 	MARKETING_BASE_HREF,
@@ -26,31 +29,58 @@ export function getMarketingSectionHref(
 	return `${MARKETING_BASE_HREF}/${groupId}/${slug}`;
 }
 
+export type MarketingSubNavItem = {
+	id: string;
+	labelKey: TranslationKeys;
+	href: string;
+	icon: LucideIcon;
+	/** Match only the exact route, so the overview is not lit on every page. */
+	exact?: boolean;
+};
+
 /**
- * Primary row: the overview, the six register groups, and the newsletter
- * builder. Group tabs point straight at their first register so the secondary
- * row is never empty.
+ * The module's sub-sidebar: the overview, the six register groups, and the
+ * newsletter builder, as in the Sales module. A group entry opens its first
+ * register through the group route, so the section row is never empty.
  */
-export const MARKETING_MODULE_TABS: ModuleTabItem[] = [
+export const MARKETING_SUB_NAV_ITEMS: MarketingSubNavItem[] = [
 	{
 		id: "marketing-overview",
 		labelKey: localizationConstants.marketingTabOverview,
 		href: MARKETING_BASE_HREF,
-		// Without this the base href is a prefix of every other tab and the
-		// overview would stay lit on the newsletter and register pages.
+		icon: LayoutGrid,
 		exact: true,
 	},
 	...MARKETING_GROUPS.map((group) => ({
 		id: `marketing-${group.id}`,
 		labelKey: group.titleKey,
 		href: getMarketingGroupHref(group.id),
+		icon: group.icon,
 	})),
 	{
 		id: "marketing-newsletter",
 		labelKey: localizationConstants.marketingTabNewsletter,
 		href: MARKETING_NEWSLETTER_HREF,
+		icon: Mail,
 	},
 ];
+
+function matchesMarketingHref(pathname: string, href: string): boolean {
+	return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function isMarketingModulePath(pathname: string): boolean {
+	return matchesMarketingHref(pathname, MARKETING_BASE_HREF);
+}
+
+export function isMarketingSubNavItemActive(
+	item: MarketingSubNavItem,
+	pathname: string,
+): boolean {
+	return item.exact
+		? pathname === item.href
+		: matchesMarketingHref(pathname, item.href);
+}
 
 /** Secondary row: the registers inside one group. */
 export function getMarketingSectionTabs(group: MarketingGroup): ModuleTabItem[] {
@@ -67,7 +97,7 @@ export const MARKETING_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.marketingModuleTitle },
 ];
 
-/** A group tab lands on its first register. */
+/** A group entry lands on its first register. */
 export function getMarketingGroupLandingHref(group: MarketingGroup): string {
 	return getMarketingSectionHref(group.id, getFirstSection(group).slug);
 }

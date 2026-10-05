@@ -81,7 +81,7 @@ export function getSectionKey(groupId: MarketingGroupId, slug: string): string {
 	return `${groupId}:${slug}`;
 }
 
-/** The register a group tab lands on. */
+/** The register a group entry lands on. */
 export function getFirstSection(group: MarketingGroup): MarketingSection {
 	const [first] = group.sections;
 	if (!first) throw new Error(`Marketing group ${group.id} has no sections`);
