@@ -10756,6 +10756,12 @@ export type ForecastDashboardTranslation = {
 	forecastStatisticsExport: string;
 	forecastStatisticsExportFailed: string;
 	forecastStatisticsSheetName: string;
+
+	/* Prognos › Arkiv: the archived forecasts' own words (TFS-1068). */
+	forecastArchiveTitle: string;
+	forecastArchiveEmpty: string;
+	forecastArchivedToast: string;
+	forecastRestoredToast: string;
 };
 
 export type PersonnelEquipmentTranslation = {

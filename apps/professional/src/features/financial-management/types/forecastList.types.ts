@@ -23,6 +23,8 @@ export interface ForecastListRow {
 	/** Kostnader, in SEK, negative as the frame writes them. */
 	costs: number;
 	status: ForecastListStatus;
+	/** Put away rather than deleted: Arkiv lists these, Prognoslista the rest. */
+	archived: boolean;
 }
 
 export type ForecastListSortField =

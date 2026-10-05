@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, MoreVertical, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, MoreVertical, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,12 +15,15 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 export interface ForecastRowMenuProps {
 	/** The row's Objekt, so a screen reader knows which row the ⋮ is for. */
 	objectNo: string;
+	/** Which way the middle item goes: Arkivera on Prognoslista, Återställ in Arkiv. */
+	archived: boolean;
 	onView: () => void;
+	onToggleArchive: () => void;
 	onDelete: () => void;
 }
 
-/** A row's ⋮: Visa detaljer, as the eye does, and Ta bort. */
-export function ForecastRowMenu({ objectNo, onView, onDelete }: ForecastRowMenuProps) {
+/** The row's ⋮: its details, putting it away or fetching it back, and Ta bort. */
+export function ForecastRowMenu({ objectNo, archived, onView, onToggleArchive, onDelete }: ForecastRowMenuProps) {
 	const t = useTranslate();
 
 	return (
@@ -40,6 +43,16 @@ export function ForecastRowMenu({ objectNo, onView, onDelete }: ForecastRowMenuP
 				<DropdownMenuItem onSelect={onView} className="cursor-pointer gap-2 text-sm text-slate-700">
 					<Eye className="h-4 w-4" aria-hidden />
 					<Translate text={localizationConstants.viewDetailsButton} />
+				</DropdownMenuItem>
+				<DropdownMenuItem onSelect={onToggleArchive} className="cursor-pointer gap-2 text-sm text-slate-700">
+					{archived ? (
+						<ArchiveRestore className="h-4 w-4" aria-hidden />
+					) : (
+						<Archive className="h-4 w-4" aria-hidden />
+					)}
+					<Translate
+						text={archived ? localizationConstants.actionRestore : localizationConstants.projectListArchiveAction}
+					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onSelect={onDelete}
