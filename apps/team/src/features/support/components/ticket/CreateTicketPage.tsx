@@ -8,7 +8,6 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	SUPPORT_MODULE_HREF,
-	SUPPORT_MODULE_TABS,
 	SUPPORT_MODULE_TITLE_KEY,
 } from "../../constants/supportNav";
 import { useCreateTicketForm } from "../../hooks/useCreateTicketForm";
@@ -22,7 +21,6 @@ export default function CreateTicketPage() {
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
 			<ModulePageHeader
 				title={SUPPORT_MODULE_TITLE_KEY}
-				tabs={SUPPORT_MODULE_TABS}
 				record={{
 					title: (
 						<Translate

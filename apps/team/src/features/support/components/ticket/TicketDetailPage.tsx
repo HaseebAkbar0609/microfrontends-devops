@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import {
 	SUPPORT_MODULE_HREF,
-	SUPPORT_MODULE_TABS,
 	SUPPORT_MODULE_TITLE_KEY,
 } from "../../constants/supportNav";
 import { useSupportTickets } from "../../hooks/useSupportTickets";
@@ -49,7 +48,6 @@ export default function TicketDetailPage({ ticketId }: TicketDetailPageProps) {
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
 			<ModulePageHeader
 				title={SUPPORT_MODULE_TITLE_KEY}
-				tabs={SUPPORT_MODULE_TABS}
 				record={{
 					title: ticket.subject,
 					description: `${ticket.id} · ${ticket.customer}`,

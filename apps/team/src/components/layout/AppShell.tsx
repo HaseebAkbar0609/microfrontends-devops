@@ -13,6 +13,8 @@ import { MarketingMobileNav, MarketingSubSidebar } from "@/features/marketing/co
 import { isMarketingModulePath } from "@/features/marketing/constants/marketingNav";
 import { ContentSubSidebar } from "@/features/content/components/layout/ContentSubSidebar";
 import { isContentConsolePath } from "@/features/content/constants/contentNav";
+import { SupportMobileNav, SupportSubSidebar } from "@/features/support/components/layout/SupportSubSidebar";
+import { isSupportModulePath } from "@/features/support/constants/supportNav";
 interface AppShellProps {
 	children: React.ReactNode;
 }
@@ -32,8 +34,9 @@ export function AppShell({ children }: AppShellProps) {
 	const isSalesModule = isSalesModulePath(pathname);
 	const isMarketingModule = isMarketingModulePath(pathname);
 	const isContentConsole = isContentConsolePath(pathname);
+	const isSupportModule = isSupportModulePath(pathname);
 	const hasSubSidebar =
-		hasFlyoutSubSidebar || isSalesModule || isMarketingModule || isContentConsole;
+		hasFlyoutSubSidebar || isSalesModule || isMarketingModule || isContentConsole || isSupportModule;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -76,6 +79,7 @@ export function AppShell({ children }: AppShellProps) {
 					{isSalesModule && <SalesSubSidebar />}
 					{isMarketingModule && <MarketingSubSidebar />}
 					{isContentConsole && <ContentSubSidebar />}
+					{isSupportModule && <SupportSubSidebar />}
 					{flyoutSubSidebarConfig && (
 						<MyPagesSubSidebar
 							titleKey={flyoutSubSidebarConfig.titleKey}
@@ -87,6 +91,7 @@ export function AppShell({ children }: AppShellProps) {
 						<Header onOpenNavigation={() => setMobileNavigationOpen(true)} />
 						{isSalesModule && <SalesMobileNav />}
 						{isMarketingModule && <MarketingMobileNav />}
+						{isSupportModule && <SupportMobileNav />}
 						<main
 							className={`flex min-w-0 flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
 						>
