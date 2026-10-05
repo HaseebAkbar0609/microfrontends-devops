@@ -22,7 +22,7 @@ export function useWorktimeGroup() {
 	const [ganttTimeRange, setGanttTimeRange] = useState<GanttTimeRange>("vecka");
 	const [groupData, setGroupData] = useState<WorktimeGroupData>(initialWorktimeGroupData);
 
-	// Expanded state for list view (default employee 1 expanded as in Figma)
+	// Expanded state for list view
 	const [expandedEmployees, setExpandedEmployees] = useState<Record<string, boolean>>({
 		"emp-1": true,
 	});
@@ -123,12 +123,25 @@ export function useWorktimeGroup() {
 					};
 				});
 
-				// Recompute employee status if all are approved
-				const allApproved = updatedDays.every((d) => d.status === "approved");
+				// Recompute employee status on approve or reject
+				const hasAnyRejected = updatedDays.some((d) => d.actionStatus === "rejected");
+				const allSubmittedApproved = updatedDays
+					.filter((d) => d.loggedHours > 0)
+					.every((d) => d.actionStatus === "approved");
+
+				let newStatus: "inkickad" | "godkand" | "mangler" | "returned" = emp.status;
+				if (hasAnyRejected) {
+					newStatus = "returned";
+				} else if (allSubmittedApproved) {
+					newStatus = "godkand";
+				} else {
+					newStatus = "inkickad";
+				}
+
 				return {
 					...emp,
 					days: updatedDays,
-					status: allApproved ? ("godkand" as const) : emp.status,
+					status: newStatus,
 				};
 			});
 
@@ -154,21 +167,31 @@ export function useWorktimeGroup() {
 		[t]
 	);
 
-	// Navigation
+	// Week navigation preserving state
 	const handlePrevWeek = useCallback(() => {
-		setGroupData((prev) => ({
-			...prev,
-			weekNumber: prev.weekNumber > 1 ? prev.weekNumber - 1 : 52,
-			dateRange: prev.weekNumber > 1 ? "16 Dec - 22 Dec" : "23 Dec - 29 Dec",
-		}));
+		setGroupData((prev) => {
+			const nextWeek = prev.weekNumber > 1 ? prev.weekNumber - 1 : 52;
+			const nextYear = prev.weekNumber > 1 ? prev.year : prev.year - 1;
+			return {
+				...prev,
+				weekNumber: nextWeek,
+				year: nextYear,
+				dateRange: `${nextWeek === 51 ? "16 Dec - 22 Dec" : `Vecka ${nextWeek}, ${nextYear}`}`,
+			};
+		});
 	}, []);
 
 	const handleNextWeek = useCallback(() => {
-		setGroupData((prev) => ({
-			...prev,
-			weekNumber: prev.weekNumber < 52 ? prev.weekNumber + 1 : 1,
-			dateRange: prev.weekNumber < 52 ? "30 Dec - 05 Jan" : "23 Dec - 29 Dec",
-		}));
+		setGroupData((prev) => {
+			const nextWeek = prev.weekNumber < 52 ? prev.weekNumber + 1 : 1;
+			const nextYear = prev.weekNumber < 52 ? prev.year : prev.year + 1;
+			return {
+				...prev,
+				weekNumber: nextWeek,
+				year: nextYear,
+				dateRange: `${nextWeek === 1 ? "30 Dec - 05 Jan" : `Vecka ${nextWeek}, ${nextYear}`}`,
+			};
+		});
 	}, []);
 
 	const handleResetThisWeek = useCallback(() => {

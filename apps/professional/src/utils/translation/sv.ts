@@ -11516,14 +11516,11 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTitle: "Arbetstid - Översikt",
 	worktimeGroupSubtitle: "Veckovy",
 	worktimeGroupTabKalender: "Kalendervy",
-	worktimeGroupTabList: "List",
+	worktimeGroupTabList: "Lista",
 	worktimeGroupTabGantt: "Gantt-schema",
 	worktimeGroupByLabel: "Gruppera efter",
 	worktimeGroupByPerson: "Person",
 	worktimeGroupByProject: "Projekt",
-	worktimeGroupByOverhead: "Overhead",
-	worktimeGroupViewModeIndividual: "Individuell",
-	worktimeGroupViewModeGroup: "Gruppöversikt",
 	worktimeGroupColEmployee: "ANSTÄLLD",
 	worktimeGroupColEmployeeTeam: "ANSTÄLLD / TEAM",
 	worktimeGroupColPlanned: "PLANERAT TIM",
@@ -11565,6 +11562,10 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupToastRejected: "Arbetstiden har avböjts",
 	worktimeGroupToastReminded: "Påminnelse har skickats till den anställde",
 	worktimeGroupEmptyEmployees: "Inga anställda matchar dina sökkriterier.",
+	worktimeGroupZoomIn: "Zooma in",
+	worktimeGroupZoomOut: "Zooma ut",
+	worktimeGroupPrevRange: "Föregående period",
+	worktimeGroupNextRange: "Nästa period",
 };
 
 export const sv: Translation = {

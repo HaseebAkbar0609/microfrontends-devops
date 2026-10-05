@@ -2,6 +2,8 @@
 
 import React from "react";
 import { EmployeeGroupSummary, EmployeeDayBreakdown } from "@/features/personnel/types/worktimeGroup.types";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 interface WorktimeGroupCalendarRowProps {
 	employee: EmployeeGroupSummary;
@@ -28,7 +30,7 @@ export function WorktimeGroupCalendarRow({ employee }: WorktimeGroupCalendarRowP
 				</div>
 			</td>
 
-			{/* 7 Days Columns matching Figma Image 1 */}
+			{/* 7 Days Columns */}
 			{daysToRender.map((day: EmployeeDayBreakdown) => {
 				const hasHours = day.loggedHours > 0;
 
@@ -48,12 +50,12 @@ export function WorktimeGroupCalendarRow({ employee }: WorktimeGroupCalendarRowP
 									<div className="flex items-center gap-1 my-0.5 flex-wrap justify-center">
 										{day.otHours > 0 && (
 											<span className="bg-amber-100 text-amber-800 text-[10px] font-semibold px-1.5 py-0.5 rounded leading-none">
-												ÖT {day.otHours}h
+												<Translate text={localizationConstants.worktimeGroupColOt} /> {day.otHours}h
 											</span>
 										)}
 										{day.ataHours > 0 && (
 											<span className="bg-indigo-100 text-indigo-700 text-[10px] font-semibold px-1.5 py-0.5 rounded leading-none">
-												ATA {day.ataHours}h
+												<Translate text={localizationConstants.worktimeGroupColAta} /> {day.ataHours}h
 											</span>
 										)}
 									</div>

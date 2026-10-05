@@ -13,6 +13,7 @@ interface WorktimeGroupListViewProps {
 	onToggleExpand: (employeeId: string) => void;
 	onApproveDay: (employeeId: string, dayId: string) => void;
 	onRejectDay: (employeeId: string, dayId: string) => void;
+	onRemind?: (employeeId: string) => void;
 }
 
 export function WorktimeGroupListView({
@@ -22,6 +23,7 @@ export function WorktimeGroupListView({
 	onToggleExpand,
 	onApproveDay,
 	onRejectDay,
+	onRemind,
 }: WorktimeGroupListViewProps) {
 	return (
 		<div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
@@ -71,6 +73,7 @@ export function WorktimeGroupListView({
 									onToggleExpand={onToggleExpand}
 									onApproveDay={onApproveDay}
 									onRejectDay={onRejectDay}
+									onRemind={onRemind}
 								/>
 							))
 						)}

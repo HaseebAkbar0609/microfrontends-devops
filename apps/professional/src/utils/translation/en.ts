@@ -11500,9 +11500,6 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupByLabel: "Group by",
 	worktimeGroupByPerson: "Person",
 	worktimeGroupByProject: "Project",
-	worktimeGroupByOverhead: "Overhead",
-	worktimeGroupViewModeIndividual: "Individual",
-	worktimeGroupViewModeGroup: "Group Overview",
 	worktimeGroupColEmployee: "EMPLOYEE",
 	worktimeGroupColEmployeeTeam: "EMPLOYEE / TEAM",
 	worktimeGroupColPlanned: "PLANNED HRS",
@@ -11544,6 +11541,10 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupToastRejected: "Worktime has been rejected",
 	worktimeGroupToastReminded: "Reminder has been sent to the employee",
 	worktimeGroupEmptyEmployees: "No employees match your search criteria.",
+	worktimeGroupZoomIn: "Zoom in",
+	worktimeGroupZoomOut: "Zoom out",
+	worktimeGroupPrevRange: "Previous period",
+	worktimeGroupNextRange: "Next period",
 };
 
 export const en: Translation = {

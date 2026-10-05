@@ -33,36 +33,53 @@ export function WorktimeGroupView() {
 		handleOpenRejectDay,
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
-		handleResetThisWeek,
+		handleRemind,
+		handlePrevWeek,
+		handleNextWeek,
 	} = useWorktimeGroup();
 
-	// In Kalendervy (Image 1) and List (Image 2), 3 employees with timesheets are shown
+	// Timesheet employees with logged days
 	const timesheetEmployees = useMemo(() => {
 		return filteredEmployees.filter((emp) => emp.days && emp.days.length > 0);
 	}, [filteredEmployees]);
 
-	// In Gantt view (Image 3), 7 employees are shown with Anna Bergström first
+	// Alphabetically sorted employees for Gantt schedule
 	const ganttEmployees = useMemo(() => {
-		return [...filteredEmployees].sort((a, b) => {
-			if (a.name === "Anna Bergström") return -1;
-			if (b.name === "Anna Bergström") return 1;
-			return 0;
-		});
+		return [...filteredEmployees].sort((a, b) => a.name.localeCompare(b.name));
 	}, [filteredEmployees]);
+
+	// Dynamically derived totals computed from active filtered employees
+	const computedTotals = useMemo(() => {
+		const totalLogged = filteredEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
+		const totalOt = filteredEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
+		const totalAta = filteredEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
+		const totalPlanned = filteredEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
+		const totalTravel = filteredEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
+
+		return {
+			totalPlanned,
+			totalLogged: Number(totalLogged.toFixed(1)),
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
+			totalTravel,
+			dailyTotals: groupData.totals.dailyTotals,
+		};
+	}, [filteredEmployees, groupData.totals.dailyTotals]);
 
 	return (
 		<div className="space-y-4">
-			{/* Top Header: Title, Date Pill, Group Dropdown & Underline Tabs */}
+			{/* Top Header: Title, Date Navigator & Underline Tabs */}
 			<WorktimeGroupHeader
 				activeTab={activeTab}
 				groupByMode={groupByMode}
 				dateRange={groupData.dateRange}
 				onTabChange={handleTabChange}
 				onGroupByChange={handleGroupByModeChange}
-				onResetWeek={handleResetThisWeek}
+				onPrevWeek={handlePrevWeek}
+				onNextWeek={handleNextWeek}
 			/>
 
-			{/* Filter Toolbar: Undantag, Search, Expand/Collapse (only in Kalender & List) */}
+			{/* Filter Toolbar: Undantag, Search, Expand/Collapse */}
 			{activeTab !== "gantt" && (
 				<WorktimeGroupToolbar
 					searchQuery={searchQuery}
@@ -75,27 +92,28 @@ export function WorktimeGroupView() {
 				/>
 			)}
 
-			{/* Tab 1: Kalendervy matching Figma Image 1 */}
+			{/* Tab 1: Kalendervy */}
 			{activeTab === "kalender" && (
 				<WorktimeGroupCalendarGrid
 					employees={timesheetEmployees}
-					dailyTotals={groupData.totals.dailyTotals}
+					dailyTotals={computedTotals.dailyTotals}
 				/>
 			)}
 
-			{/* Tab 2: List matching Figma Image 2 */}
+			{/* Tab 2: Lista */}
 			{activeTab === "list" && (
 				<WorktimeGroupListView
 					employees={timesheetEmployees}
-					totals={groupData.totals}
+					totals={computedTotals}
 					expandedEmployees={expandedEmployees}
 					onToggleExpand={handleToggleEmployee}
 					onApproveDay={handleOpenApproveDay}
 					onRejectDay={handleOpenRejectDay}
+					onRemind={handleRemind}
 				/>
 			)}
 
-			{/* Tab 3: Gantt-schema matching Figma Image 3 */}
+			{/* Tab 3: Gantt-schema */}
 			{activeTab === "gantt" && (
 				<WorktimeGroupGanttView
 					employees={ganttEmployees}
@@ -104,14 +122,14 @@ export function WorktimeGroupView() {
 				/>
 			)}
 
-			{/* Bottom Aggregated Metrics Footer */}
+			{/* Bottom Aggregated Metrics Footer with Derived Totals */}
 			<WorktimeGroupFooterBar
-				totalEmployees={4}
+				totalEmployees={filteredEmployees.length}
 				weekNumber={groupData.weekNumber}
 				year={groupData.year}
-				totalLogged={164.5}
-				totalOt={6.5}
-				totalAta={14.5}
+				totalLogged={computedTotals.totalLogged}
+				totalOt={computedTotals.totalOt}
+				totalAta={computedTotals.totalAta}
 			/>
 
 			{/* Safe Confirmation Dialog */}
