@@ -24,7 +24,11 @@ export const supportTicketDraftSchema = z.object({
 	line: z.enum(["first", "second"]),
 	country: z.string().min(1),
 	assigneeId: z.string(),
-	/** Empty until a register record is picked; the typed name still stands on its own. */
+	/**
+	 * Empty until a register record is picked; the typed name still stands on its own.
+	 * "" rather than NO_SELECTION: no Select renders this field, and the picker
+	 * treats any non-empty value as linked.
+	 */
 	customerId: z.string(),
 	description: z.string().trim(),
 });
