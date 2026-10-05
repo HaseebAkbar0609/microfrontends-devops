@@ -15,9 +15,7 @@ export type TicketStatus =
 /** First line handles local support; second line is the global technical team. */
 export type SupportLine = "first" | "second";
 
-export type SupportCustomerType = "private" | "craftsman";
-
-export type CraftsmanStatus = "active" | "pending" | "paused" | "inactive";
+export type SupportCustomerType = "private" | "professional";
 
 export type TicketActionType =
 	| "comment"
@@ -55,7 +53,8 @@ export type SupportTicket = {
 	createdAt: string;
 	/** Negative once the SLA has been breached. */
 	slaMinutesLeft: number;
-	craftsmanId: string | null;
+	/** Private customer id or professional company id when picked from the register. */
+	customerId: string | null;
 	description: string;
 	actions: TicketAction[];
 };
@@ -68,16 +67,6 @@ export type SupportAgent = {
 	online: boolean;
 	activeTickets: number;
 	roleKey: TranslationKeys;
-};
-
-export type Craftsman = {
-	id: string;
-	name: string;
-	company: string;
-	tradeKey: TranslationKeys;
-	country: string;
-	status: CraftsmanStatus;
-	phone: string;
 };
 
 /** One bucket in the volume chart, counted per channel. */
@@ -107,7 +96,7 @@ export type SupportTicketDraft = Pick<
 	| "line"
 	| "country"
 	| "assigneeId"
-	| "craftsmanId"
+	| "customerId"
 	| "description"
 >;
 

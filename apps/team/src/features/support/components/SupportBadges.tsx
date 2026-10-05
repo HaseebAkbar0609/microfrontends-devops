@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import {
-	getCraftsmanStatusMeta,
 	getSupportChannelMeta,
 	getSupportCustomerTypeMeta,
 	getSupportLineMeta,
@@ -12,7 +11,6 @@ import {
 	type BadgeMeta,
 } from "../constants/supportStatuses";
 import type {
-	CraftsmanStatus,
 	SupportChannel,
 	SupportCustomerType,
 	SupportLine,
@@ -56,10 +54,6 @@ export function SupportLineBadge({ line }: { line: SupportLine }) {
 
 export function CustomerTypeBadge({ type }: { type: SupportCustomerType }) {
 	return <SupportBadge meta={getSupportCustomerTypeMeta(type)} />;
-}
-
-export function CraftsmanStatusBadge({ status }: { status: CraftsmanStatus }) {
-	return <SupportBadge meta={getCraftsmanStatusMeta(status)} />;
 }
 
 /** Channels read as an icon plus a label rather than a filled pill. */

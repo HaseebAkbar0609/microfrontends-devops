@@ -1,7 +1,6 @@
 import localizationConstants from "@/utils/translation/constants";
 import { SUPPORT_CURRENT_USER_ID } from "../constants/support.constants";
 import type {
-	Craftsman,
 	SupportAgent,
 	SupportTicket,
 	SupportTicketDraft,
@@ -80,25 +79,6 @@ export function applyAssignment(
 				: localizationConstants.supportActionUnassigned,
 			messageValue: agent?.name,
 			type: "assignment",
-		},
-	);
-}
-
-export function applyCraftsmanLink(
-	ticket: SupportTicket,
-	craftsman: Craftsman | undefined,
-	craftsmanId: string | null,
-): SupportTicket {
-	return appendAction(
-		{ ...ticket, craftsmanId },
-		{
-			authorId: SUPPORT_CURRENT_USER_ID,
-			text: "",
-			messageKey: craftsman
-				? localizationConstants.supportActionCraftsmanLinked
-				: localizationConstants.supportActionCraftsmanUnlinked,
-			messageValue: craftsman?.name,
-			type: "comment",
 		},
 	);
 }

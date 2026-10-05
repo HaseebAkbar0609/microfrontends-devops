@@ -13,11 +13,13 @@ import {
 } from "../../constants/supportStatuses";
 import { NO_SELECTION } from "../../schemas/supportTicket.schema";
 import type { SupportTicketFormValues } from "../../schemas/supportTicket.schema";
-import type { SupportAgent } from "../../types";
+import type { SupportAgent, SupportCustomerType } from "../../types";
+import { RequesterPicker } from "./RequesterPicker";
 
 type CreateTicketFieldsProps = {
 	control: Control<SupportTicketFormValues>;
 	availableAgents: SupportAgent[];
+	customerType: SupportCustomerType;
 };
 
 function toOptions(
@@ -35,8 +37,8 @@ const CUSTOMER_TYPE_OPTIONS: FormSelectOption[] = [
 		label: <Translate text={localizationConstants.supportCustomerPrivateOption} />,
 	},
 	{
-		value: "craftsman",
-		label: <Translate text={localizationConstants.supportCustomerCraftsman} />,
+		value: "professional",
+		label: <Translate text={localizationConstants.supportCustomerProfessional} />,
 	},
 ];
 
@@ -54,6 +56,7 @@ const LINE_OPTIONS: FormSelectOption[] = [
 export function CreateTicketFields({
 	control,
 	availableAgents,
+	customerType,
 }: CreateTicketFieldsProps) {
 	const assigneeOptions = useMemo<FormSelectOption[]>(
 		() => [
@@ -78,18 +81,13 @@ export function CreateTicketFields({
 				placeholder={localizationConstants.supportFieldSubjectPlaceholder}
 				className="@2xl:col-span-2"
 			/>
-			<FormInput
-				control={control}
-				name="customer"
-				label={localizationConstants.supportFieldCustomer}
-				placeholder={localizationConstants.supportFieldCustomerPlaceholder}
-			/>
 			<FormSelect
 				control={control}
 				name="customerType"
 				label={localizationConstants.supportFieldCustomerType}
 				options={CUSTOMER_TYPE_OPTIONS}
 			/>
+			<RequesterPicker control={control} customerType={customerType} />
 			<FormSelect
 				control={control}
 				name="channel"

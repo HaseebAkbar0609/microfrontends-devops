@@ -2,7 +2,6 @@ import { Mail, MessageSquare, Phone, type LucideIcon } from "lucide-react";
 import type { TranslationKeys } from "@/utils/translation/constants";
 import localizationConstants from "@/utils/translation/constants";
 import type {
-	CraftsmanStatus,
 	SupportChannel,
 	SupportCustomerType,
 	SupportLine,
@@ -91,32 +90,9 @@ export const SUPPORT_CUSTOMER_TYPES: BadgeMeta<SupportCustomerType>[] = [
 		className: "bg-slate-100 text-slate-600",
 	},
 	{
-		id: "craftsman",
-		labelKey: localizationConstants.supportCustomerCraftsman,
+		id: "professional",
+		labelKey: localizationConstants.supportCustomerProfessional,
 		className: "bg-emerald-50 text-emerald-700",
-	},
-];
-
-export const CRAFTSMAN_STATUSES: BadgeMeta<CraftsmanStatus>[] = [
-	{
-		id: "active",
-		labelKey: localizationConstants.supportCraftsmanActive,
-		className: "bg-emerald-50 text-emerald-700",
-	},
-	{
-		id: "pending",
-		labelKey: localizationConstants.supportCraftsmanPending,
-		className: "bg-amber-50 text-amber-700",
-	},
-	{
-		id: "paused",
-		labelKey: localizationConstants.supportCraftsmanPaused,
-		className: "bg-sky-50 text-sky-700",
-	},
-	{
-		id: "inactive",
-		labelKey: localizationConstants.supportCraftsmanInactive,
-		className: "bg-slate-100 text-slate-600",
 	},
 ];
 
@@ -165,7 +141,6 @@ export const getTicketStatusMeta = toLookup(TICKET_STATUSES);
 export const getTicketPriorityMeta = toLookup(TICKET_PRIORITIES);
 export const getSupportLineMeta = toLookup(SUPPORT_LINES);
 export const getSupportCustomerTypeMeta = toLookup(SUPPORT_CUSTOMER_TYPES);
-export const getCraftsmanStatusMeta = toLookup(CRAFTSMAN_STATUSES);
 export const getSupportChannelMeta = toLookup(SUPPORT_CHANNELS);
 
 export const TICKET_STATUS_IDS = TICKET_STATUSES.map((entry) => entry.id);

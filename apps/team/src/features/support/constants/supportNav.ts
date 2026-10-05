@@ -1,6 +1,7 @@
 import type { ModuleTabItem } from "@/components/layout/navigation";
 import type { BreadcrumbItem } from "@/types/common";
 import localizationConstants from "@/utils/translation/constants";
+import type { SupportTicket } from "../types";
 
 export const SUPPORT_MODULE_HREF = "/support";
 
@@ -59,3 +60,17 @@ export function getTicketHref(ticketId: string): string {
 }
 
 export const CREATE_TICKET_HREF = `${SUPPORT_MODULE_HREF}/tickets/new`;
+
+/**
+ * Where the linked record lives under Customers. Private customers have a list
+ * page only, so the link lands on the list filtered by name.
+ */
+export function getRequesterHref(
+	ticket: Pick<SupportTicket, "customerId" | "customerType" | "customer">,
+): string | null {
+	if (!ticket.customerId) return null;
+	if (ticket.customerType === "professional") {
+		return `/customers/professional/${ticket.customerId}`;
+	}
+	return `/customers/private?search=${encodeURIComponent(ticket.customer)}`;
+}
