@@ -4,8 +4,7 @@ import type { TranslationKeys } from "@/utils/translation/constants";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import type { StatisticsEvent } from "../../../types/forecastStatistics.types";
-
-const PANEL = "flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-2xs";
+import { PANEL_SURFACE, PANEL_TITLE } from "../SummaryCardParts";
 
 export interface StatisticsEventsPanelProps {
 	titleKey: TranslationKeys;
@@ -22,8 +21,8 @@ export interface StatisticsEventsPanelProps {
  */
 export function StatisticsEventsPanel({ titleKey, events, dotClassName }: StatisticsEventsPanelProps) {
 	return (
-		<section className={PANEL}>
-			<h3 className="text-base font-semibold text-slate-900">
+		<section className={PANEL_SURFACE}>
+			<h3 className={PANEL_TITLE}>
 				<Translate text={titleKey} />
 			</h3>
 

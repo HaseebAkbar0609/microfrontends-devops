@@ -10814,6 +10814,9 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastStatisticsTitle: "Statistik",
 	forecastStatisticsKpiObjects: "Aktiva objekt",
 	forecastStatisticsKpiOpenCases: "Öppna ärenden",
+	forecastStatisticsKpiOperatingMargin: "Rörelsemarginal, senaste månaden",
+	/** Procentenheter: the unit a difference between two percentages is in. */
+	forecastStatisticsPointsUnit: "p.e.",
 	forecastStatisticsNoteChange: "{{value}} mot föregående period",
 	forecastStatisticsKpiWarning: "Över tröskelvärdet",
 	forecastStatisticsProfitTitle: "Ackumulerat resultat mot driftkostnad",

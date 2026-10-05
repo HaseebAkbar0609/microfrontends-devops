@@ -10718,6 +10718,8 @@ export type ForecastDashboardTranslation = {
 	forecastStatisticsTitle: string;
 	forecastStatisticsKpiObjects: string;
 	forecastStatisticsKpiOpenCases: string;
+	forecastStatisticsKpiOperatingMargin: string;
+	forecastStatisticsPointsUnit: string;
 	forecastStatisticsNoteChange: string;
 	forecastStatisticsKpiWarning: string;
 	forecastStatisticsProfitTitle: string;

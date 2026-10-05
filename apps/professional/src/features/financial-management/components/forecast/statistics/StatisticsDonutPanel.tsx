@@ -6,6 +6,7 @@ import type { TranslationKeys } from "@/utils/translation/constants";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import type { StatisticsDistributionSlice } from "../../../types/forecastStatistics.types";
+import { PANEL_SURFACE, PANEL_TITLE } from "../SummaryCardParts";
 
 /* Recharts measures the DOM, so every ring in Prognos comes in client-side. */
 const StatusDonut = dynamic(() => import("../charts/StatusDonut"), {
@@ -13,13 +14,15 @@ const StatusDonut = dynamic(() => import("../charts/StatusDonut"), {
 	loading: () => <div className="h-40 w-full animate-pulse rounded-lg bg-slate-100" />,
 });
 
-const PANEL = "flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-2xs";
-
-export interface StatisticsDonutPanelProps {
+export interface StatisticsDonutPanelProps<Id extends string> {
 	titleKey: TranslationKeys;
-	slices: StatisticsDistributionSlice[];
-	/** Resolved here, so the ring stays ignorant of any domain's palette. */
-	colorOf: (slice: StatisticsDistributionSlice) => string;
+	slices: StatisticsDistributionSlice<Id>[];
+	/**
+	 * Resolved here, so the ring stays ignorant of any domain's palette. `Id`
+	 * travels with the slices, so a caller can index its palette directly
+	 * rather than casting and falling back on a default colour.
+	 */
+	colorOf: (slice: StatisticsDistributionSlice<Id>) => string;
 	ariaLabelKey: TranslationKeys;
 	emptyKey: TranslationKeys;
 }
@@ -31,16 +34,16 @@ export interface StatisticsDonutPanelProps {
  * truncates its rows, which is the reason Personal's distribution panel made
  * the same choice.
  */
-export function StatisticsDonutPanel({
+export function StatisticsDonutPanel<Id extends string>({
 	titleKey,
 	slices,
 	colorOf,
 	ariaLabelKey,
 	emptyKey,
-}: StatisticsDonutPanelProps) {
+}: StatisticsDonutPanelProps<Id>) {
 	return (
-		<section className={PANEL}>
-			<h3 className="text-base font-semibold text-slate-900">
+		<section className={PANEL_SURFACE}>
+			<h3 className={PANEL_TITLE}>
 				<Translate text={titleKey} />
 			</h3>
 			<div className="flex flex-1 items-center justify-center py-2">

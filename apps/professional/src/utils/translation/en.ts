@@ -10793,6 +10793,9 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastStatisticsTitle: "Statistics",
 	forecastStatisticsKpiObjects: "Active objects",
 	forecastStatisticsKpiOpenCases: "Open cases",
+	forecastStatisticsKpiOperatingMargin: "Operating margin, latest month",
+	/** Percentage points: the unit a difference between two percentages is in. */
+	forecastStatisticsPointsUnit: "pp",
 	forecastStatisticsNoteChange: "{{value}} vs previous period",
 	forecastStatisticsKpiWarning: "Above the threshold",
 	forecastStatisticsProfitTitle: "Cumulative profit vs. operating cost",

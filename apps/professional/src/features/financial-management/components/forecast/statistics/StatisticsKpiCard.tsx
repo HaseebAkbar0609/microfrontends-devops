@@ -5,15 +5,15 @@ import { OctagonAlert, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { FORECAST_STATISTICS_PROFIT_COLOR } from "../../../constants/forecastStatistics.constants";
+import {
+	FORECAST_STATISTICS_PROFIT_COLOR,
+	FORECAST_STATISTICS_UP_IS_BAD,
+} from "../../../constants/forecastStatistics.constants";
 import type { StatisticsKpi } from "../../../types/forecastStatistics.types";
 import { formatNumber, formatPercent, formatSekCompact } from "../../../utils/economyFormatters";
 import { TONE_CLASS, changeTone } from "../analysis/widgets/AnalysisCardParts";
 import { Sparkline } from "../charts/Sparkline";
 import { SUMMARY_CARD, SUMMARY_CAPTION, SUMMARY_VALUE } from "../SummaryCardParts";
-
-/** The figures a rise is bad news for. */
-const UP_IS_BAD = new Set(["operatingCost", "riskExposure"]);
 
 function writeValue(kpi: StatisticsKpi): string {
 	if (kpi.format === "percent") return formatPercent(kpi.value, 1);
@@ -22,11 +22,18 @@ function writeValue(kpi: StatisticsKpi): string {
 	return formatSekCompact(kpi.value);
 }
 
-/** The change, written short, with the typographic minus the hours use. */
-function writeChange(kpi: StatisticsKpi): string {
+/**
+ * The change, written short, with the typographic minus the hours use.
+ *
+ * A percentage card's change is the gap between two percentages, so it is in
+ * percentage points, not percent: "+1.2 p.e." rather than "+1.2 %", which would
+ * read as a relative move. The decimal point matches `formatPercent`, which
+ * every percentage on these screens is written with.
+ */
+function writeChange(kpi: StatisticsKpi, pointsUnit: string): string {
 	const sign = kpi.change > 0 ? "+" : kpi.change < 0 ? "−" : "";
 	const size = Math.abs(kpi.change);
-	if (kpi.format === "percent") return `${sign}${formatPercent(size, 1)}`;
+	if (kpi.format === "percent") return `${sign}${size.toFixed(1)} ${pointsUnit}`;
 	if (kpi.format === "count") return `${sign}${formatNumber(size)}`;
 	return `${sign}${formatSekCompact(size)}`;
 }
@@ -38,7 +45,7 @@ export interface StatisticsKpiCardProps {
 /** One of the six figures: what it is, what it stands at, and how it moved. */
 export function StatisticsKpiCard({ kpi }: StatisticsKpiCardProps) {
 	const t = useTranslate();
-	const tone = changeTone(kpi.change, !UP_IS_BAD.has(kpi.id));
+	const tone = changeTone(kpi.change, !FORECAST_STATISTICS_UP_IS_BAD.has(kpi.id));
 	const Arrow = kpi.change < 0 ? TrendingDown : TrendingUp;
 
 	return (
@@ -68,7 +75,9 @@ export function StatisticsKpiCard({ kpi }: StatisticsKpiCardProps) {
 				)}
 			>
 				{kpi.change !== 0 && <Arrow className="h-3.5 w-3.5 shrink-0" aria-hidden />}
-				{t(localizationConstants.forecastStatisticsNoteChange, { value: writeChange(kpi) })}
+				{t(localizationConstants.forecastStatisticsNoteChange, {
+					value: writeChange(kpi, t(localizationConstants.forecastStatisticsPointsUnit)),
+				})}
 			</p>
 
 			<Sparkline values={kpi.trend} color={FORECAST_STATISTICS_PROFIT_COLOR} className="mt-1" />

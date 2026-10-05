@@ -1,5 +1,6 @@
 import type { TranslationKeys } from "@/utils/translation/constants";
 import { RISK_LEVEL_META, RISK_LEVEL_ORDER } from "../constants/forecastRisk.constants";
+import type { RiskLevel } from "../types/forecastRisk.types";
 import {
 	FORECAST_STATISTICS_ACTIVITY_COLUMNS,
 	FORECAST_STATISTICS_KPI_LABELS,
@@ -23,7 +24,13 @@ import type { Cell } from "./economyWorkbook";
 /** Turns a translation key into the reader's text. */
 export type StatisticsLabel = (key: TranslationKeys) => string;
 
-/** What share of the month's turnover was kept, in percent. */
+/**
+ * The month's operating margin: operating profit over turnover, in percent.
+ *
+ * Not a gross margin — turnover here is profit plus operating cost, so what is
+ * divided out is every operating cost rather than the cost of sales alone. The
+ * card's label says so.
+ */
 function marginOf(month: StatisticsMonthPoint): number {
 	const turnover = month.profit + month.operatingCost;
 	return turnover === 0 ? 0 : (month.profit / turnover) * 100;
@@ -51,7 +58,7 @@ function trendFor(id: StatisticsKpiId, months: StatisticsMonthPoint[]): number[]
 			return months.map((month) => month.operatingCost);
 		case "activeObjects":
 			return months.map((month) => month.activeObjects);
-		case "averageMargin":
+		case "operatingMargin":
 			return months.map(marginOf);
 		case "openCases":
 			return months.map((month) => month.openCases);
@@ -60,7 +67,7 @@ function trendFor(id: StatisticsKpiId, months: StatisticsMonthPoint[]): number[]
 	}
 }
 
-const PERCENT_KPIS = new Set<StatisticsKpiId>(["averageMargin"]);
+const PERCENT_KPIS = new Set<StatisticsKpiId>(["operatingMargin"]);
 const COUNT_KPIS = new Set<StatisticsKpiId>(["activeObjects", "openCases"]);
 
 function formatOf(id: StatisticsKpiId) {
@@ -69,7 +76,12 @@ function formatOf(id: StatisticsKpiId) {
 	return "sek" as const;
 }
 
-/** The six cards, each the last point of its own series. */
+/**
+ * The six cards, each the last point of its own series.
+ *
+ * Every figure is the latest month, including the margin — which is why its
+ * label names the month rather than calling itself an average.
+ */
 export function buildStatisticsKpis(months: StatisticsMonthPoint[]): StatisticsKpi[] {
 	return FORECAST_STATISTICS_KPI_ORDER.map((id) => {
 		const trend = trendFor(id, months);
@@ -104,7 +116,7 @@ export function buildChartPoints(months: StatisticsMonthPoint[]): StatisticsChar
  */
 export function buildHealthDistribution(
 	activity: StatisticsActivityRow[],
-): StatisticsDistributionSlice[] {
+): StatisticsDistributionSlice<RiskLevel>[] {
 	return RISK_LEVEL_ORDER.map((level) => ({
 		id: level,
 		labelKey: RISK_LEVEL_META[level].labelKey,

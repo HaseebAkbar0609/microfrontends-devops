@@ -6,7 +6,7 @@ export type StatisticsKpiId =
 	| "cumulativeProfit"
 	| "operatingCost"
 	| "activeObjects"
-	| "averageMargin"
+	| "operatingMargin"
 	| "openCases"
 	| "riskExposure";
 
@@ -53,8 +53,18 @@ export interface StatisticsKpi {
 }
 
 /** One arc of either ring; the panel resolves the colour. */
-export interface StatisticsDistributionSlice {
-	id: string;
+/** The object ring's three slices. The palette is keyed by the same union. */
+export type StatisticsObjectSliceId = "onBudget" | "overBudget" | "other";
+
+/**
+ * One slice of a ring.
+ *
+ * `Id` is the set of slice ids the distribution can hold, so a caller that
+ * resolves a colour per slice can do it with a total lookup instead of a cast
+ * and a fallback.
+ */
+export interface StatisticsDistributionSlice<Id extends string = string> {
+	id: Id;
 	labelKey: TranslationKeys;
 	value: number;
 }
@@ -92,7 +102,7 @@ export type StatisticsActivitySortField =
 /** What the seed states outright. */
 export interface StatisticsSeed {
 	months: StatisticsMonthPoint[];
-	objectDistribution: StatisticsDistributionSlice[];
+	objectDistribution: StatisticsDistributionSlice<StatisticsObjectSliceId>[];
 	events: StatisticsEvent[];
 	activity: StatisticsActivityRow[];
 }
@@ -101,9 +111,9 @@ export interface StatisticsSeed {
 export interface StatisticsState {
 	kpis: StatisticsKpi[];
 	chartPoints: StatisticsChartPoint[];
-	objectDistribution: StatisticsDistributionSlice[];
+	objectDistribution: StatisticsDistributionSlice<StatisticsObjectSliceId>[];
 	/** Grouped from the activity rows, so the ring and the table agree. */
-	healthDistribution: StatisticsDistributionSlice[];
+	healthDistribution: StatisticsDistributionSlice<RiskLevel>[];
 	systemEvents: StatisticsEvent[];
 	financialEvents: StatisticsEvent[];
 	activity: StatisticsActivityRow[];

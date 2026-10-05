@@ -2,6 +2,7 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 import type {
 	StatisticsActivitySortField,
 	StatisticsKpiId,
+	StatisticsObjectSliceId,
 } from "../types/forecastStatistics.types";
 import { FORECAST_CUMULATIVE_COLOR } from "./forecastAnalysis.constants";
 
@@ -31,7 +32,7 @@ export const FORECAST_STATISTICS_KPI_LABELS: Record<StatisticsKpiId, Translation
 	cumulativeProfit: localizationConstants.forecastKeyFiguresCardCumulative,
 	operatingCost: localizationConstants.forecastColCosts,
 	activeObjects: localizationConstants.forecastStatisticsKpiObjects,
-	averageMargin: localizationConstants.forecastAnalysisKpiMargin,
+	operatingMargin: localizationConstants.forecastStatisticsKpiOperatingMargin,
 	openCases: localizationConstants.forecastStatisticsKpiOpenCases,
 	riskExposure: localizationConstants.forecastAnalysisKpiRiskExposure,
 };
@@ -41,7 +42,7 @@ export const FORECAST_STATISTICS_KPI_ORDER: StatisticsKpiId[] = [
 	"cumulativeProfit",
 	"operatingCost",
 	"activeObjects",
-	"averageMargin",
+	"operatingMargin",
 	"openCases",
 	"riskExposure",
 ];
@@ -71,7 +72,7 @@ export const FORECAST_STATISTICS_ACTIVITY_PAGE_SIZE = 10;
  * and red for over it, as the risk palette uses them, so the two rings on
  * this page read the same way.
  */
-export const FORECAST_STATISTICS_OBJECT_COLORS: Record<string, string> = {
+export const FORECAST_STATISTICS_OBJECT_COLORS: Record<StatisticsObjectSliceId, string> = {
 	onBudget: "#10b981",
 	overBudget: "#ef4444",
 	other: "#94a3b8",
@@ -79,3 +80,15 @@ export const FORECAST_STATISTICS_OBJECT_COLORS: Record<string, string> = {
 
 /** What the exported workbook is called. */
 export const FORECAST_STATISTICS_EXPORT_FILE = "prognos-statistik.xlsx";
+
+/**
+ * The figures a rise is bad news for.
+ *
+ * Which way is good is business configuration rather than presentation, so it
+ * sits beside the card order instead of inside the card. Typed to the id union,
+ * so renaming a figure is a compile error rather than a silently green arrow.
+ */
+export const FORECAST_STATISTICS_UP_IS_BAD = new Set<StatisticsKpiId>([
+	"operatingCost",
+	"riskExposure",
+]);
