@@ -13,12 +13,20 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { REQUESTER_SEARCH_DEBOUNCE_MS } from "../../constants/support.constants";
 import type { SupportTicketFormValues } from "../../schemas/supportTicket.schema";
 import type { SupportCustomerType } from "../../types";
 import { searchRequesters } from "../../utils/requesterSearch";
+
+/** Each register searches different columns, so the placeholder names the ones that match. */
+const PLACEHOLDER_KEYS: Record<SupportCustomerType, TranslationKeys> = {
+	private: localizationConstants.supportFieldCustomerPlaceholderPrivate,
+	professional: localizationConstants.supportFieldCustomerPlaceholderProfessional,
+};
 
 type RequesterPickerProps = {
 	control: Control<SupportTicketFormValues>;
@@ -59,7 +67,7 @@ export function RequesterPicker({ control, customerType }: RequesterPickerProps)
 								{...field}
 								autoComplete="off"
 								className="pl-9"
-								placeholder={t(localizationConstants.supportFieldCustomerPlaceholder)}
+								placeholder={t(PLACEHOLDER_KEYS[customerType])}
 								onChange={(event) => {
 									field.onChange(event);
 									if (idField.value) idField.onChange("");

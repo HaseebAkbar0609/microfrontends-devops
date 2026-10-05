@@ -1567,7 +1567,8 @@ export type SupportTranslation = {
 	supportFieldSubject: string;
 	supportFieldSubjectPlaceholder: string;
 	supportFieldCustomer: string;
-	supportFieldCustomerPlaceholder: string;
+	supportFieldCustomerPlaceholderPrivate: string;
+	supportFieldCustomerPlaceholderProfessional: string;
 	supportFieldCustomerType: string;
 	supportFieldChannel: string;
 	supportFieldPriority: string;
