@@ -28,8 +28,8 @@ type RegisterPageProps = {
 };
 
 /**
- * One register. The group is the primary tab and the register the secondary
- * one, so the module title is the same on all 19 pages.
+ * One register. The sub-sidebar selects the group and the section row the
+ * register, so the module title is the same on all 19 pages.
  */
 export default function RegisterPage({
 	groupId,

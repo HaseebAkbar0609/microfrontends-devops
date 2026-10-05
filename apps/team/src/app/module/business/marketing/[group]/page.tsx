@@ -10,7 +10,7 @@ type GroupPageProps = {
 	params: Promise<{ group: string }>;
 };
 
-/** A group tab lands on its first register, so the secondary row is never empty. */
+/** A group entry lands on its first register, so the section row is never empty. */
 export default async function Page({ params }: GroupPageProps) {
 	const { group } = await params;
 	const slug = parseMarketingSlug(group);

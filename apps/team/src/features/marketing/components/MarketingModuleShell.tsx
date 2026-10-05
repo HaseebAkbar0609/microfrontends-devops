@@ -7,7 +7,6 @@ import {
 } from "@/components/layout/navigation";
 import {
 	MARKETING_BREADCRUMBS,
-	MARKETING_MODULE_TABS,
 	MARKETING_MODULE_TITLE_KEY,
 } from "../constants/marketingNav";
 
@@ -20,10 +19,9 @@ type MarketingModuleShellProps = {
 /**
  * Shell for every page in the marketing module.
  *
- * The prototype navigated 21 destinations from a dark 256px sidebar with six
- * collapsible groups and no URL state at all. Here the primary row selects a
- * group and the secondary row selects a register inside it, so every page is
- * linkable and the back button works.
+ * The module's sub-sidebar selects the overview, a group or the newsletter;
+ * the section row here selects a register inside the group. Every page keeps
+ * its own route, so it is linkable and the back button works.
  */
 export function MarketingModuleShell({
 	children,
@@ -33,7 +31,6 @@ export function MarketingModuleShell({
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
 			<ModulePageHeader
 				title={MARKETING_MODULE_TITLE_KEY}
-				tabs={MARKETING_MODULE_TABS}
 				breadcrumbs={MARKETING_BREADCRUMBS}
 				secondaryTabs={sectionTabs}
 			/>

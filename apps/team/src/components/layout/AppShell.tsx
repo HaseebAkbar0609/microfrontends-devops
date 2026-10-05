@@ -9,6 +9,8 @@ import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
 import { SalesMobileNav, SalesSubSidebar } from "@/features/sales/components/layout/SalesSubSidebar";
 import { isSalesModulePath } from "@/features/sales/constants/salesNav";
+import { MarketingMobileNav, MarketingSubSidebar } from "@/features/marketing/components/layout/MarketingSubSidebar";
+import { isMarketingModulePath } from "@/features/marketing/constants/marketingNav";
 import { ContentSubSidebar } from "@/features/content/components/layout/ContentSubSidebar";
 import { isContentConsolePath } from "@/features/content/constants/contentNav";
 interface AppShellProps {
@@ -28,9 +30,10 @@ export function AppShell({ children }: AppShellProps) {
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
 	const isSalesModule = isSalesModulePath(pathname);
+	const isMarketingModule = isMarketingModulePath(pathname);
 	const isContentConsole = isContentConsolePath(pathname);
 	const hasSubSidebar =
-		hasFlyoutSubSidebar || isSalesModule || isContentConsole;
+		hasFlyoutSubSidebar || isSalesModule || isMarketingModule || isContentConsole;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -71,6 +74,7 @@ export function AppShell({ children }: AppShellProps) {
 						</div>
 					)}
 					{isSalesModule && <SalesSubSidebar />}
+					{isMarketingModule && <MarketingSubSidebar />}
 					{isContentConsole && <ContentSubSidebar />}
 					{flyoutSubSidebarConfig && (
 						<MyPagesSubSidebar
@@ -82,6 +86,7 @@ export function AppShell({ children }: AppShellProps) {
 					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 						<Header onOpenNavigation={() => setMobileNavigationOpen(true)} />
 						{isSalesModule && <SalesMobileNav />}
+						{isMarketingModule && <MarketingMobileNav />}
 						<main
 							className={`flex min-w-0 flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
 						>
