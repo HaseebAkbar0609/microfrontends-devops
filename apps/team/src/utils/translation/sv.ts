@@ -1477,7 +1477,7 @@ export const sweSupport: SupportTranslation = {
 	supportLineFirstOption: "First line (lokalt)",
 	supportLineSecondOption: "Second line",
 	supportCustomerPrivate: "Privat",
-	supportCustomerProfessional: "Professional",
+	supportCustomerProfessional: "Proffs",
 	supportCustomerPrivateOption: "Privatperson",
 	supportRequesterHint: "Välj en post ur registret så kopplas ärendet till den.",
 	supportRequesterSearching: "Söker…",
