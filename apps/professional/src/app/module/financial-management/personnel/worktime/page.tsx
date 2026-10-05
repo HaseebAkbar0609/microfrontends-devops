@@ -1,13 +1,7 @@
 "use client";
 
-import { PersonnelSubRoutePage } from "@/features/personnel/components/common/PersonnelSubRoutePage";
-import localizationConstants from "@/utils/translation/constants";
+import { PersonnelWorktimePage } from "@/features/personnel/components/worktime/PersonnelWorktimePage";
 
 export default function WorktimePage() {
-	return (
-		<PersonnelSubRoutePage
-			activeTabId="worktime"
-			titleKey={localizationConstants.worktimeTab}
-		/>
-	);
+	return <PersonnelWorktimePage />;
 }
