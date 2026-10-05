@@ -12,7 +12,6 @@ import {
 	SUPPORT_MODULE_TITLE_KEY,
 } from "../../constants/supportNav";
 import { useCreateTicketForm } from "../../hooks/useCreateTicketForm";
-import { CraftsmanPicker } from "./CraftsmanPicker";
 import { CreateTicketFields } from "./CreateTicketFields";
 
 export default function CreateTicketPage() {
@@ -49,11 +48,8 @@ export default function CreateTicketPage() {
 						<CreateTicketFields
 							control={form.control}
 							availableAgents={availableAgents}
+							customerType={customerType}
 						/>
-
-						{customerType === "craftsman" ? (
-							<CraftsmanPicker control={form.control} />
-						) : null}
 
 						<div className="mt-5 flex flex-wrap justify-end gap-2">
 							<Button

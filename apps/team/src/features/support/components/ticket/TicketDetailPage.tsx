@@ -11,9 +11,9 @@ import { useSupportTickets } from "../../hooks/useSupportTickets";
 import type { TicketStatus } from "../../types";
 import { TicketNotFound } from "./TicketNotFound";
 import { TicketActionLog } from "./TicketActionLog";
-import { TicketCraftsmanCard } from "./TicketCraftsmanCard";
 import { TicketHandlingCard } from "./TicketHandlingCard";
 import { TicketMetaCard } from "./TicketMetaCard";
+import { TicketRequesterCard } from "./TicketRequesterCard";
 
 type TicketDetailPageProps = {
 	ticketId: string;
@@ -23,10 +23,8 @@ export default function TicketDetailPage({ ticketId }: TicketDetailPageProps) {
 	const {
 		getTicket,
 		agents,
-		craftsmen,
 		setTicketStatus,
 		assignTicket,
-		setTicketCraftsman,
 		addComment,
 	} = useSupportTickets();
 
@@ -39,10 +37,6 @@ export default function TicketDetailPage({ ticketId }: TicketDetailPageProps) {
 	const handleAssignee = useCallback(
 		(agentId: string | null) => assignTicket(ticketId, agentId),
 		[ticketId, assignTicket],
-	);
-	const handleCraftsman = useCallback(
-		(craftsmanId: string | null) => setTicketCraftsman(ticketId, craftsmanId),
-		[ticketId, setTicketCraftsman],
 	);
 	const handleComment = useCallback(
 		(text: string) => addComment(ticketId, text),
@@ -80,11 +74,7 @@ export default function TicketDetailPage({ ticketId }: TicketDetailPageProps) {
 						onStatusChange={handleStatus}
 						onAssigneeChange={handleAssignee}
 					/>
-					<TicketCraftsmanCard
-						craftsmen={craftsmen}
-						craftsmanId={ticket.craftsmanId}
-						onChange={handleCraftsman}
-					/>
+					<TicketRequesterCard ticket={ticket} />
 				</aside>
 			</div>
 		</div>

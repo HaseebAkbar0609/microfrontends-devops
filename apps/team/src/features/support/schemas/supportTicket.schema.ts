@@ -18,13 +18,14 @@ export const supportTicketDraftSchema = z.object({
 	customer: z.string().trim().min(1, {
 		message: localizationConstants.supportValidationCustomerRequired,
 	}),
-	customerType: z.enum(["private", "craftsman"]),
+	customerType: z.enum(["private", "professional"]),
 	channel: z.enum(["phone", "email", "chat"]),
 	priority: z.enum(["low", "medium", "high", "critical"]),
 	line: z.enum(["first", "second"]),
 	country: z.string().min(1),
 	assigneeId: z.string(),
-	craftsmanId: z.string(),
+	/** Empty until a register record is picked; the typed name still stands on its own. */
+	customerId: z.string(),
 	description: z.string().trim(),
 });
 
@@ -40,7 +41,7 @@ export const EMPTY_SUPPORT_TICKET_DRAFT: SupportTicketFormValues = {
 	line: "first",
 	country: "Sverige",
 	assigneeId: NO_SELECTION,
-	craftsmanId: NO_SELECTION,
+	customerId: "",
 	description: "",
 };
 

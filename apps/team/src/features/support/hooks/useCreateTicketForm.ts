@@ -44,10 +44,9 @@ export function useCreateTicketForm() {
 		form.setValue("assigneeId", NO_SELECTION);
 	}, [assigneeId, availableAgents, form]);
 
-	/** The craftsman link only applies to craftsman customers. */
+	/** A picked record belongs to one register, so switching type drops it. */
 	useEffect(() => {
-		if (customerType === "craftsman") return;
-		form.setValue("craftsmanId", NO_SELECTION);
+		form.setValue("customerId", "");
 	}, [customerType, form]);
 
 	const submit = form.handleSubmit((values) => {
@@ -55,8 +54,7 @@ export function useCreateTicketForm() {
 			...values,
 			assigneeId:
 				values.assigneeId === NO_SELECTION ? null : values.assigneeId,
-			craftsmanId:
-				values.craftsmanId === NO_SELECTION ? null : values.craftsmanId,
+			customerId: values.customerId || null,
 		});
 		showToast("success", t(localizationConstants.supportTicketCreatedToast));
 		router.push(getTicketHref(ticketId));

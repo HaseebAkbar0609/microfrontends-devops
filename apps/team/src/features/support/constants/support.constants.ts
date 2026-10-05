@@ -47,3 +47,7 @@ export const SUPPORT_REFERENCE_DATE = "2026-09-03T09:00:00.000Z";
  * written from the UI carry this id so they read as "You" rather than "System".
  */
 export const SUPPORT_CURRENT_USER_ID = "me";
+
+/** Requester search on the create-ticket form. */
+export const REQUESTER_SEARCH_DEBOUNCE_MS = 400;
+export const REQUESTER_SEARCH_LIMIT = 8;
