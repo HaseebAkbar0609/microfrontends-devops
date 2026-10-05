@@ -73,8 +73,8 @@ export interface FlyoutSubSidebarConfig {
 
 /**
  * Sales and Marketing sit in the "Affär" flyout. Both bring their own
- * navigation through their `ModulePageHeader` tab rows, so the Affär item sets
- * `hideSubSidebar` to keep the generic flyout sub-sidebar from opening on top of it.
+ * sub-sidebar, so the Affär item sets `hideSubSidebar` to keep the generic
+ * flyout sub-sidebar from opening next to theirs.
  */
 const moduleSalesItem: NavFlyoutItem = {
 	id: "module-business-sales",
