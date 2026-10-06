@@ -11260,6 +11260,60 @@ export type PersonnelProcessAndDocumentTranslation = {
 	personalDocEmptyTable: string;
 };
 
+// TFS-987: Worktime Group by Person (and Group Views)
+export type PersonnelWorktimeGroupTranslation = {
+	worktimeGroupTitle: string;
+	worktimeGroupSubtitle: string;
+	worktimeGroupTabKalender: string;
+	worktimeGroupTabList: string;
+	worktimeGroupTabGantt: string;
+	worktimeGroupByLabel: string;
+	worktimeGroupByPerson: string;
+	worktimeGroupColEmployee: string;
+	worktimeGroupColEmployeeTeam: string;
+	worktimeGroupColPlanned: string;
+	worktimeGroupColLogged: string;
+	worktimeGroupColOt: string;
+	worktimeGroupColAta: string;
+	worktimeGroupColTravel: string;
+	worktimeGroupColStatus: string;
+	worktimeGroupColActions: string;
+	worktimeGroupColDay: string;
+	worktimeGroupColTotalHours: string;
+	worktimeGroupBtnExpandAll: string;
+	worktimeGroupBtnCollapseAll: string;
+	worktimeGroupFilterException: string;
+	worktimeGroupSearchPlaceholder: string;
+	worktimeGroupBtnGranska: string;
+	worktimeGroupBtnGodkann: string;
+	worktimeGroupBtnAvboj: string;
+	worktimeGroupBtnRemind: string;
+	worktimeGroupStatusGodkand: string;
+	worktimeGroupStatusInkickad: string;
+	worktimeGroupStatusMangler: string;
+	worktimeGroupStatusReturned: string;
+	worktimeGroupTotalRowLabel: string;
+	worktimeGroupTotalDayRowLabel: string;
+	worktimeGroupFooterShowing: string;
+	worktimeGroupFooterEmployees: string;
+	worktimeGroupFooterWeek: string;
+	worktimeGroupFooterTotalLogged: string;
+	worktimeGroupFooterTotalOt: string;
+	worktimeGroupFooterTotalAta: string;
+	worktimeGroupGanttToggleWeek: string;
+	worktimeGroupGanttToggleMonth: string;
+	worktimeGroupConfirmApproveTitle: string;
+	worktimeGroupConfirmApproveDesc: string;
+	worktimeGroupConfirmRejectTitle: string;
+	worktimeGroupConfirmRejectDesc: string;
+	worktimeGroupToastApproved: string;
+	worktimeGroupToastRejected: string;
+	worktimeGroupToastReminded: string;
+	worktimeGroupEmptyEmployees: string;
+	worktimeGroupZoomIn: string;
+	worktimeGroupZoomOut: string;
+};
+
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
 	materialDepotLabel: string;
@@ -11635,7 +11689,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	SmartAccessNewTranslation &
 	PersonnelCompetenceAndReviewTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
-	PersonnelProcessAndDocumentTranslation;
+	PersonnelProcessAndDocumentTranslation &
+	PersonnelWorktimeGroupTranslation;
 
 export type TranslationKeys = keyof Translation;
 
