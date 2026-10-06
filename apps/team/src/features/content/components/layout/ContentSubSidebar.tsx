@@ -19,18 +19,23 @@ import { ContentSubNavGroup } from "./ContentSubNavGroup";
 export function ContentSubSidebar() {
 	const pathname = usePathname();
 	const activeGroupId = getActiveContentGroupId(pathname);
-	// Holds only what the user has shut, so both dashboards start open.
-	const [collapsedIds, setCollapsedIds] = useState<ContentGroupId[]>([]);
+	// Holds only what is open, so on the console's start page, which belongs to
+	// neither dashboard, both start collapsed. A page inside one starts with it open.
+	const [expandedIds, setExpandedIds] = useState<ContentGroupId[]>(() =>
+		activeGroupId ? [activeGroupId] : [],
+	);
 
 	// Arriving in a collapsed dashboard opens it. Keyed on the group rather than
 	// the pathname so the chevron still works while you stay inside it.
 	useEffect(() => {
 		if (!activeGroupId) return;
-		setCollapsedIds((ids) => ids.filter((id) => id !== activeGroupId));
+		setExpandedIds((ids) =>
+			ids.includes(activeGroupId) ? ids : [...ids, activeGroupId],
+		);
 	}, [activeGroupId]);
 
 	const toggleGroup = (groupId: ContentGroupId) => {
-		setCollapsedIds((ids) =>
+		setExpandedIds((ids) =>
 			ids.includes(groupId)
 				? ids.filter((id) => id !== groupId)
 				: [...ids, groupId],
@@ -59,7 +64,7 @@ export function ContentSubSidebar() {
 						key={group.id}
 						group={group}
 						pathname={pathname}
-						isOpen={!collapsedIds.includes(group.id)}
+						isOpen={expandedIds.includes(group.id)}
 						onToggle={() => toggleGroup(group.id)}
 					/>
 				))}
