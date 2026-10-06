@@ -1050,6 +1050,7 @@ export const svProjects: ProjectsModule = {
 	deleteOrgConfirmDescription:
 		"Är du säker på att du vill ta bort detta företag från organisationsplanen? Åtgärden kan inte ångras.",
 	projectActivateAction: "Aktivera",
+	projectRowActionsLabel: "Fler åtgärder",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:
 		"Är du säker på att du vill ta bort detta projekt? Åtgärden kan inte ångras.",
