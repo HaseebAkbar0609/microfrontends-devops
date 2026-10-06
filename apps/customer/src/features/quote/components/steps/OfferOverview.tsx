@@ -98,7 +98,7 @@ export function OfferOverview({
 	);
 
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-10">
+		<div className="grid grid-cols-1 gap-6 pb-10">
 			{/* Personal Information */}
 			<DetailCard
 				icon={FileText}
