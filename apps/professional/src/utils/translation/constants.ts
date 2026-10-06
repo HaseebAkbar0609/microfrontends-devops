@@ -11342,6 +11342,67 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyOverhead: string;
 };
 
+// TFS-1149: Data IT Dashboard (Widget & Navigation)
+export type DataItDashboardTranslation = {
+	dataItDashboard: string;
+	dataItDashboardBreadcrumb: string;
+	dataItOverview: string;
+	dataItEquipment: string;
+	dataItSystem: string;
+	dataItSupport: string;
+	dataItSecurity: string;
+	dataItProtocol: string;
+	dataItEconomy: string;
+	dataItPurchase: string;
+	dataItTemplates: string;
+	dataItStatistics: string;
+	dataItDocuments: string;
+	dataItArchive: string;
+	wDataItKpiTitle: string;
+	wDataItKpiDesc: string;
+	wDataItDevicesByCategoryTitle: string;
+	wDataItDevicesByCategoryDesc: string;
+	wDataItWarrantyExpiryTitle: string;
+	wDataItWarrantyExpiryDesc: string;
+	wDataItUpcomingPurchasesTitle: string;
+	wDataItUpcomingPurchasesDesc: string;
+	wDataItActiveSupportTitle: string;
+	wDataItActiveSupportDesc: string;
+	wDataItQuickActionsTitle: string;
+	wDataItQuickActionsDesc: string;
+	wDataItSecurityStatusTitle: string;
+	wDataItSecurityStatusDesc: string;
+	wDataItSystemStatusTitle: string;
+	wDataItSystemStatusDesc: string;
+	dataItTotalDevices: string;
+	dataItActiveSystems: string;
+	dataItOpenTickets: string;
+	dataItSecurityScore: string;
+	dataItLaptops: string;
+	dataItMonitors: string;
+	dataItMobileTablets: string;
+	dataItServersNetwork: string;
+	dataItOtherPeripherals: string;
+	dataItExpiringInDays: string;
+	dataItEstimatedBudget: string;
+	dataItApprovedBudget: string;
+	dataItHighPriority: string;
+	dataItNormalPriority: string;
+	dataItRegisterEquipment: string;
+	dataItCreateSupportTicket: string;
+	dataItOrderHardware: string;
+	dataItRequestPermissions: string;
+	dataItActionRegisteredSuccess: string;
+	dataItActionTicketSuccess: string;
+	dataItActionOrderSuccess: string;
+	dataItActionPermissionSuccess: string;
+	dataItEmptyWarrantyTitle: string;
+	dataItEmptyWarrantyDesc: string;
+	dataItEmptySupportTitle: string;
+	dataItEmptySupportDesc: string;
+	dataItDiscard: string;
+};
+
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
 	materialDepotLabel: string;
@@ -11718,7 +11779,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelCompetenceAndReviewTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
 	PersonnelProcessAndDocumentTranslation &
-	PersonnelWorktimeGroupTranslation;
+	PersonnelWorktimeGroupTranslation &
+	DataItDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
