@@ -11220,7 +11220,6 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTabGantt: string;
 	worktimeGroupByLabel: string;
 	worktimeGroupByPerson: string;
-	worktimeGroupByProject: string;
 	worktimeGroupColEmployee: string;
 	worktimeGroupColEmployeeTeam: string;
 	worktimeGroupColPlanned: string;
@@ -11264,8 +11263,6 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyEmployees: string;
 	worktimeGroupZoomIn: string;
 	worktimeGroupZoomOut: string;
-	worktimeGroupPrevRange: string;
-	worktimeGroupNextRange: string;
 };
 
 // Material storage – overview (TFS-1072)

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { toast } from "sonner";
 import {
 	GroupByMode,
 	GroupViewTab,
@@ -12,6 +11,7 @@ import {
 import { initialWorktimeGroupData } from "../constants/worktimeGroup.mock";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
+import { showToast } from "@/lib/toast";
 
 export function useWorktimeGroup() {
 	const { t } = useTranslation();
@@ -152,9 +152,9 @@ export function useWorktimeGroup() {
 		});
 
 		if (action === "approve") {
-			toast.success(t(localizationConstants.worktimeGroupToastApproved));
+			showToast("success", t(localizationConstants.worktimeGroupToastApproved));
 		} else {
-			toast.error(t(localizationConstants.worktimeGroupToastRejected));
+			showToast("error", t(localizationConstants.worktimeGroupToastRejected));
 		}
 
 		setConfirmAction(null);
@@ -162,37 +162,10 @@ export function useWorktimeGroup() {
 
 	const handleRemind = useCallback(
 		(_employeeId: string) => {
-			toast.info(t(localizationConstants.worktimeGroupToastReminded));
+			showToast("info", t(localizationConstants.worktimeGroupToastReminded));
 		},
 		[t]
 	);
-
-	// Week navigation preserving state
-	const handlePrevWeek = useCallback(() => {
-		setGroupData((prev) => {
-			const nextWeek = prev.weekNumber > 1 ? prev.weekNumber - 1 : 52;
-			const nextYear = prev.weekNumber > 1 ? prev.year : prev.year - 1;
-			return {
-				...prev,
-				weekNumber: nextWeek,
-				year: nextYear,
-				dateRange: `${nextWeek === 51 ? "16 Dec - 22 Dec" : `Vecka ${nextWeek}, ${nextYear}`}`,
-			};
-		});
-	}, []);
-
-	const handleNextWeek = useCallback(() => {
-		setGroupData((prev) => {
-			const nextWeek = prev.weekNumber < 52 ? prev.weekNumber + 1 : 1;
-			const nextYear = prev.weekNumber < 52 ? prev.year : prev.year + 1;
-			return {
-				...prev,
-				weekNumber: nextWeek,
-				year: nextYear,
-				dateRange: `${nextWeek === 1 ? "30 Dec - 05 Jan" : `Vecka ${nextWeek}, ${nextYear}`}`,
-			};
-		});
-	}, []);
 
 	const handleResetThisWeek = useCallback(() => {
 		setGroupData(initialWorktimeGroupData);
@@ -221,8 +194,6 @@ export function useWorktimeGroup() {
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
 		handleRemind,
-		handlePrevWeek,
-		handleNextWeek,
 		handleResetThisWeek,
 	};
 }

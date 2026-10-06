@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,71 +16,58 @@ interface WorktimeGroupGanttViewProps {
 	employees: EmployeeGroupSummary[];
 	ganttTimeRange: GanttTimeRange;
 	onRangeChange: (range: GanttTimeRange) => void;
+	startDate?: Date;
 }
-
-// Localized 10-day timeline columns
-const GANTT_DAYS_SV = [
-	{ index: 0, dayLetter: "M", dateLabel: "1 Jan" },
-	{ index: 1, dayLetter: "T", dateLabel: "2 Jan" },
-	{ index: 2, dayLetter: "O", dateLabel: "3 Jan" },
-	{ index: 3, dayLetter: "T", dateLabel: "4 Jan" },
-	{ index: 4, dayLetter: "F", dateLabel: "5 Jan" },
-	{ index: 5, dayLetter: "L", dateLabel: "6 Jan" },
-	{ index: 6, dayLetter: "S", dateLabel: "7 Jan" },
-	{ index: 7, dayLetter: "M", dateLabel: "8 Jan" },
-	{ index: 8, dayLetter: "O", dateLabel: "9 Jan" },
-	{ index: 9, dayLetter: "O", dateLabel: "10 Jan" },
-];
-
-const GANTT_DAYS_EN = [
-	{ index: 0, dayLetter: "M", dateLabel: "1 Jan" },
-	{ index: 1, dayLetter: "T", dateLabel: "2 Jan" },
-	{ index: 2, dayLetter: "W", dateLabel: "3 Jan" },
-	{ index: 3, dayLetter: "T", dateLabel: "4 Jan" },
-	{ index: 4, dayLetter: "F", dateLabel: "5 Jan" },
-	{ index: 5, dayLetter: "S", dateLabel: "6 Jan" },
-	{ index: 6, dayLetter: "S", dateLabel: "7 Jan" },
-	{ index: 7, dayLetter: "M", dateLabel: "8 Jan" },
-	{ index: 8, dayLetter: "W", dateLabel: "9 Jan" },
-	{ index: 9, dayLetter: "W", dateLabel: "10 Jan" },
-];
-
-// Localized month timeline columns
-const GANTT_MONTH_SV = [
-	{ index: 0, dayLetter: "V1", dateLabel: "1-7 Jan" },
-	{ index: 1, dayLetter: "V2", dateLabel: "8-14 Jan" },
-	{ index: 2, dayLetter: "V3", dateLabel: "15-21 Jan" },
-	{ index: 3, dayLetter: "V4", dateLabel: "22-31 Jan" },
-];
-
-const GANTT_MONTH_EN = [
-	{ index: 0, dayLetter: "W1", dateLabel: "1-7 Jan" },
-	{ index: 1, dayLetter: "W2", dateLabel: "8-14 Jan" },
-	{ index: 2, dayLetter: "W3", dateLabel: "15-21 Jan" },
-	{ index: 3, dayLetter: "W4", dateLabel: "22-31 Jan" },
-];
 
 export function WorktimeGroupGanttView({
 	employees,
 	ganttTimeRange,
 	onRangeChange,
+	startDate = new Date(2024, 11, 23),
 }: WorktimeGroupGanttViewProps) {
 	const { t, i18n } = useTranslation();
 	const [zoomLevel, setZoomLevel] = useState(1);
 
 	const isMonthView = ganttTimeRange === "manad";
-	const isEn = i18n.language?.startsWith("en");
 
-	const timelineColumns = isMonthView
-		? isEn
-			? GANTT_MONTH_EN
-			: GANTT_MONTH_SV
-		: isEn
-			? GANTT_DAYS_EN
-			: GANTT_DAYS_SV;
+	// Dynamically build timeline columns with active locale via Intl.DateTimeFormat
+	const timelineColumns = useMemo(() => {
+		const locale = i18n.language?.startsWith("en") ? "en-US" : "sv-SE";
+		const weekdayFormatter = new Intl.DateTimeFormat(locale, { weekday: "narrow" });
+		const monthFormatter = new Intl.DateTimeFormat(locale, { month: "short" });
 
-	const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 0.15, 1.3));
-	const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 0.15, 0.85));
+		if (isMonthView) {
+			let monthName = monthFormatter.format(startDate).replace(".", "");
+			monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+			const weekLetter = t(localizationConstants.worktimeGroupFooterWeek).charAt(0).toUpperCase();
+
+			return [
+				{ index: 0, dayLetter: `${weekLetter}1`, dateLabel: `1-7 ${monthName}` },
+				{ index: 1, dayLetter: `${weekLetter}2`, dateLabel: `8-14 ${monthName}` },
+				{ index: 2, dayLetter: `${weekLetter}3`, dateLabel: `15-21 ${monthName}` },
+				{ index: 3, dayLetter: `${weekLetter}4`, dateLabel: `22-31 ${monthName}` },
+			];
+		}
+
+		return Array.from({ length: 10 }).map((_, index) => {
+			const date = new Date(startDate);
+			date.setDate(startDate.getDate() + index);
+
+			const dayLetter = weekdayFormatter.format(date);
+			const dayNumber = date.getDate();
+			let monthName = monthFormatter.format(date).replace(".", "");
+			monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+			return {
+				index,
+				dayLetter,
+				dateLabel: `${dayNumber} ${monthName}`,
+			};
+		});
+	}, [startDate, isMonthView, i18n.language, t]);
+
+	const handleZoomIn = () => setZoomLevel((z) => Math.min(Number((z + 0.15).toFixed(2)), 1.3));
+	const handleZoomOut = () => setZoomLevel((z) => Math.max(Number((z - 0.15).toFixed(2)), 0.85));
 
 	return (
 		<div className="space-y-3">
@@ -139,13 +126,16 @@ export function WorktimeGroupGanttView({
 			<div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
 				<div className="overflow-x-auto">
 					<div
-						className="min-w-[850px]"
-						style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top left" }}
+						className="transition-[min-width] duration-150"
+						style={{
+							minWidth: `${Math.round(850 * zoomLevel)}px`,
+							width: `${Math.round(100 * zoomLevel)}%`,
+						}}
 					>
-						{/* Timeline Header */}
+						{/* Timeline Header: ANSTÄLLD / TEAM per Gantt-schema frame */}
 						<div className="flex bg-white border-b border-slate-200 text-2xs font-semibold text-slate-500 uppercase tracking-wider">
 							<div className="w-56 min-w-[200px] py-3 px-4 shrink-0">
-								<Translate text={localizationConstants.worktimeGroupColEmployee} />
+								<Translate text={localizationConstants.worktimeGroupColEmployeeTeam} />
 							</div>
 							<div
 								className={cn(
@@ -173,13 +163,19 @@ export function WorktimeGroupGanttView({
 
 						{/* Employee Gantt Rows */}
 						<div className="divide-y divide-slate-100">
-							{employees.map((emp) => (
-								<WorktimeGroupGanttRow
-									key={emp.id}
-									employee={emp}
-									isMonthView={isMonthView}
-								/>
-							))}
+							{employees.length === 0 ? (
+								<div className="py-12 text-center text-xs text-slate-500">
+									<Translate text={localizationConstants.worktimeGroupEmptyEmployees} />
+								</div>
+							) : (
+								employees.map((emp) => (
+									<WorktimeGroupGanttRow
+										key={emp.id}
+										employee={emp}
+										isMonthView={isMonthView}
+									/>
+								))
+							)}
 						</div>
 					</div>
 				</div>
@@ -187,3 +183,4 @@ export function WorktimeGroupGanttView({
 		</div>
 	);
 }
+

@@ -13,7 +13,6 @@ import { WorktimeGroupConfirmDialog } from "./WorktimeGroupConfirmDialog";
 export function WorktimeGroupView() {
 	const {
 		activeTab,
-		groupByMode,
 		searchQuery,
 		showExceptionsOnly,
 		ganttTimeRange,
@@ -22,7 +21,6 @@ export function WorktimeGroupView() {
 		expandedEmployees,
 		confirmAction,
 		handleTabChange,
-		handleGroupByModeChange,
 		handleToggleEmployee,
 		handleExpandAll,
 		handleCollapseAll,
@@ -34,8 +32,6 @@ export function WorktimeGroupView() {
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
 		handleRemind,
-		handlePrevWeek,
-		handleNextWeek,
 	} = useWorktimeGroup();
 
 	// Timesheet employees with logged days
@@ -48,13 +44,13 @@ export function WorktimeGroupView() {
 		return [...filteredEmployees].sort((a, b) => a.name.localeCompare(b.name));
 	}, [filteredEmployees]);
 
-	// Dynamically derived totals computed from active filtered employees
+	// Dynamically derived totals computed from active timesheet employees
 	const computedTotals = useMemo(() => {
-		const totalLogged = filteredEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
-		const totalOt = filteredEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
-		const totalAta = filteredEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
-		const totalPlanned = filteredEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
-		const totalTravel = filteredEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
+		const totalLogged = timesheetEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
+		const totalOt = timesheetEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
+		const totalAta = timesheetEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
+		const totalPlanned = timesheetEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
+		const totalTravel = timesheetEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
 
 		return {
 			totalPlanned,
@@ -64,19 +60,15 @@ export function WorktimeGroupView() {
 			totalTravel,
 			dailyTotals: groupData.totals.dailyTotals,
 		};
-	}, [filteredEmployees, groupData.totals.dailyTotals]);
+	}, [timesheetEmployees, groupData.totals.dailyTotals]);
 
 	return (
 		<div className="space-y-4">
-			{/* Top Header: Title, Date Navigator & Underline Tabs */}
+			{/* Top Header: Title, Date Pill & Underline Tabs */}
 			<WorktimeGroupHeader
 				activeTab={activeTab}
-				groupByMode={groupByMode}
 				dateRange={groupData.dateRange}
 				onTabChange={handleTabChange}
-				onGroupByChange={handleGroupByModeChange}
-				onPrevWeek={handlePrevWeek}
-				onNextWeek={handleNextWeek}
 			/>
 
 			{/* Filter Toolbar: Undantag, Search, Expand/Collapse */}
@@ -124,7 +116,7 @@ export function WorktimeGroupView() {
 
 			{/* Bottom Aggregated Metrics Footer with Derived Totals */}
 			<WorktimeGroupFooterBar
-				totalEmployees={filteredEmployees.length}
+				totalEmployees={timesheetEmployees.length}
 				weekNumber={groupData.weekNumber}
 				year={groupData.year}
 				totalLogged={computedTotals.totalLogged}

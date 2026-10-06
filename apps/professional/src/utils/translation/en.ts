@@ -11499,7 +11499,6 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTabGantt: "Gantt Schedule",
 	worktimeGroupByLabel: "Group by",
 	worktimeGroupByPerson: "Person",
-	worktimeGroupByProject: "Project",
 	worktimeGroupColEmployee: "EMPLOYEE",
 	worktimeGroupColEmployeeTeam: "EMPLOYEE / TEAM",
 	worktimeGroupColPlanned: "PLANNED HRS",
@@ -11543,8 +11542,6 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyEmployees: "No employees match your search criteria.",
 	worktimeGroupZoomIn: "Zoom in",
 	worktimeGroupZoomOut: "Zoom out",
-	worktimeGroupPrevRange: "Previous period",
-	worktimeGroupNextRange: "Next period",
 };
 
 export const en: Translation = {

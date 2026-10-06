@@ -11520,7 +11520,6 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTabGantt: "Gantt-schema",
 	worktimeGroupByLabel: "Gruppera efter",
 	worktimeGroupByPerson: "Person",
-	worktimeGroupByProject: "Projekt",
 	worktimeGroupColEmployee: "ANSTÄLLD",
 	worktimeGroupColEmployeeTeam: "ANSTÄLLD / TEAM",
 	worktimeGroupColPlanned: "PLANERAT TIM",
@@ -11529,7 +11528,7 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupColAta: "ATA",
 	worktimeGroupColTravel: "RESA (KM)",
 	worktimeGroupColStatus: "STATUS",
-	worktimeGroupColActions: "ACTION",
+	worktimeGroupColActions: "ÅTGÄRD",
 	worktimeGroupColDay: "DAG",
 	worktimeGroupColTotalHours: "TOTALT TIM",
 	worktimeGroupBtnExpandAll: "Expandera alla",
@@ -11542,7 +11541,7 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupBtnRemind: "Påminn",
 	worktimeGroupStatusGodkand: "Godkänd",
 	worktimeGroupStatusInkickad: "Inskickad",
-	worktimeGroupStatusMangler: "Mangler",
+	worktimeGroupStatusMangler: "Saknas",
 	worktimeGroupStatusReturned: "Avböjd",
 	worktimeGroupTotalRowLabel: "Totalt",
 	worktimeGroupTotalDayRowLabel: "Totalt (Dag)",
@@ -11564,8 +11563,6 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyEmployees: "Inga anställda matchar dina sökkriterier.",
 	worktimeGroupZoomIn: "Zooma in",
 	worktimeGroupZoomOut: "Zooma ut",
-	worktimeGroupPrevRange: "Föregående period",
-	worktimeGroupNextRange: "Nästa period",
 };
 
 export const sv: Translation = {
