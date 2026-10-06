@@ -1,26 +1,41 @@
 "use client";
 
 import React from "react";
-import { Calendar as CalendarIcon } from "lucide-react";
+import {
+	Calendar as CalendarIcon,
+	ChevronDown,
+	Users,
+	Briefcase,
+} from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { GroupViewTab } from "@/features/personnel/types/worktimeGroup.types";
+import { GroupByMode, GroupViewTab } from "@/features/personnel/types/worktimeGroup.types";
 import { cn } from "@/lib/utils";
 
 interface WorktimeGroupHeaderProps {
 	activeTab: GroupViewTab;
+	groupByMode: GroupByMode;
 	dateRange: string;
 	onTabChange: (tab: GroupViewTab) => void;
+	onGroupByChange: (mode: GroupByMode) => void;
 }
 
 export function WorktimeGroupHeader({
 	activeTab,
+	groupByMode,
 	dateRange,
 	onTabChange,
+	onGroupByChange,
 }: WorktimeGroupHeaderProps) {
 	return (
 		<div className="space-y-4">
-			{/* Top Bar: Title & Subtitle + Date Pill & Group Indicator matching Figma */}
+			{/* Top Bar: Title & Subtitle + Date Pill & Group Dropdown */}
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div>
 					<h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -38,15 +53,54 @@ export function WorktimeGroupHeader({
 						<span>{dateRange}</span>
 					</div>
 
-					{/* Group By Indicator matching Figma frame */}
-					<div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 shadow-2xs">
-						<span>
-							<Translate text={localizationConstants.worktimeGroupByLabel} />:{" "}
-							<span className="font-semibold text-slate-900">
+					{/* Group By Dropdown Button */}
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<button
+								type="button"
+								className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-2xs cursor-pointer transition-colors"
+							>
+								<span>
+									<Translate text={localizationConstants.worktimeGroupByLabel} />:{" "}
+									<span className="font-semibold text-slate-900">
+										{groupByMode === "person" && (
+											<Translate text={localizationConstants.worktimeGroupByPerson} />
+										)}
+										{groupByMode === "project" && (
+											<Translate text={localizationConstants.worktimeGroupByProject} />
+										)}
+									</span>
+								</span>
+								<ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+							</button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" className="w-44">
+							<DropdownMenuItem
+								onClick={() => onGroupByChange("person")}
+								className={cn(
+									"flex items-center gap-2 text-xs cursor-pointer",
+									groupByMode === "person"
+										? "font-semibold text-slate-900 bg-slate-50"
+										: "text-slate-600"
+								)}
+							>
+								<Users className="w-4 h-4 text-sky-600" />
 								<Translate text={localizationConstants.worktimeGroupByPerson} />
-							</span>
-						</span>
-					</div>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => onGroupByChange("project")}
+								className={cn(
+									"flex items-center gap-2 text-xs cursor-pointer",
+									groupByMode === "project"
+										? "font-semibold text-slate-900 bg-slate-50"
+										: "text-slate-600"
+								)}
+							>
+								<Briefcase className="w-4 h-4 text-emerald-600" />
+								<Translate text={localizationConstants.worktimeGroupByProject} />
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
 			</div>
 

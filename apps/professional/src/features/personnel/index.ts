@@ -52,3 +52,5 @@ export * from "./hooks/useHalsa";
 export * from "./components/worktime/PersonnelWorktimePage";
 export * from "./types/worktimeGroup.types";
 export * from "./hooks/useWorktimeGroup";
+export * from "./hooks/useWorktimeProjectGroup";
+

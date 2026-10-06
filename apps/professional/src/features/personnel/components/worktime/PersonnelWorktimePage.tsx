@@ -50,7 +50,7 @@ export function PersonnelWorktimePage() {
 					</Tabs>
 				</div>
 
-				{/* Worktime Group Overview (TFS-987 Group by Person) */}
+				{/* Worktime Group Overview (TFS-987 Group by Person & TFS-988 Group by Project) */}
 				<WorktimeGroupView />
 			</div>
 		</div>

@@ -9,19 +9,29 @@ import { WorktimeGroupListView } from "./WorktimeGroupListView";
 import { WorktimeGroupGanttView } from "./WorktimeGroupGanttView";
 import { WorktimeGroupFooterBar } from "./WorktimeGroupFooterBar";
 import { WorktimeGroupConfirmDialog } from "./WorktimeGroupConfirmDialog";
+import { WorktimeProjectCalendarGrid } from "./project/WorktimeProjectCalendarGrid";
+import { WorktimeProjectListView } from "./project/WorktimeProjectListView";
+import { WorktimeProjectGanttView } from "./project/WorktimeProjectGanttView";
 
 export function WorktimeGroupView() {
 	const {
 		activeTab,
+		groupByMode,
 		searchQuery,
 		showExceptionsOnly,
 		ganttTimeRange,
 		groupData,
 		filteredEmployees,
 		expandedEmployees,
+		projectData,
+		filteredProjects,
+		expandedProjects,
+		filteredProjectGanttRows,
 		confirmAction,
 		handleTabChange,
+		handleGroupByModeChange,
 		handleToggleEmployee,
+		handleToggleProject,
 		handleExpandAll,
 		handleCollapseAll,
 		handleToggleExceptions,
@@ -34,7 +44,9 @@ export function WorktimeGroupView() {
 		handleRemind,
 	} = useWorktimeGroup();
 
-	// Timesheet employees with logged days
+	const isProjectMode = groupByMode === "project";
+
+	// Timesheet employees with logged days (matches rendered rows in calendar & list)
 	const timesheetEmployees = useMemo(() => {
 		return filteredEmployees.filter((emp) => emp.days && emp.days.length > 0);
 	}, [filteredEmployees]);
@@ -62,13 +74,29 @@ export function WorktimeGroupView() {
 		};
 	}, [timesheetEmployees, groupData.totals.dailyTotals]);
 
+	// Dynamically derived totals computed from active filtered projects
+	const computedProjectTotals = useMemo(() => {
+		const totalLogged = filteredProjects.reduce((sum, p) => sum + (p.loggedHours || 0), 0);
+		const totalOt = filteredProjects.reduce((sum, p) => sum + (p.otHours || 0), 0);
+		const totalAta = filteredProjects.reduce((sum, p) => sum + (p.ataHours || 0), 0);
+
+		return {
+			totalLogged: Number(totalLogged.toFixed(1)),
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
+			dailyTotals: projectData.totals.dailyTotals,
+		};
+	}, [filteredProjects, projectData.totals.dailyTotals]);
+
 	return (
 		<div className="space-y-4">
-			{/* Top Header: Title, Date Pill & Underline Tabs */}
+			{/* Top Header: Title, Date Pill & Group Toggle */}
 			<WorktimeGroupHeader
 				activeTab={activeTab}
-				dateRange={groupData.dateRange}
+				groupByMode={groupByMode}
+				dateRange={isProjectMode ? projectData.dateRange : groupData.dateRange}
 				onTabChange={handleTabChange}
+				onGroupByChange={handleGroupByModeChange}
 			/>
 
 			{/* Filter Toolbar: Undantag, Search, Expand/Collapse */}
@@ -85,43 +113,65 @@ export function WorktimeGroupView() {
 			)}
 
 			{/* Tab 1: Kalendervy */}
-			{activeTab === "kalender" && (
-				<WorktimeGroupCalendarGrid
-					employees={timesheetEmployees}
-					dailyTotals={computedTotals.dailyTotals}
-				/>
-			)}
+			{activeTab === "kalender" &&
+				(isProjectMode ? (
+					<WorktimeProjectCalendarGrid
+						projects={filteredProjects}
+						dailyTotals={computedProjectTotals.dailyTotals}
+					/>
+				) : (
+					<WorktimeGroupCalendarGrid
+						employees={timesheetEmployees}
+						dailyTotals={computedTotals.dailyTotals}
+					/>
+				))}
 
 			{/* Tab 2: Lista */}
-			{activeTab === "list" && (
-				<WorktimeGroupListView
-					employees={timesheetEmployees}
-					totals={computedTotals}
-					expandedEmployees={expandedEmployees}
-					onToggleExpand={handleToggleEmployee}
-					onApproveDay={handleOpenApproveDay}
-					onRejectDay={handleOpenRejectDay}
-					onRemind={handleRemind}
-				/>
-			)}
+			{activeTab === "list" &&
+				(isProjectMode ? (
+					<WorktimeProjectListView
+						projects={filteredProjects}
+						totals={computedProjectTotals}
+						expandedProjects={expandedProjects}
+						onToggleExpand={handleToggleProject}
+					/>
+				) : (
+					<WorktimeGroupListView
+						employees={timesheetEmployees}
+						totals={computedTotals}
+						expandedEmployees={expandedEmployees}
+						onToggleExpand={handleToggleEmployee}
+						onApproveDay={handleOpenApproveDay}
+						onRejectDay={handleOpenRejectDay}
+						onRemind={handleRemind}
+					/>
+				))}
 
 			{/* Tab 3: Gantt-schema */}
-			{activeTab === "gantt" && (
-				<WorktimeGroupGanttView
-					employees={ganttEmployees}
-					ganttTimeRange={ganttTimeRange}
-					onRangeChange={handleGanttRangeChange}
-				/>
-			)}
+			{activeTab === "gantt" &&
+				(isProjectMode ? (
+					<WorktimeProjectGanttView
+						ganttRows={filteredProjectGanttRows}
+						ganttTimeRange={ganttTimeRange}
+						onRangeChange={handleGanttRangeChange}
+					/>
+				) : (
+					<WorktimeGroupGanttView
+						employees={ganttEmployees}
+						ganttTimeRange={ganttTimeRange}
+						onRangeChange={handleGanttRangeChange}
+					/>
+				))}
 
 			{/* Bottom Aggregated Metrics Footer with Derived Totals */}
 			<WorktimeGroupFooterBar
-				totalEmployees={timesheetEmployees.length}
+				totalCount={isProjectMode ? filteredProjects.length : timesheetEmployees.length}
+				itemType={isProjectMode ? "project" : "employee"}
 				weekNumber={groupData.weekNumber}
 				year={groupData.year}
-				totalLogged={computedTotals.totalLogged}
-				totalOt={computedTotals.totalOt}
-				totalAta={computedTotals.totalAta}
+				totalLogged={isProjectMode ? computedProjectTotals.totalLogged : computedTotals.totalLogged}
+				totalOt={isProjectMode ? computedProjectTotals.totalOt : computedTotals.totalOt}
+				totalAta={isProjectMode ? computedProjectTotals.totalAta : computedTotals.totalAta}
 			/>
 
 			{/* Safe Confirmation Dialog */}

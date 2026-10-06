@@ -77,3 +77,76 @@ export interface WorktimeGroupData {
 	employees: EmployeeGroupSummary[];
 	totals: WorktimeGroupTotals;
 }
+
+export interface ProjectDayEntry {
+	dayIndex: number; // 0..6
+	dayLabel: string; // e.g. "MÅN"
+	dayDate: string; // e.g. "23 Dec"
+	hours: number; // e.g. 17
+	otHours?: number; // e.g. 1
+	personCount: number; // e.g. 2
+}
+
+export interface ProjectEmployeeItem {
+	id: string;
+	name: string;
+	empCode: string; // e.g. "EMP-001"
+	initials: string; // e.g. "EA"
+	avatarColor?: string;
+	loggedHours: number; // e.g. 17
+	otHours: number; // e.g. 1
+	ataHours: number; // e.g. 2
+	daysWorked: number; // e.g. 2
+	flags?: number; // e.g. 1
+	status: "inkickad" | "godkand" | "mangler" | "returned";
+}
+
+export interface ProjectGroupSummary {
+	id: string;
+	code: string; // e.g. "P-001"
+	name: string; // e.g. "Projekt 2025-001"
+	customer: string; // e.g. "AB Bygg Stockholm"
+	type: "project" | "order";
+	loggedHours: number; // e.g. 49
+	otHours: number; // e.g. 1
+	ataHours: number; // e.g. 2
+	personCount: number; // e.g. 3
+	travelKm: number; // e.g. 115
+	flags?: number; // e.g. 1
+	hasDeviation?: boolean;
+	days: ProjectDayEntry[];
+	employees: ProjectEmployeeItem[];
+}
+
+export interface ProjectGanttTaskBar {
+	id: string;
+	title: string;
+	startDayIndex: number;
+	durationDays: number;
+	colorClass: string;
+}
+
+export interface ProjectGanttRowItem {
+	id: string;
+	projectId?: string;
+	code: string;
+	name: string;
+	tasks: ProjectGanttTaskBar[];
+}
+
+export interface WorktimeProjectTotals {
+	totalLogged: number; // 125
+	totalOt: number; // 7
+	totalAta: number; // 6
+	dailyTotals: DailyGroupTotal[];
+}
+
+export interface WorktimeProjectGroupData {
+	weekNumber: number;
+	year: number;
+	dateRange: string;
+	projects: ProjectGroupSummary[];
+	ganttRows: ProjectGanttRowItem[];
+	totals: WorktimeProjectTotals;
+}
+
