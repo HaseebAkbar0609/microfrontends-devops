@@ -339,11 +339,6 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					label: localizationConstants.adminCompanyInformation,
 					href: "/admin/company-information",
 				},
-				{
-					id: "admin-content",
-					label: localizationConstants.contentModuleTitle,
-					href: "/admin/content",
-				},
 			],
 		},
 		// One entry, like Support: the console brings its own sidebar, which owns
