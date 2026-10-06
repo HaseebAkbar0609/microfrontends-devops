@@ -506,9 +506,14 @@ export default function CreateOfferPage() {
 		const saveStep =
 			Number.isFinite(raw) && raw >= 1 && raw <= 5 ? Math.trunc(raw) : 1;
 
+		// A draft may have no supplier yet; Next on step 4 and Send require one
 		const isValid =
 			saveStep === 4
-				? await form.trigger()
+				? await form.trigger(
+						(
+							Object.keys(form.getValues()) as (keyof CreateOfferFormValues)[]
+						).filter((field) => field !== "invitedSuppliers"),
+					)
 				: await form.trigger(
 						CREATE_OFFER_STEP_VALIDATION_FIELDS[
 							saveStep as keyof typeof CREATE_OFFER_STEP_VALIDATION_FIELDS

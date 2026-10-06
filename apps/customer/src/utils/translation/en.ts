@@ -407,6 +407,7 @@ export const enOfferModule: OfferModule = {
 	supplierRecipientCountInfo:
 		"Total recipients includes both customer-selected suppliers and internal recipients.",
 	supplierSelectionMaxExceeded: "You can select up to 3 suppliers.",
+	supplierSelectionRequired: "Invite at least one supplier.",
 	searchLabel: "Search",
 	loadingLabel: "Loading suppliers...",
 	newInvitationButton: "New Invitation",
