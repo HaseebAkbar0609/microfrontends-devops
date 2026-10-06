@@ -11577,6 +11577,19 @@ export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupZoomOut: "Zooma ut",
 	worktimeGroupExpandRow: "Expandera rad",
 	worktimeGroupCollapseRow: "Kollapsa rad",
+	// TFS-989: Worktime Group by Overhead (OH)
+	worktimeGroupByOverhead: "OH",
+	worktimeGroupColEmployeeOnlyOt: "ANSTÄLLD (ENDAST MED ÖT)",
+	worktimeGroupColTotalOh: "TOTAL ÖH",
+	worktimeGroupColOhDays: "ÖH DAGAR",
+	worktimeGroupColTopProject: "TOPPPROJEKT",
+	worktimeGroupColAssociatedProject: "ASSOCIERAT PROJEKT",
+	worktimeGroupColTimeInterval: "TIDSINTERVALL",
+	worktimeGroupColOhTim: "ÖH TIM",
+	worktimeGroupTotalOvertime: "Total övertid",
+	worktimeGroupTotalOtDay: "Total ÖT (Dag)",
+	worktimeGroupTotalOhLabel: "Total ÖH",
+	worktimeGroupEmptyOverhead: "Inga anställda med övertid matchar dina sökkriterier.",
 };
 
 export const sv: Translation = {

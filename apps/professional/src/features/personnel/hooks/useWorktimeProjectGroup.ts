@@ -80,11 +80,26 @@ export function useWorktimeProjectGroup({
 		);
 	}, [projectData.ganttRows, filteredProjects]);
 
+	// Dynamically derived totals computed from active filtered projects
+	const computedTotals = useMemo(() => {
+		const totalLogged = filteredProjects.reduce((sum, p) => sum + (p.loggedHours || 0), 0);
+		const totalOt = filteredProjects.reduce((sum, p) => sum + (p.otHours || 0), 0);
+		const totalAta = filteredProjects.reduce((sum, p) => sum + (p.ataHours || 0), 0);
+
+		return {
+			totalLogged: Number(totalLogged.toFixed(1)),
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
+			dailyTotals: projectData.totals.dailyTotals,
+		};
+	}, [filteredProjects, projectData.totals.dailyTotals]);
+
 	return {
 		projectData,
 		expandedProjects,
 		filteredProjects,
 		filteredGanttRows,
+		computedTotals,
 		handleToggleProject,
 		handleExpandAllProjects,
 		handleCollapseAllProjects,

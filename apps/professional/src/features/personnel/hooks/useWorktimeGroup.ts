@@ -10,6 +10,7 @@ import {
 } from "../types/worktimeGroup.types";
 import { initialWorktimeGroupData } from "../constants/worktimeGroup.mock";
 import { useWorktimeProjectGroup } from "./useWorktimeProjectGroup";
+import { useWorktimeOverheadGroup } from "./useWorktimeOverheadGroup";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
@@ -43,10 +44,26 @@ export function useWorktimeGroup() {
 		expandedProjects,
 		filteredProjects,
 		filteredGanttRows: filteredProjectGanttRows,
+		computedTotals: computedProjectTotals,
 		handleToggleProject,
 		handleExpandAllProjects,
 		handleCollapseAllProjects,
 	} = useWorktimeProjectGroup({
+		searchQuery,
+		showExceptionsOnly,
+	});
+
+	// Dedicated overhead group hook for overhead grouping view (TFS-989)
+	const {
+		overheadData,
+		expandedEmployees: expandedOverheadEmployees,
+		filteredEmployees: filteredOverheadEmployees,
+		computedDailyTotals: computedOverheadDailyTotals,
+		computedTotals: computedOverheadTotals,
+		handleToggleEmployee: handleToggleOverheadEmployee,
+		handleExpandAll: handleExpandAllOverhead,
+		handleCollapseAll: handleCollapseAllOverhead,
+	} = useWorktimeOverheadGroup({
 		searchQuery,
 		showExceptionsOnly,
 	});
@@ -84,7 +101,9 @@ export function useWorktimeGroup() {
 	}, []);
 
 	const handleExpandAll = useCallback(() => {
-		if (groupByMode === "project") {
+		if (groupByMode === "overhead") {
+			handleExpandAllOverhead();
+		} else if (groupByMode === "project") {
 			handleExpandAllProjects();
 		} else {
 			const allExpanded: Record<string, boolean> = {};
@@ -93,15 +112,17 @@ export function useWorktimeGroup() {
 			});
 			setExpandedEmployees(allExpanded);
 		}
-	}, [groupByMode, groupData.employees, handleExpandAllProjects]);
+	}, [groupByMode, groupData.employees, handleExpandAllProjects, handleExpandAllOverhead]);
 
 	const handleCollapseAll = useCallback(() => {
-		if (groupByMode === "project") {
+		if (groupByMode === "overhead") {
+			handleCollapseAllOverhead();
+		} else if (groupByMode === "project") {
 			handleCollapseAllProjects();
 		} else {
 			setExpandedEmployees({});
 		}
-	}, [groupByMode, handleCollapseAllProjects]);
+	}, [groupByMode, handleCollapseAllProjects, handleCollapseAllOverhead]);
 
 	// Filtered employees list based on search and exception toggle
 	const filteredEmployees = useMemo(() => {
@@ -122,6 +143,34 @@ export function useWorktimeGroup() {
 			return true;
 		});
 	}, [groupData.employees, showExceptionsOnly, searchQuery]);
+
+	// Timesheet employees with logged days (matches rendered rows in calendar & list)
+	const timesheetEmployees = useMemo(() => {
+		return filteredEmployees.filter((emp) => emp.days && emp.days.length > 0);
+	}, [filteredEmployees]);
+
+	// Alphabetically sorted employees for Gantt schedule
+	const ganttEmployees = useMemo(() => {
+		return [...filteredEmployees].sort((a, b) => a.name.localeCompare(b.name));
+	}, [filteredEmployees]);
+
+	// Dynamically derived totals computed from active timesheet employees
+	const computedTotals = useMemo(() => {
+		const totalLogged = timesheetEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
+		const totalOt = timesheetEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
+		const totalAta = timesheetEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
+		const totalPlanned = timesheetEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
+		const totalTravel = timesheetEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
+
+		return {
+			totalPlanned,
+			totalLogged: Number(totalLogged.toFixed(1)),
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
+			totalTravel,
+			dailyTotals: groupData.totals.dailyTotals,
+		};
+	}, [timesheetEmployees, groupData.totals.dailyTotals]);
 
 	// Day approval/rejection action handling
 	const handleOpenApproveDay = useCallback(
@@ -221,16 +270,26 @@ export function useWorktimeGroup() {
 		ganttTimeRange,
 		groupData,
 		filteredEmployees,
+		timesheetEmployees,
+		ganttEmployees,
+		computedTotals,
 		expandedEmployees,
 		projectData,
 		filteredProjects,
 		expandedProjects,
 		filteredProjectGanttRows,
+		computedProjectTotals,
+		overheadData,
+		expandedOverheadEmployees,
+		filteredOverheadEmployees,
+		computedOverheadDailyTotals,
+		computedOverheadTotals,
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
 		handleToggleEmployee,
 		handleToggleProject,
+		handleToggleOverheadEmployee,
 		handleExpandAll,
 		handleCollapseAll,
 		handleToggleExceptions,

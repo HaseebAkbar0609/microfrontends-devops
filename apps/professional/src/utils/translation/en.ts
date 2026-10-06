@@ -11556,6 +11556,19 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupZoomOut: "Zoom out",
 	worktimeGroupExpandRow: "Expand row",
 	worktimeGroupCollapseRow: "Collapse row",
+	// TFS-989: Worktime Group by Overhead (OH)
+	worktimeGroupByOverhead: "OH",
+	worktimeGroupColEmployeeOnlyOt: "EMPLOYEE (OT ONLY)",
+	worktimeGroupColTotalOh: "TOTAL OT",
+	worktimeGroupColOhDays: "OT DAYS",
+	worktimeGroupColTopProject: "TOP PROJECT",
+	worktimeGroupColAssociatedProject: "ASSOCIATED PROJECT",
+	worktimeGroupColTimeInterval: "TIME INTERVAL",
+	worktimeGroupColOhTim: "OT HRS",
+	worktimeGroupTotalOvertime: "Total overtime",
+	worktimeGroupTotalOtDay: "Total OT (Day)",
+	worktimeGroupTotalOhLabel: "Total OT",
+	worktimeGroupEmptyOverhead: "No employees with overtime match your search criteria.",
 };
 
 export const en: Translation = {

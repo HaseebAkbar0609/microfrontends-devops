@@ -6,6 +6,7 @@ import {
 	ChevronDown,
 	Users,
 	Briefcase,
+	Clock,
 } from "lucide-react";
 import {
 	DropdownMenu,
@@ -69,6 +70,9 @@ export function WorktimeGroupHeader({
 										{groupByMode === "project" && (
 											<Translate text={localizationConstants.worktimeGroupByProject} />
 										)}
+										{groupByMode === "overhead" && (
+											<Translate text={localizationConstants.worktimeGroupByOverhead} />
+										)}
 									</span>
 								</span>
 								<ChevronDown className="w-3.5 h-3.5 text-slate-400" />
@@ -98,6 +102,18 @@ export function WorktimeGroupHeader({
 							>
 								<Briefcase className="w-4 h-4 text-emerald-600" />
 								<Translate text={localizationConstants.worktimeGroupByProject} />
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => onGroupByChange("overhead")}
+								className={cn(
+									"flex items-center gap-2 text-xs cursor-pointer",
+									groupByMode === "overhead"
+										? "font-semibold text-slate-900 bg-slate-50"
+										: "text-slate-600"
+								)}
+							>
+								<Clock className="w-4 h-4 text-amber-600" />
+								<Translate text={localizationConstants.worktimeGroupByOverhead} />
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
