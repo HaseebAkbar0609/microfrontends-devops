@@ -449,6 +449,7 @@ export const svOfferModule: OfferModule = {
 	validationProjectPostalCodeRequired: "Postnummer krävs",
 	validationCategoryRequired: "Kategori krävs",
 	validationClientNoRequired: "Kundnummer krävs",
+	validationCheckIncorrectFields: "Kontrollera felaktiga fält.",
 	offerOverview: "Offeröversikt",
 	actionLabel: "Åtgärd",
 	overviewTab: "Översikt",

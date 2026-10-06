@@ -452,6 +452,7 @@ export const enOfferModule: OfferModule = {
 	validationProjectPostalCodeRequired: "Postal code is required",
 	validationCategoryRequired: "Category is required",
 	validationClientNoRequired: "Client number is required",
+	validationCheckIncorrectFields: "Check incorrect fields",
 	offerOverview: "Offer Overview",
 	actionLabel: "Action",
 	overviewTab: "Overview",

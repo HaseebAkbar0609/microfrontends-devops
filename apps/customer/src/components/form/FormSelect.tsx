@@ -320,6 +320,7 @@ export function FormSelect<
 									<DropdownMenuTrigger asChild disabled={disabled}>
 										<div
 											ref={field.ref}
+											tabIndex={disabled ? -1 : 0}
 											onBlur={field.onBlur}
 											className={cn(
 												"border-input data-[placeholder]:text-muted-foreground flex w-full 2xl:min-h-12 min-h-10 cursor-pointer items-start justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 ring-0 data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
@@ -494,6 +495,7 @@ export function FormSelect<
 						>
 							<FormControl>
 								<SelectTrigger
+									ref={field.ref}
 									className={cn("w-full 2xl:h-12 h-10 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 ring-0", triggerClassName)}
 								>
 									<SelectValue

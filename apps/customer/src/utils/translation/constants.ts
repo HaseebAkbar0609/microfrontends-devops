@@ -422,6 +422,7 @@ export type OfferModule = {
 	validationProjectPostalCodeRequired: string;
 	validationCategoryRequired: string;
 	validationClientNoRequired: string;
+	validationCheckIncorrectFields: string;
 	offerOverview: string;
 	actionLabel: string;
 	overviewTab: string;
