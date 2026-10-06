@@ -11214,6 +11214,7 @@ export type PersonnelProcessAndDocumentTranslation = {
 // TFS-987: Worktime Group by Person (and Group Views)
 export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTitle: string;
+	worktimeGroupTitleSchema: string;
 	worktimeGroupSubtitle: string;
 	worktimeGroupTabKalender: string;
 	worktimeGroupTabList: string;

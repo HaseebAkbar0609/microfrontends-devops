@@ -72,9 +72,15 @@ export function WorktimeOverheadCalendarGrid({
 										className="py-2.5 px-3 text-center border-l border-slate-100 align-top"
 									>
 										<div className="flex flex-col items-center">
-											<span className="text-xs font-bold text-amber-600">
-												{tot.totalHours > 0 ? `${tot.totalHours}h` : "—"}
-											</span>
+											{tot.totalHours > 0 ? (
+												<span className="text-xs font-bold text-amber-600">
+													{tot.totalHours}h
+												</span>
+											) : (
+												<span className="text-xs font-normal text-slate-300">
+													—
+												</span>
+											)}
 										</div>
 									</td>
 								))}

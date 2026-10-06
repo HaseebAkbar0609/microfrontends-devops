@@ -57,7 +57,13 @@ export function useWorktimeOverheadGroup({
 				const matchName = emp.name.toLowerCase().includes(q);
 				const matchCode = emp.empCode.toLowerCase().includes(q);
 				const matchProject = emp.topProject.toLowerCase().includes(q);
-				if (!matchName && !matchCode && !matchProject) {
+				const matchDayProject = emp.days?.some(
+					(d) => d.projectCode && d.projectCode.toLowerCase().includes(q)
+				);
+				const matchEntryProject = emp.overtimeEntries?.some(
+					(e) => e.projectName && e.projectName.toLowerCase().includes(q)
+				);
+				if (!matchName && !matchCode && !matchProject && !matchDayProject && !matchEntryProject) {
 					return false;
 				}
 			}

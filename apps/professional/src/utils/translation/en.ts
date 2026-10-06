@@ -11493,6 +11493,7 @@ export const enPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 
 export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTitle: "Worktime - Overview",
+	worktimeGroupTitleSchema: "Worktime - Schedule",
 	worktimeGroupSubtitle: "Weekly View",
 	worktimeGroupTabKalender: "Calendar View",
 	worktimeGroupTabList: "List",

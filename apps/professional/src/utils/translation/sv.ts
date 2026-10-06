@@ -11514,6 +11514,7 @@ export const svPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 
 export const svPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTitle: "Arbetstid - Översikt",
+	worktimeGroupTitleSchema: "Arbetstid - Schema",
 	worktimeGroupSubtitle: "Veckovy",
 	worktimeGroupTabKalender: "Kalendervy",
 	worktimeGroupTabList: "Lista",
