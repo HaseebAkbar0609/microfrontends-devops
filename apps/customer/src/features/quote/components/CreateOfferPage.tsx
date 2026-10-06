@@ -539,8 +539,9 @@ export default function CreateOfferPage() {
 		const orgNumber = newSupplier.orgNumber.trim();
 		const alreadyAdded = currentSuppliers.some(
 			(supplier) =>
-				supplier.emailAddress.trim().toLowerCase() === email ||
-				(orgNumber !== "" && supplier.orgNumber.trim() === orgNumber),
+				// Suppliers picked from the list can come back without an email
+				(supplier.emailAddress ?? "").trim().toLowerCase() === email ||
+				(orgNumber !== "" && (supplier.orgNumber ?? "").trim() === orgNumber),
 		);
 		if (!alreadyAdded) {
 			form.setValue("invitedSuppliers", [...currentSuppliers, supplierWithId]);
