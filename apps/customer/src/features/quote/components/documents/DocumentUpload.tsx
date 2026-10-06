@@ -3,6 +3,7 @@
 import { ChevronDown, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { OptionalLabelSuffix } from "@/components/form";
 
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -156,6 +157,7 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 			<div className="space-y-2 pt-2">
 				<label className="text-sm font-semibold text-slate-900">
 					<Translate text={localizationConstants.comments} />
+					<OptionalLabelSuffix />
 				</label>
 				<Textarea
 					placeholder={t(localizationConstants.writeDescriptionPlaceholder)}

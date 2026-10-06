@@ -27,6 +27,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { OptionalLabelSuffix } from "@/components/form";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { CreateOfferFormValues, QuoteDocument } from "../../types/form";
@@ -118,6 +119,7 @@ export function Step3ProjectDescription({ form }: Step3Props) {
 											localizationConstants.descriptionLabel
 										}
 									/>
+									<OptionalLabelSuffix />
 								</label>
 								<FormControl>
 									<Textarea
@@ -161,6 +163,7 @@ export function Step3ProjectDescription({ form }: Step3Props) {
 									localizationConstants.uploadYourFilesLabel
 								}
 							/>
+							<OptionalLabelSuffix />
 						</label>
 						<p className="text-xs text-slate-500">
 							<Translate

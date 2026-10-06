@@ -476,6 +476,7 @@ export type OfferModule = {
 };
 
 export type CommonFiles = {
+	optionalFieldLabelSuffix: string;
 	upload: string;
 	noFileChosen: string;
 	unsupportedFileType: string;

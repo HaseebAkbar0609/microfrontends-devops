@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
+import { withOptionalSuffix } from "./OptionalLabelSuffix";
 
 export interface FormInputProps<
 	TFieldValues extends FieldValues = FieldValues,
@@ -24,6 +25,8 @@ export interface FormInputProps<
 	control: Control<TFieldValues>;
 	name: TName;
 	label?: React.ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	placeholder?: string;
 	type?: React.ComponentProps<"input">["type"] | "textarea";
 	disabled?: boolean;
@@ -47,6 +50,7 @@ export function FormInput<
 	control,
 	name,
 	label,
+	optional,
 	placeholder,
 	type = "text",
 	disabled,
@@ -82,7 +86,7 @@ export function FormInput<
 				<FormItem className={cn("grid gap-2 ", className)}>
 					{label != null && (
 						<FormLabel className={labelClassName}>
-							{resolvedLabel}
+							{withOptionalSuffix(resolvedLabel, optional)}
 						</FormLabel>
 					)}
 

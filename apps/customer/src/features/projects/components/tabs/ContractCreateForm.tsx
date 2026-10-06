@@ -55,18 +55,15 @@ interface ContractCreateFormProps {
 
 function FormField({
   label,
-  required,
   children,
 }: {
   label: string;
-  required?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div>
       <label className="block text-sm font-medium text-[#09090B] mb-1.5">
         {label}
-        {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {children}
     </div>
@@ -402,7 +399,6 @@ export function ContractCreateForm({
               </div>
               <FormField
                 label={t(localizationConstants.contractDirectionsLabel)}
-                required
               >
                 <textarea
                   value={form.directions}

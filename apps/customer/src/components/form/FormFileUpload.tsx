@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import Image from "next/image";
+import { withOptionalSuffix } from "./OptionalLabelSuffix";
 
 export interface FormFileUploadProps<
 	TFieldValues extends FieldValues = FieldValues,
@@ -26,6 +27,8 @@ export interface FormFileUploadProps<
 	control: Control<TFieldValues>;
 	name: TName;
 	label?: ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	accept?: string;
 	allowedTypes?: string[];
 	buttonLabel?: ReactNode;
@@ -51,6 +54,7 @@ export function FormFileUpload<
 	control,
 	name,
 	label,
+	optional,
 	accept,
 	allowedTypes,
 	buttonLabel = localizationConstants.upload,
@@ -131,7 +135,7 @@ export function FormFileUpload<
 				<FormItem className={cn("grid gap-2", className)}>
 					{resolvedLabel && (
 						<FormLabel className={labelClassName}>
-							{resolvedLabel}
+							{withOptionalSuffix(resolvedLabel, optional)}
 						</FormLabel>
 					)}
 

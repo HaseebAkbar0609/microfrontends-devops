@@ -204,6 +204,7 @@ export const svSidebar: SidebarTranslation = {
 };
 
 export const svCommonFiles: CommonFiles = {
+	optionalFieldLabelSuffix: "(Valfritt)",
 	upload: "Ladda upp",
 	noFileChosen: "Ingen fil vald",
 	unsupportedFileType: "Endast PNG- och JPG-filer är tillåtna.",
@@ -373,7 +374,7 @@ export const svOfferModule: OfferModule = {
 	projectAddressLabel: "Projektadress",
 	projectCityLabel: "Stad",
 	projectPostalCodeLabel: "Postnummer",
-	directionsLabel: "Vägbeskrivning/Platsinformation*",
+	directionsLabel: "Vägbeskrivning/Platsinformation",
 	ja: "Ja",
 	nej: "Nej",
 	projectDescriptionSection: "Projektbeskrivning",

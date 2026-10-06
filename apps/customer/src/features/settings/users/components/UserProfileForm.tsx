@@ -295,6 +295,7 @@ export function UserProfileForm({
 											control={form.control}
 											name="profile_photo"
 											label={t(localizationConstants.userFormUploadPhotoLabel)}
+											optional
 											buttonLabel={t(localizationConstants.upload)}
 											placeholder={t(localizationConstants.noFileChosen)}
 											allowedTypes={["image/png", "image/jpeg"]}

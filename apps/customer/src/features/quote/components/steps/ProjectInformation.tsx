@@ -167,6 +167,7 @@ export function Step2ProjectInformation({
 							control={form.control}
 							name="clientNo"
 							label={localizationConstants.clientNoLabel}
+							optional
 							placeholder={localizationConstants.clientNoLabel}
 						/>
 						<FormSelect
@@ -240,6 +241,7 @@ export function Step2ProjectInformation({
 						control={form.control}
 						name="directions"
 						label={localizationConstants.directionsLabel}
+						optional
 						placeholder={localizationConstants.directionsLabel}
 						type="textarea"
 						rows={4}
