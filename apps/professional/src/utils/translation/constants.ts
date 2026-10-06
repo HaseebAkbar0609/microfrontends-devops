@@ -11221,9 +11221,6 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupByLabel: string;
 	worktimeGroupByPerson: string;
 	worktimeGroupByProject: string;
-	worktimeGroupByOverhead: string;
-	worktimeGroupViewModeIndividual: string;
-	worktimeGroupViewModeGroup: string;
 	worktimeGroupColEmployee: string;
 	worktimeGroupColEmployeeTeam: string;
 	worktimeGroupColPlanned: string;

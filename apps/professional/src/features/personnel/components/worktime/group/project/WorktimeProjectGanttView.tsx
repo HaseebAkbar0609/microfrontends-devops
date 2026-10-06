@@ -8,7 +8,12 @@ import {
 	GanttTimeRange,
 } from "@/features/personnel/types/worktimeGroup.types";
 import { WorktimeProjectGanttRow } from "./WorktimeProjectGanttRow";
-import { GANTT_TIMELINE_DAYS } from "../WorktimeGroupGanttView";
+import {
+	GANTT_DAYS_SV,
+	GANTT_DAYS_EN,
+	GANTT_MONTH_SV,
+	GANTT_MONTH_EN,
+} from "../WorktimeGroupGanttView";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
@@ -24,26 +29,41 @@ export function WorktimeProjectGanttView({
 	ganttTimeRange,
 	onRangeChange,
 }: WorktimeProjectGanttViewProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [zoomLevel, setZoomLevel] = useState(1);
 	const [ganttDateRange, setGanttDateRange] = useState("1 jan - 15 jan, 2026");
+
+	const isMonthView = ganttTimeRange === "manad";
+	const isEn = i18n.language?.startsWith("en");
+
+	const timelineColumns = isMonthView
+		? isEn
+			? GANTT_MONTH_EN
+			: GANTT_MONTH_SV
+		: isEn
+			? GANTT_DAYS_EN
+			: GANTT_DAYS_SV;
 
 	const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 0.15, 1.3));
 	const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 0.15, 0.85));
 
 	const handlePrevRange = () => {
-		setGanttDateRange("16 dec - 31 dec, 2025");
+		setGanttDateRange((prev) =>
+			prev.includes("1 jan") ? "16 dec - 31 dec, 2025" : "1 jan - 15 jan, 2026"
+		);
 	};
 
 	const handleNextRange = () => {
-		setGanttDateRange("16 jan - 31 jan, 2026");
+		setGanttDateRange((prev) =>
+			prev.includes("1 jan") ? "16 jan - 31 jan, 2026" : "1 jan - 15 jan, 2026"
+		);
 	};
 
 	return (
 		<div className="space-y-3">
-			{/* Timeline Range Navigator & Sub-controls matching Figma Image 3 */}
+			{/* Timeline Range Navigator & Sub-controls */}
 			<div className="flex flex-wrap items-center justify-between gap-3">
-				{/* Range Navigator (< 1 jan - 15 jan, 2026 >) */}
+				{/* Range Navigator */}
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
@@ -77,7 +97,7 @@ export function WorktimeProjectGanttView({
 							onClick={() => onRangeChange("vecka")}
 							className={cn(
 								"px-3 py-1 text-xs font-semibold rounded cursor-pointer transition-colors",
-								ganttTimeRange === "vecka"
+								!isMonthView
 									? "bg-slate-900 text-white"
 									: "text-slate-600 hover:text-slate-900 bg-transparent"
 							)}
@@ -89,7 +109,7 @@ export function WorktimeProjectGanttView({
 							onClick={() => onRangeChange("manad")}
 							className={cn(
 								"px-3 py-1 text-xs font-semibold rounded cursor-pointer transition-colors",
-								ganttTimeRange === "manad"
+								isMonthView
 									? "bg-slate-900 text-white"
 									: "text-slate-600 hover:text-slate-900 bg-transparent"
 							)}
@@ -127,13 +147,18 @@ export function WorktimeProjectGanttView({
 						className="min-w-[850px]"
 						style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top left" }}
 					>
-						{/* Timeline Header matching Figma Image 3 */}
+						{/* Timeline Header */}
 						<div className="flex bg-white border-b border-slate-200 text-2xs font-semibold text-slate-500 uppercase tracking-wider">
 							<div className="w-56 min-w-[200px] py-3 px-4 shrink-0 text-left">
 								<Translate text={localizationConstants.worktimeGroupColProjectOrder} />
 							</div>
-							<div className="flex-1 grid grid-cols-10 border-l border-slate-100">
-								{GANTT_TIMELINE_DAYS.map((col) => (
+							<div
+								className={cn(
+									"flex-1 border-l border-slate-100 grid",
+									isMonthView ? "grid-cols-4" : "grid-cols-10"
+								)}
+							>
+								{timelineColumns.map((col) => (
 									<div
 										key={col.index}
 										className="py-2.5 px-1 text-center border-r border-slate-100"
@@ -154,7 +179,11 @@ export function WorktimeProjectGanttView({
 						{/* Project Gantt Rows */}
 						<div className="divide-y divide-slate-100">
 							{ganttRows.map((row) => (
-								<WorktimeProjectGanttRow key={row.id} row={row} />
+								<WorktimeProjectGanttRow
+									key={row.id}
+									row={row}
+									isMonthView={isMonthView}
+								/>
 							))}
 						</div>
 					</div>

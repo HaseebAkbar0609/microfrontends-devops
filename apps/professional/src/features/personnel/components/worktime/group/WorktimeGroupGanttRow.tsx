@@ -6,9 +6,12 @@ import { cn } from "@/lib/utils";
 
 interface WorktimeGroupGanttRowProps {
 	employee: EmployeeGroupSummary;
+	isMonthView?: boolean;
 }
 
-export function WorktimeGroupGanttRow({ employee }: WorktimeGroupGanttRowProps) {
+export function WorktimeGroupGanttRow({ employee, isMonthView = false }: WorktimeGroupGanttRowProps) {
+	const totalCols = isMonthView ? 4 : 10;
+
 	return (
 		<div className="flex border-b border-slate-100 hover:bg-slate-50/40 transition-colors h-14 items-center">
 			{/* Employee Info Header Column */}
@@ -24,21 +27,35 @@ export function WorktimeGroupGanttRow({ employee }: WorktimeGroupGanttRowProps) 
 				</div>
 			</div>
 
-			{/* Timeline 10-day grid track matching Figma Image 3 */}
-			<div className="flex-1 grid grid-cols-10 relative h-full border-l border-slate-100">
-				{/* 10 background column dividers */}
-				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((dayIdx) => (
+			{/* Timeline Grid Track */}
+			<div
+				className={cn(
+					"flex-1 relative h-full border-l border-slate-100 grid",
+					isMonthView ? "grid-cols-4" : "grid-cols-10"
+				)}
+			>
+				{/* Background column dividers */}
+				{Array.from({ length: totalCols }).map((_, colIdx) => (
 					<div
-						key={dayIdx}
+						key={colIdx}
 						className="h-full border-r border-slate-100"
 					/>
 				))}
 
-				{/* Floating Gantt Bars positioned over the 10-day grid */}
-				<div className="absolute inset-0 grid grid-cols-10 items-center px-0.5 pointer-events-none">
+				{/* Floating Gantt Bars */}
+				<div
+					className={cn(
+						"absolute inset-0 items-center px-0.5 pointer-events-none grid",
+						isMonthView ? "grid-cols-4" : "grid-cols-10"
+					)}
+				>
 					{employee.ganttTasks.map((task: GanttTaskItem) => {
-						const colStart = Math.min(Math.max(task.startDayIndex + 1, 1), 10);
-						const colSpan = Math.min(task.durationDays, 11 - colStart);
+						const colStart = isMonthView
+							? Math.min(Math.floor(task.startDayIndex / 2.5) + 1, 4)
+							: Math.min(Math.max(task.startDayIndex + 1, 1), 10);
+						const colSpan = isMonthView
+							? Math.max(1, Math.min(Math.ceil(task.durationDays / 2.5), 5 - colStart))
+							: Math.min(task.durationDays, 11 - colStart);
 
 						return (
 							<div

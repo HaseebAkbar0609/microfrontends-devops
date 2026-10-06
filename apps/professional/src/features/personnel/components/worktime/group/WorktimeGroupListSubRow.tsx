@@ -18,8 +18,9 @@ export function WorktimeGroupListSubRow({
 	onApproveDay,
 	onRejectDay,
 }: WorktimeGroupListSubRowProps) {
-	const isWeekend = day.dayOfWeek === 5 || day.dayOfWeek === 6;
-	const hasAction = !isWeekend;
+	const hasHours = day.loggedHours > 0;
+	const isApproved = day.actionStatus === "approved";
+	const isRejected = day.actionStatus === "rejected";
 
 	return (
 		<tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors text-xs">
@@ -30,7 +31,7 @@ export function WorktimeGroupListSubRow({
 
 			{/* Total Time */}
 			<td className="py-2.5 px-3 text-center font-bold text-slate-900">
-				{day.loggedHours > 0 ? `${day.loggedHours}h` : "—"}
+				{hasHours ? `${day.loggedHours}h` : "—"}
 			</td>
 
 			{/* OT */}
@@ -60,9 +61,17 @@ export function WorktimeGroupListSubRow({
 				{day.travelKm > 0 ? `${day.travelKm} km` : <span className="text-slate-400">—</span>}
 			</td>
 
-			{/* Action Column: [Avböj] [Godkänn] buttons matching Figma */}
+			{/* Action Column: Approvable for all submitted days with hours including weekends */}
 			<td className="py-2.5 px-4 text-center">
-				{hasAction ? (
+				{isApproved ? (
+					<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+						<Translate text={localizationConstants.worktimeGroupStatusGodkand} />
+					</span>
+				) : isRejected ? (
+					<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+						<Translate text={localizationConstants.worktimeGroupStatusReturned} />
+					</span>
+				) : hasHours ? (
 					<div className="inline-flex items-center gap-2 justify-center">
 						<button
 							type="button"

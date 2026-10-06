@@ -6,9 +6,15 @@ import { cn } from "@/lib/utils";
 
 interface WorktimeProjectGanttRowProps {
 	row: ProjectGanttRowItem;
+	isMonthView?: boolean;
 }
 
-export function WorktimeProjectGanttRow({ row }: WorktimeProjectGanttRowProps) {
+export function WorktimeProjectGanttRow({
+	row,
+	isMonthView = false,
+}: WorktimeProjectGanttRowProps) {
+	const totalCols = isMonthView ? 4 : 10;
+
 	return (
 		<div className="flex items-center min-h-[44px] hover:bg-slate-50/50 transition-colors">
 			{/* Project Name & Code */}
@@ -21,20 +27,29 @@ export function WorktimeProjectGanttRow({ row }: WorktimeProjectGanttRowProps) {
 				</span>
 			</div>
 
-			{/* Timeline Grid (10 Columns) with Task Bars */}
+			{/* Timeline Grid with Task Bars */}
 			<div className="flex-1 relative h-10 border-l border-slate-100 flex items-center">
-				{/* Background Grid Lines for 10 Days */}
-				<div className="absolute inset-0 grid grid-cols-10 pointer-events-none">
-					{Array.from({ length: 10 }).map((_, i) => (
+				{/* Background Grid Lines */}
+				<div
+					className={cn(
+						"absolute inset-0 grid pointer-events-none",
+						isMonthView ? "grid-cols-4" : "grid-cols-10"
+					)}
+				>
+					{Array.from({ length: totalCols }).map((_, i) => (
 						<div key={i} className="border-r border-slate-100/70 h-full" />
 					))}
 				</div>
 
 				{/* Task Bars Overlay */}
 				{row.tasks.map((task) => {
-					// 10-column percentage positioning
-					const leftPercent = (task.startDayIndex / 10) * 100;
-					const widthPercent = (task.durationDays / 10) * 100;
+					const leftPercent = isMonthView
+						? (Math.min(Math.floor(task.startDayIndex / 2.5), 3) / totalCols) * 100
+						: (task.startDayIndex / totalCols) * 100;
+
+					const widthPercent = isMonthView
+						? (Math.max(1, Math.min(Math.ceil(task.durationDays / 2.5), 4)) / totalCols) * 100
+						: (task.durationDays / totalCols) * 100;
 
 					return (
 						<div
