@@ -6,12 +6,10 @@ import {
 	PhoneCall,
 	Settings,
 	UsersRound,
-	type LucideIcon,
 } from "lucide-react";
+import type { ModuleSubNavItem } from "@/components/layout/sidebar/ModuleSubSidebar";
 import type { ModuleTabItem } from "@/components/layout/navigation";
-import localizationConstants, {
-	type TranslationKeys,
-} from "@/utils/translation/constants";
+import localizationConstants from "@/utils/translation/constants";
 import type { SalesCompany } from "../types";
 
 export const SALES_MODULE_HREF = "/module/sales";
@@ -80,11 +78,7 @@ export function getSalesRecordTabs(company: SalesCompany): ModuleTabItem[] {
 	return tabs;
 }
 
-export type SalesSubNavItem = {
-	id: string;
-	labelKey: TranslationKeys;
-	href: string;
-	icon: LucideIcon;
+export type SalesSubNavItem = ModuleSubNavItem & {
 	/** Match only the exact route, so the dashboard is not active on every sales page. */
 	exact?: boolean;
 	/** Other route prefixes that belong to this item. */

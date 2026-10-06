@@ -1,9 +1,8 @@
-import { LayoutGrid, Mail, type LucideIcon } from "lucide-react";
+import { LayoutGrid, Mail } from "lucide-react";
+import type { ModuleSubNavItem } from "@/components/layout/sidebar/ModuleSubSidebar";
 import type { ModuleTabItem } from "@/components/layout/navigation";
 import type { BreadcrumbItem } from "@/types/common";
-import localizationConstants, {
-	type TranslationKeys,
-} from "@/utils/translation/constants";
+import localizationConstants from "@/utils/translation/constants";
 import type { MarketingGroup, MarketingGroupId } from "../types";
 import {
 	MARKETING_BASE_HREF,
@@ -29,11 +28,7 @@ export function getMarketingSectionHref(
 	return `${MARKETING_BASE_HREF}/${groupId}/${slug}`;
 }
 
-export type MarketingSubNavItem = {
-	id: string;
-	labelKey: TranslationKeys;
-	href: string;
-	icon: LucideIcon;
+export type MarketingSubNavItem = ModuleSubNavItem & {
 	/** Match only the exact route, so the overview is not lit on every page. */
 	exact?: boolean;
 };

@@ -5,13 +5,11 @@ import {
 	Settings,
 	TriangleAlert,
 	UsersRound,
-	type LucideIcon,
 } from "lucide-react";
+import type { ModuleSubNavItem } from "@/components/layout/sidebar/ModuleSubSidebar";
 import { findActiveRouteTab } from "@/types/navigation";
 import type { BreadcrumbItem } from "@/types/common";
-import localizationConstants, {
-	type TranslationKeys,
-} from "@/utils/translation/constants";
+import localizationConstants from "@/utils/translation/constants";
 import type { SupportTicket } from "../types";
 
 export const SUPPORT_MODULE_HREF = "/support";
@@ -23,12 +21,7 @@ export const SUPPORT_MODULE_HREF = "/support";
  */
 export const SUPPORT_MODULE_TITLE_KEY = localizationConstants.support;
 
-export type SupportSubNavItem = {
-	id: string;
-	labelKey: TranslationKeys;
-	href: string;
-	icon: LucideIcon;
-};
+export type SupportSubNavItem = ModuleSubNavItem;
 
 /**
  * Items in the support sub-sidebar, in display order. The overview is not
