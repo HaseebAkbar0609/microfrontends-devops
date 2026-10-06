@@ -82,12 +82,10 @@ export function buildDataItWidgetMap(
 		emptyPage: {
 			title: localizationConstants.emptyPageLabel,
 			icon: Layers,
-			variant: "muted",
 		},
 		kpi: {
 			title: localizationConstants.wDataItKpiTitle,
 			icon: Folder,
-			variant: "muted",
 			content: <KpiDataItWidget kpi={state.kpi} />,
 			expandedContent: <KpiDataItWidget kpi={state.kpi} />,
 			onRefresh,
@@ -95,7 +93,6 @@ export function buildDataItWidgetMap(
 		categories: {
 			title: localizationConstants.wDataItDevicesByCategoryTitle,
 			icon: LayoutGrid,
-			variant: "muted",
 			content: <DevicesByCategoryWidget categories={state.categories} />,
 			expandedContent: <DevicesByCategoryWidget categories={state.categories} />,
 			onRefresh,
@@ -103,7 +100,6 @@ export function buildDataItWidgetMap(
 		warranty: {
 			title: localizationConstants.wDataItWarrantyExpiryTitle,
 			icon: Coins,
-			variant: "muted",
 			content: <WarrantyExpiryWidget devices={state.warrantyDevices} />,
 			expandedContent: <WarrantyExpiryWidget devices={state.warrantyDevices} />,
 			emptyTitle: localizationConstants.dataItEmptyWarrantyTitle,
@@ -114,7 +110,6 @@ export function buildDataItWidgetMap(
 		purchases: {
 			title: localizationConstants.wDataItUpcomingPurchasesTitle,
 			icon: Shield,
-			variant: "muted",
 			content: <UpcomingPurchasesWidget purchases={state.upcomingPurchases} />,
 			expandedContent: <UpcomingPurchasesWidget purchases={state.upcomingPurchases} />,
 			onRefresh,
@@ -122,7 +117,6 @@ export function buildDataItWidgetMap(
 		support: {
 			title: localizationConstants.wDataItActiveSupportTitle,
 			icon: User,
-			variant: "muted",
 			content: <ActiveSupportWidget tickets={state.supportTickets} />,
 			expandedContent: <ActiveSupportWidget tickets={state.supportTickets} />,
 			emptyTitle: localizationConstants.dataItEmptySupportTitle,
@@ -133,7 +127,6 @@ export function buildDataItWidgetMap(
 		actions: {
 			title: localizationConstants.wDataItQuickActionsTitle,
 			icon: Coins,
-			variant: "muted",
 			content: <QuickActionsWidget />,
 			expandedContent: <QuickActionsWidget />,
 			onRefresh,
@@ -141,7 +134,6 @@ export function buildDataItWidgetMap(
 		security: {
 			title: localizationConstants.wDataItSecurityStatusTitle,
 			icon: ShieldCheck,
-			variant: "muted",
 			content: <SecurityStatusWidget />,
 			expandedContent: <SecurityStatusWidget />,
 			onRefresh,
@@ -149,7 +141,6 @@ export function buildDataItWidgetMap(
 		system: {
 			title: localizationConstants.wDataItSystemStatusTitle,
 			icon: Server,
-			variant: "muted",
 			content: <SystemStatusWidget />,
 			expandedContent: <SystemStatusWidget />,
 			onRefresh,

@@ -11795,6 +11795,18 @@ export const enDataItDashboard: DataItDashboardTranslation = {
 	dataItEmptySupportTitle: "No active support tickets",
 	dataItEmptySupportDesc: "There are currently no open or unresolved support cases.",
 	dataItDiscard: "Discard",
+	dataItOperational: "Operational",
+	dataItUpToDate: "Up to date",
+	dataItCompleted: "Completed",
+	dataItPendingPatches: "Pending patches",
+	dataItMfaCompliance: "MFA compliance",
+	dataItDailyBackup: "Daily cloud backup",
+	dataItAntivirusStatus: "Antivirus definitions",
+	dataItUptime: "Uptime",
+	dataItUnits: "units",
+	dataItCurrencySek: "SEK",
+	dataItAriaSections: "Data IT sections",
+	dataItAriaRearrange: "Rearrange dashboard",
 };
 
 export const en: Translation = {

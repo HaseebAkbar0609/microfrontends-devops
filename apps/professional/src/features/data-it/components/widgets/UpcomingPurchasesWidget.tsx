@@ -29,7 +29,8 @@ export function UpcomingPurchasesWidget({
 								{item.itemName}
 							</p>
 							<p className="text-[11px] text-slate-500">
-								{item.estimatedCostSek.toLocaleString("sv-SE")} SEK
+								{item.estimatedCostSek.toLocaleString("sv-SE")}{" "}
+								<Translate text={localizationConstants.dataItCurrencySek} />
 							</p>
 						</div>
 					</div>

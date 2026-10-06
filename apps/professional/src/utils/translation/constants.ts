@@ -11401,6 +11401,18 @@ export type DataItDashboardTranslation = {
 	dataItEmptySupportTitle: string;
 	dataItEmptySupportDesc: string;
 	dataItDiscard: string;
+	dataItOperational: string;
+	dataItUpToDate: string;
+	dataItCompleted: string;
+	dataItPendingPatches: string;
+	dataItMfaCompliance: string;
+	dataItDailyBackup: string;
+	dataItAntivirusStatus: string;
+	dataItUptime: string;
+	dataItUnits: string;
+	dataItCurrencySek: string;
+	dataItAriaSections: string;
+	dataItAriaRearrange: string;
 };
 
 // Material storage – overview (TFS-1072)

@@ -2,20 +2,44 @@
 
 import React from "react";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
+
+interface SecurityItem {
+	labelKey: string;
+	valueKey: string;
+	status: "ok" | "warn";
+}
+
+const SECURITY_ITEMS: SecurityItem[] = [
+	{
+		labelKey: localizationConstants.dataItMfaCompliance,
+		valueKey: "98.4%",
+		status: "ok",
+	},
+	{
+		labelKey: localizationConstants.dataItDailyBackup,
+		valueKey: localizationConstants.dataItCompleted,
+		status: "ok",
+	},
+	{
+		labelKey: localizationConstants.dataItAntivirusStatus,
+		valueKey: localizationConstants.dataItUpToDate,
+		status: "ok",
+	},
+	{
+		labelKey: localizationConstants.dataItPendingPatches,
+		valueKey: localizationConstants.dataItOperational,
+		status: "warn",
+	},
+];
 
 export function SecurityStatusWidget() {
-	const securityItems = [
-		{ label: "MFA Compliance", value: "98.4%", status: "ok" },
-		{ label: "Daily Cloud Backup", value: "Completed 03:00", status: "ok" },
-		{ label: "Antivirus Definitions", value: "Up to date", status: "ok" },
-		{ label: "Pending OS Patches", value: "2 devices", status: "warn" },
-	];
-
 	return (
 		<div className="space-y-2 pt-2">
-			{securityItems.map((item) => (
+			{SECURITY_ITEMS.map((item) => (
 				<div
-					key={item.label}
+					key={item.labelKey}
 					className="flex items-center justify-between rounded-lg border border-slate-200/80 bg-white p-2.5 shadow-2xs"
 				>
 					<div className="flex items-center gap-2">
@@ -25,11 +49,15 @@ export function SecurityStatusWidget() {
 							<ShieldAlert className="h-4 w-4 text-amber-600" />
 						)}
 						<span className="text-xs font-medium text-slate-800">
-							{item.label}
+							<Translate text={item.labelKey} />
 						</span>
 					</div>
 					<span className="text-xs font-semibold text-slate-600">
-						{item.value}
+						{item.valueKey.includes("%") ? (
+							item.valueKey
+						) : (
+							<Translate text={item.valueKey} />
+						)}
 					</span>
 				</div>
 			))}

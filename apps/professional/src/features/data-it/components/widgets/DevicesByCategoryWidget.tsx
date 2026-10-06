@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import type { DeviceCategoryItem } from "../../types/dataIt.types";
 
@@ -20,7 +21,9 @@ export function DevicesByCategoryWidget({
 							<Translate text={cat.labelKey} />
 						</span>
 						<span className="text-slate-500">
-							{cat.count} st ({cat.percentage}%)
+							{cat.count}{" "}
+							<Translate text={localizationConstants.dataItUnits} /> (
+							{cat.percentage}%)
 						</span>
 					</div>
 					<div className="h-2 w-full overflow-hidden rounded-full bg-slate-200/70">

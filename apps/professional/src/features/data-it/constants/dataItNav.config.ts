@@ -9,8 +9,9 @@ export const DATA_IT_MODULE_BASE_URL = "/module/business-support/data-it";
 export const dataItNavItems: RouteTabItem[] = [
 	{
 		id: "dashboard",
-		labelKey: localizationConstants.dataItDashboard,
-		href: `${DATA_IT_MODULE_BASE_URL}/dashboard`,
+		labelKey: localizationConstants.dashboard,
+		href: DATA_IT_MODULE_BASE_URL,
+		exact: true,
 	},
 	{
 		id: "overview",
@@ -75,21 +76,20 @@ export const dataItNavItems: RouteTabItem[] = [
 ];
 
 export const dataItBreadcrumbs = (
-	currentPageKey?: TranslationKeys,
+	sectionKey?: TranslationKeys,
 ): BreadcrumbItem[] => [
 	{
 		label: localizationConstants.home,
-		href: "/",
+		href: "/dashboard",
 	},
 	{
-		label: localizationConstants.dataIT,
-		href: DATA_IT_MODULE_BASE_URL,
+		label: localizationConstants.moduleItem,
 	},
-	...(currentPageKey
-		? [
-				{
-					label: currentPageKey,
-				},
-			]
-		: []),
+	{
+		label: localizationConstants.businessSupport,
+		href: "/module/business-support",
+	},
+	{
+		label: sectionKey ?? localizationConstants.dataIT,
+	},
 ];

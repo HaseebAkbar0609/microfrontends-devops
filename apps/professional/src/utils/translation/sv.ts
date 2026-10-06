@@ -11816,6 +11816,18 @@ export const svDataItDashboard: DataItDashboardTranslation = {
 	dataItEmptySupportTitle: "Inga aktiva ärenden",
 	dataItEmptySupportDesc: "Det finns inga pågående eller olösta supportärenden.",
 	dataItDiscard: "Kasta bort",
+	dataItOperational: "I drift",
+	dataItUpToDate: "Uppdaterad",
+	dataItCompleted: "Slutförd",
+	dataItPendingPatches: "Väntande patchar",
+	dataItMfaCompliance: "MFA-efterlevnad",
+	dataItDailyBackup: "Daglig molnsäkerhetskopia",
+	dataItAntivirusStatus: "Antivirusdefinitioner",
+	dataItUptime: "Drifttid",
+	dataItUnits: "st",
+	dataItCurrencySek: "SEK",
+	dataItAriaSections: "Data-IT sektioner",
+	dataItAriaRearrange: "Ordna om instrumentpanel",
 };
 
 export const sv: Translation = {

@@ -15,16 +15,9 @@ import {
 	DATA_IT_SOURCE_LOCATION,
 } from "../../constants/dataItDashboard.constants";
 
-interface DataItDashboardProps {
-	isRearranging: boolean;
-	setIsRearranging: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export function DataItDashboard({
-	isRearranging,
-	setIsRearranging,
-}: DataItDashboardProps) {
-	const { state, handleRefresh } = useDataItDashboard();
+export function DataItDashboard() {
+	const { state, isRearranging, setIsRearranging, handleRefresh } =
+		useDataItDashboard();
 
 	const widgetMap = useMemo(
 		() => buildDataItWidgetMap(state, handleRefresh),
@@ -43,7 +36,7 @@ export function DataItDashboard({
 			initialWidgets={initialWidgets}
 			sidebarItems={DATA_IT_SIDEBAR_ITEMS}
 			storageKey={DATA_IT_DASHBOARD_STORAGE_KEY}
-			cardVariant="muted"
+			cardVariant="default"
 			isRearranging={isRearranging}
 			rail={({
 				selectedItem,
@@ -58,7 +51,7 @@ export function DataItDashboard({
 					onSelectItem={onSelectItem}
 					placedItemIds={placedItemIds}
 					isRearranging={isRearranging}
-					showToggle={false}
+					showToggle={true}
 					discardLabel={localizationConstants.dataItDiscard}
 					onToggleRearrange={() => setIsRearranging((prev) => !prev)}
 					onSave={() => {
