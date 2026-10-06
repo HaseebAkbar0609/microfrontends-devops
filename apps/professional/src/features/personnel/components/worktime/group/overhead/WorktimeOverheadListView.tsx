@@ -10,14 +10,14 @@ interface WorktimeOverheadListViewProps {
 	employees: OverheadEmployeeSummary[];
 	expandedEmployees: Record<string, boolean>;
 	onToggleEmployee: (employeeId: string) => void;
-	totalOvertime: number;
+	totalOh: number;
 }
 
 export function WorktimeOverheadListView({
 	employees,
 	expandedEmployees,
 	onToggleEmployee,
-	totalOvertime,
+	totalOh,
 }: WorktimeOverheadListViewProps) {
 	return (
 		<div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
@@ -73,7 +73,7 @@ export function WorktimeOverheadListView({
 									<Translate text={localizationConstants.worktimeGroupTotalOvertime} />
 								</td>
 								<td className="py-3.5 px-4 font-bold text-amber-600">
-									{totalOvertime}h
+									{totalOh}h
 								</td>
 								<td colSpan={5} className="py-3.5 px-4" />
 							</tr>

@@ -87,7 +87,6 @@ export function useWorktimeOverheadGroup({
 			return {
 				...col,
 				totalHours,
-				otHours: totalHours,
 			};
 		});
 	}, [filteredEmployees, overheadData.totals.dailyTotals]);
@@ -96,12 +95,14 @@ export function useWorktimeOverheadGroup({
 	const computedTotals = useMemo<WorktimeOverheadTotals>(() => {
 		const totalOh = filteredEmployees.reduce((sum, emp) => sum + (emp.totalOhHours || 0), 0);
 		const totalLogged = filteredEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
+		const totalOt = filteredEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
+		const totalAta = filteredEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
 
 		return {
 			totalOh: Number(totalOh.toFixed(1)),
 			totalLogged: Number(totalLogged.toFixed(1)),
-			totalOt: Number(totalOh.toFixed(1)),
-			totalAta: 2,
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
 			dailyTotals: computedDailyTotals,
 		};
 	}, [filteredEmployees, computedDailyTotals]);

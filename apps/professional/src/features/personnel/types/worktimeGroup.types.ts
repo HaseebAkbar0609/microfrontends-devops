@@ -180,6 +180,8 @@ export interface OverheadEmployeeSummary {
 	topProject: string; // e.g. "Projekt 2025-002"
 	flags?: number; // e.g. 1
 	hasDeviation?: boolean;
+	otHours?: number; // e.g. 5
+	ataHours?: number; // e.g. 10.5
 	status: "inkickad" | "godkand" | "mangler" | "returned";
 	days: OverheadDayCell[];
 	overtimeEntries: OverheadDetailEntry[];

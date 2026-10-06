@@ -39,7 +39,6 @@ export function WorktimeGroupView() {
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
-		handleDateRangeChange,
 		handleToggleEmployee,
 		handleToggleProject,
 		handleToggleOverheadEmployee,
@@ -58,26 +57,21 @@ export function WorktimeGroupView() {
 	const isProjectMode = groupByMode === "project";
 	const isOverheadMode = groupByMode === "overhead";
 
-	const footerCount = isOverheadMode
-		? filteredOverheadEmployees.length
-		: isProjectMode
-		? filteredProjects.length
-		: timesheetEmployees.length;
-	const footerLogged = isOverheadMode
-		? computedOverheadTotals.totalLogged
-		: isProjectMode
-		? computedProjectTotals.totalLogged
-		: computedTotals.totalLogged;
-	const footerOt = isOverheadMode
-		? computedOverheadTotals.totalOt
-		: isProjectMode
-		? computedProjectTotals.totalOt
-		: computedTotals.totalOt;
-	const footerAta = isOverheadMode
-		? computedOverheadTotals.totalAta
-		: isProjectMode
-		? computedProjectTotals.totalAta
-		: computedTotals.totalAta;
+	const totals = {
+		person: computedTotals,
+		project: computedProjectTotals,
+		overhead: computedOverheadTotals,
+	}[groupByMode];
+
+	const footerCount = {
+		person: timesheetEmployees.length,
+		project: filteredProjects.length,
+		overhead: filteredOverheadEmployees.length,
+	}[groupByMode];
+
+	const footerLogged = totals.totalLogged;
+	const footerOt = totals.totalOt;
+	const footerAta = totals.totalAta;
 
 	return (
 		<div className="space-y-4">
@@ -86,7 +80,6 @@ export function WorktimeGroupView() {
 				activeTab={activeTab}
 				groupByMode={groupByMode}
 				dateRange={selectedDateRange}
-				onDateRangeChange={handleDateRangeChange}
 				onTabChange={handleTabChange}
 				onGroupByChange={handleGroupByModeChange}
 			/>
@@ -130,7 +123,7 @@ export function WorktimeGroupView() {
 						employees={filteredOverheadEmployees}
 						expandedEmployees={expandedOverheadEmployees}
 						onToggleEmployee={handleToggleOverheadEmployee}
-						totalOvertime={computedOverheadTotals.totalOh}
+						totalOh={computedOverheadTotals.totalOh}
 					/>
 				) : isProjectMode ? (
 					<WorktimeProjectListView
@@ -153,6 +146,7 @@ export function WorktimeGroupView() {
 
 			{/* Tab 3: Gantt-schema */}
 			{activeTab === "gantt" &&
+				!isOverheadMode &&
 				(isProjectMode ? (
 					<WorktimeProjectGanttView
 						ganttRows={filteredProjectGanttRows}

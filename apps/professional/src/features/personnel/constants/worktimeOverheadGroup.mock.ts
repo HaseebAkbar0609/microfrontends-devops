@@ -7,8 +7,8 @@ export const initialWorktimeOverheadData: WorktimeOverheadGroupData = {
 	totals: {
 		totalOh: 7,
 		totalLogged: 87,
-		totalOt: 7,
-		totalAta: 2,
+		totalOt: 6.5,
+		totalAta: 14.5,
 		dailyTotals: [
 			{
 				dayIndex: 0,
@@ -81,6 +81,8 @@ export const initialWorktimeOverheadData: WorktimeOverheadGroupData = {
 			topProject: "Projekt 2025-002",
 			flags: 1,
 			hasDeviation: true,
+			otHours: 5,
+			ataHours: 10.5,
 			status: "inkickad",
 			days: [
 				{
@@ -166,6 +168,8 @@ export const initialWorktimeOverheadData: WorktimeOverheadGroupData = {
 			loggedHours: 42,
 			ohDaysCount: 1,
 			topProject: "Projekt 2025-002",
+			otHours: 1.5,
+			ataHours: 4,
 			status: "godkand",
 			days: [
 				{

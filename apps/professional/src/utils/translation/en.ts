@@ -11560,15 +11560,15 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	// TFS-989: Worktime Group by Overhead (OH)
 	worktimeGroupByOverhead: "OH",
 	worktimeGroupColEmployeeOnlyOt: "EMPLOYEE (OT ONLY)",
-	worktimeGroupColTotalOh: "TOTAL OT",
-	worktimeGroupColOhDays: "OT DAYS",
+	worktimeGroupColTotalOh: "TOTAL OH",
+	worktimeGroupColOhDays: "OH DAYS",
 	worktimeGroupColTopProject: "TOP PROJECT",
 	worktimeGroupColAssociatedProject: "ASSOCIATED PROJECT",
 	worktimeGroupColTimeInterval: "TIME INTERVAL",
-	worktimeGroupColOhTim: "OT HRS",
+	worktimeGroupColOhTim: "OH HRS",
 	worktimeGroupTotalOvertime: "Total overtime",
 	worktimeGroupTotalOtDay: "Total OT (Day)",
-	worktimeGroupTotalOhLabel: "Total OT",
+	worktimeGroupTotalOhLabel: "Total OH",
 	worktimeGroupEmptyOverhead: "No employees with overtime match your search criteria.",
 };
 

@@ -2,6 +2,7 @@
 
 import React from "react";
 import {
+	Calendar as CalendarIcon,
 	ChevronDown,
 	Users,
 	Briefcase,
@@ -16,14 +17,12 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { GroupByMode, GroupViewTab } from "@/features/personnel/types/worktimeGroup.types";
-import { WorktimeDateRangePicker } from "./WorktimeDateRangePicker";
 import { cn } from "@/lib/utils";
 
 interface WorktimeGroupHeaderProps {
 	activeTab: GroupViewTab;
 	groupByMode: GroupByMode;
 	dateRange: string;
-	onDateRangeChange?: (range: string) => void;
 	onTabChange: (tab: GroupViewTab) => void;
 	onGroupByChange: (mode: GroupByMode) => void;
 }
@@ -32,7 +31,6 @@ export function WorktimeGroupHeader({
 	activeTab,
 	groupByMode,
 	dateRange,
-	onDateRangeChange,
 	onTabChange,
 	onGroupByChange,
 }: WorktimeGroupHeaderProps) {
@@ -56,11 +54,11 @@ export function WorktimeGroupHeader({
 				</div>
 
 				<div className="flex items-center gap-3">
-					{/* Interactive Date Range Picker matching Figma pill */}
-					<WorktimeDateRangePicker
-						value={dateRange}
-						onChange={onDateRangeChange || (() => {})}
-					/>
+					{/* Static Date Range Pill matching Figma frame */}
+					<div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800 shadow-2xs select-none">
+						<CalendarIcon className="w-3.5 h-3.5 text-slate-400" />
+						<span>{dateRange}</span>
+					</div>
 
 					{/* Group By Dropdown Button */}
 					<DropdownMenu>
@@ -154,18 +152,20 @@ export function WorktimeGroupHeader({
 				>
 					<Translate text={localizationConstants.worktimeGroupTabList} />
 				</button>
-				<button
-					type="button"
-					onClick={() => onTabChange("gantt")}
-					className={cn(
-						"py-2.5 px-4 text-xs font-semibold cursor-pointer transition-colors border-b-2 -mb-px",
-						activeTab === "gantt"
-							? "border-slate-900 text-slate-900 font-bold"
-							: "border-transparent text-slate-500 hover:text-slate-800"
-					)}
-				>
-					<Translate text={localizationConstants.worktimeGroupTabGantt} />
-				</button>
+				{groupByMode !== "overhead" && (
+					<button
+						type="button"
+						onClick={() => onTabChange("gantt")}
+						className={cn(
+							"py-2.5 px-4 text-xs font-semibold cursor-pointer transition-colors border-b-2 -mb-px",
+							activeTab === "gantt"
+								? "border-slate-900 text-slate-900 font-bold"
+								: "border-transparent text-slate-500 hover:text-slate-800"
+						)}
+					>
+						<Translate text={localizationConstants.worktimeGroupTabGantt} />
+					</button>
+				)}
 			</div>
 		</div>
 	);

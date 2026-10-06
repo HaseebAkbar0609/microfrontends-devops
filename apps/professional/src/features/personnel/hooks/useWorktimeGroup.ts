@@ -78,9 +78,12 @@ export function useWorktimeGroup() {
 		setActiveTab(tab);
 	}, []);
 
-	// Group-by toggle (person vs project)
+	// Group-by toggle (person vs project vs overhead)
 	const handleGroupByModeChange = useCallback((mode: GroupByMode) => {
 		setGroupByMode(mode);
+		if (mode === "overhead") {
+			setActiveTab((current) => (current === "gantt" ? "kalender" : current));
+		}
 	}, []);
 
 	// Search & exception filtering
