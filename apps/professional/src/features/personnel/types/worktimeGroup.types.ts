@@ -150,3 +150,56 @@ export interface WorktimeProjectGroupData {
 	totals: WorktimeProjectTotals;
 }
 
+// TFS-989: Overhead (OH) Grouping Types
+export interface OverheadDayCell {
+	dayIndex: number; // 0..6
+	dayLabel: string; // e.g. "MÅN"
+	dayDate: string; // e.g. "23 Dec"
+	ohHours: number; // e.g. 1
+	projectCode?: string; // e.g. "P-001"
+	timeInterval?: string; // e.g. "08:00 – 17:00"
+}
+
+export interface OverheadDetailEntry {
+	id: string;
+	dayLabel: string; // e.g. "Mon (23 Dec)"
+	ohHours: number; // e.g. 1
+	projectName: string; // e.g. "Projekt 2025-001"
+	timeInterval: string; // e.g. "08:00 – 17:00"
+}
+
+export interface OverheadEmployeeSummary {
+	id: string;
+	name: string; // e.g. "Erik Andersson"
+	empCode: string; // e.g. "EMP-001"
+	initials: string; // e.g. "EA"
+	avatarColor?: string;
+	totalOhHours: number; // e.g. 5
+	loggedHours: number; // e.g. 45
+	ohDaysCount: number; // e.g. 3
+	topProject: string; // e.g. "Projekt 2025-002"
+	flags?: number; // e.g. 1
+	hasDeviation?: boolean;
+	otHours?: number; // e.g. 5
+	ataHours?: number; // e.g. 10.5
+	status: "inkickad" | "godkand" | "mangler" | "returned";
+	days: OverheadDayCell[];
+	overtimeEntries: OverheadDetailEntry[];
+}
+
+export interface WorktimeOverheadTotals {
+	totalOh: number; // e.g. 7
+	totalLogged: number; // e.g. 87
+	totalOt: number; // e.g. 7
+	totalAta: number; // e.g. 2
+	dailyTotals: DailyGroupTotal[];
+}
+
+export interface WorktimeOverheadGroupData {
+	weekNumber: number;
+	year: number;
+	dateRange: string;
+	employees: OverheadEmployeeSummary[];
+	totals: WorktimeOverheadTotals;
+}
+

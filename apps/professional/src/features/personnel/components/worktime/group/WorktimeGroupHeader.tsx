@@ -6,6 +6,7 @@ import {
 	ChevronDown,
 	Users,
 	Briefcase,
+	Clock,
 } from "lucide-react";
 import {
 	DropdownMenu,
@@ -39,7 +40,13 @@ export function WorktimeGroupHeader({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div>
 					<h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-						<Translate text={localizationConstants.worktimeGroupTitle} />
+						<Translate
+							text={
+								activeTab === "gantt"
+									? localizationConstants.worktimeGroupTitleSchema
+									: localizationConstants.worktimeGroupTitle
+							}
+						/>
 					</h1>
 					<p className="text-xs text-slate-500 font-normal mt-0.5">
 						<Translate text={localizationConstants.worktimeGroupSubtitle} />
@@ -68,6 +75,9 @@ export function WorktimeGroupHeader({
 										)}
 										{groupByMode === "project" && (
 											<Translate text={localizationConstants.worktimeGroupByProject} />
+										)}
+										{groupByMode === "overhead" && (
+											<Translate text={localizationConstants.worktimeGroupByOverhead} />
 										)}
 									</span>
 								</span>
@@ -98,6 +108,18 @@ export function WorktimeGroupHeader({
 							>
 								<Briefcase className="w-4 h-4 text-emerald-600" />
 								<Translate text={localizationConstants.worktimeGroupByProject} />
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => onGroupByChange("overhead")}
+								className={cn(
+									"flex items-center gap-2 text-xs cursor-pointer",
+									groupByMode === "overhead"
+										? "font-semibold text-slate-900 bg-slate-50"
+										: "text-slate-600"
+								)}
+							>
+								<Clock className="w-4 h-4 text-amber-600" />
+								<Translate text={localizationConstants.worktimeGroupByOverhead} />
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -130,18 +152,20 @@ export function WorktimeGroupHeader({
 				>
 					<Translate text={localizationConstants.worktimeGroupTabList} />
 				</button>
-				<button
-					type="button"
-					onClick={() => onTabChange("gantt")}
-					className={cn(
-						"py-2.5 px-4 text-xs font-semibold cursor-pointer transition-colors border-b-2 -mb-px",
-						activeTab === "gantt"
-							? "border-slate-900 text-slate-900 font-bold"
-							: "border-transparent text-slate-500 hover:text-slate-800"
-					)}
-				>
-					<Translate text={localizationConstants.worktimeGroupTabGantt} />
-				</button>
+				{groupByMode !== "overhead" && (
+					<button
+						type="button"
+						onClick={() => onTabChange("gantt")}
+						className={cn(
+							"py-2.5 px-4 text-xs font-semibold cursor-pointer transition-colors border-b-2 -mb-px",
+							activeTab === "gantt"
+								? "border-slate-900 text-slate-900 font-bold"
+								: "border-transparent text-slate-500 hover:text-slate-800"
+						)}
+					>
+						<Translate text={localizationConstants.worktimeGroupTabGantt} />
+					</button>
+				)}
 			</div>
 		</div>
 	);

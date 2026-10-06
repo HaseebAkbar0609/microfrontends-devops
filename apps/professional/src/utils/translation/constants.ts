@@ -11263,6 +11263,7 @@ export type PersonnelProcessAndDocumentTranslation = {
 // TFS-987: Worktime Group by Person (and Group Views)
 export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupTitle: string;
+	worktimeGroupTitleSchema: string;
 	worktimeGroupSubtitle: string;
 	worktimeGroupTabKalender: string;
 	worktimeGroupTabList: string;
@@ -11326,6 +11327,19 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupZoomOut: string;
 	worktimeGroupExpandRow: string;
 	worktimeGroupCollapseRow: string;
+	// TFS-989: Worktime Group by Overhead (OH)
+	worktimeGroupByOverhead: string;
+	worktimeGroupColEmployeeOnlyOt: string;
+	worktimeGroupColTotalOh: string;
+	worktimeGroupColOhDays: string;
+	worktimeGroupColTopProject: string;
+	worktimeGroupColAssociatedProject: string;
+	worktimeGroupColTimeInterval: string;
+	worktimeGroupColOhTim: string;
+	worktimeGroupTotalOvertime: string;
+	worktimeGroupTotalOtDay: string;
+	worktimeGroupTotalOhLabel: string;
+	worktimeGroupEmptyOverhead: string;
 };
 
 // Material storage – overview (TFS-1072)
