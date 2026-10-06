@@ -11275,8 +11275,6 @@ export type PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyProjects: string;
 	worktimeGroupZoomIn: string;
 	worktimeGroupZoomOut: string;
-	worktimeGroupPrevRange: string;
-	worktimeGroupNextRange: string;
 	worktimeGroupExpandRow: string;
 	worktimeGroupCollapseRow: string;
 };

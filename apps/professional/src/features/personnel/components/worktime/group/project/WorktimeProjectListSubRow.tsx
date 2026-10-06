@@ -82,6 +82,14 @@ export function WorktimeProjectListSubRow({ employee }: WorktimeProjectListSubRo
 					<span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-2xs font-medium bg-blue-50 text-blue-600 border border-blue-200">
 						<Translate text={localizationConstants.worktimeGroupStatusInkickad} />
 					</span>
+				) : employee.status === "returned" ? (
+					<span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-2xs font-medium bg-rose-50 text-rose-600 border border-rose-200">
+						<Translate text={localizationConstants.worktimeGroupStatusReturned} />
+					</span>
+				) : employee.status === "mangler" ? (
+					<span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-2xs font-medium bg-slate-50 text-slate-500 border border-slate-200">
+						<Translate text={localizationConstants.worktimeGroupStatusMangler} />
+					</span>
 				) : (
 					<span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-2xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
 						<Translate text={localizationConstants.worktimeGroupStatusGodkand} />

@@ -4,8 +4,6 @@ import React from "react";
 import {
 	Calendar as CalendarIcon,
 	ChevronDown,
-	ChevronLeft,
-	ChevronRight,
 	Users,
 	Briefcase,
 } from "lucide-react";
@@ -18,7 +16,6 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { GroupByMode, GroupViewTab } from "@/features/personnel/types/worktimeGroup.types";
-import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface WorktimeGroupHeaderProps {
@@ -27,8 +24,6 @@ interface WorktimeGroupHeaderProps {
 	dateRange: string;
 	onTabChange: (tab: GroupViewTab) => void;
 	onGroupByChange: (mode: GroupByMode) => void;
-	onPrevWeek: () => void;
-	onNextWeek: () => void;
 }
 
 export function WorktimeGroupHeader({
@@ -37,14 +32,10 @@ export function WorktimeGroupHeader({
 	dateRange,
 	onTabChange,
 	onGroupByChange,
-	onPrevWeek,
-	onNextWeek,
 }: WorktimeGroupHeaderProps) {
-	const { t } = useTranslation();
-
 	return (
 		<div className="space-y-4">
-			{/* Top Bar: Title & Subtitle + Date Navigator & Group Dropdown */}
+			{/* Top Bar: Title & Subtitle + Date Pill & Group Dropdown */}
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div>
 					<h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -56,28 +47,10 @@ export function WorktimeGroupHeader({
 				</div>
 
 				<div className="flex items-center gap-3">
-					{/* Interactive Date Range Navigator with Previous / Next Week */}
-					<div className="inline-flex items-center rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 shadow-2xs">
-						<button
-							type="button"
-							onClick={onPrevWeek}
-							className="p-1.5 hover:bg-slate-50 text-slate-400 hover:text-slate-700 rounded-l-lg transition-colors cursor-pointer"
-							aria-label={t(localizationConstants.worktimeGroupPrevRange)}
-						>
-							<ChevronLeft className="w-3.5 h-3.5" />
-						</button>
-						<div className="flex items-center gap-1.5 px-2.5 py-1.5 select-none font-semibold text-slate-800">
-							<CalendarIcon className="w-3.5 h-3.5 text-slate-400" />
-							<span>{dateRange}</span>
-						</div>
-						<button
-							type="button"
-							onClick={onNextWeek}
-							className="p-1.5 hover:bg-slate-50 text-slate-400 hover:text-slate-700 rounded-r-lg transition-colors cursor-pointer"
-							aria-label={t(localizationConstants.worktimeGroupNextRange)}
-						>
-							<ChevronRight className="w-3.5 h-3.5" />
-						</button>
+					{/* Static Date Range Pill matching Figma frame */}
+					<div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800 shadow-2xs select-none">
+						<CalendarIcon className="w-3.5 h-3.5 text-slate-400" />
+						<span>{dateRange}</span>
 					</div>
 
 					{/* Group By Dropdown Button */}

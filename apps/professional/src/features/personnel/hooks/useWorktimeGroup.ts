@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { toast } from "sonner";
 import {
 	GroupByMode,
 	GroupViewTab,
@@ -13,6 +12,7 @@ import { initialWorktimeGroupData } from "../constants/worktimeGroup.mock";
 import { useWorktimeProjectGroup } from "./useWorktimeProjectGroup";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
+import { showToast } from "@/lib/toast";
 
 export function useWorktimeGroup() {
 	const { t } = useTranslation();
@@ -25,20 +25,8 @@ export function useWorktimeGroup() {
 		initialWorktimeGroupData
 	);
 
-	// Project Group Sub-hook
-	const {
-		projectData,
-		expandedProjects,
-		filteredProjects,
-		handleToggleProject,
-		handleExpandAllProjects,
-		handleCollapseAllProjects,
-	} = useWorktimeProjectGroup({ searchQuery, showExceptionsOnly });
-
-	// Expanded state for list view
-	const [expandedEmployees, setExpandedEmployees] = useState<
-		Record<string, boolean>
-	>({
+	// Expanded employee rows for list view
+	const [expandedEmployees, setExpandedEmployees] = useState<Record<string, boolean>>({
 		"emp-1": true,
 	});
 
@@ -49,14 +37,44 @@ export function useWorktimeGroup() {
 		action: "approve" | "reject";
 	} | null>(null);
 
+	// Dedicated project group hook for project grouping view
+	const {
+		projectData,
+		expandedProjects,
+		filteredProjects,
+		handleToggleProject,
+		handleExpandAllProjects,
+		handleCollapseAllProjects,
+	} = useWorktimeProjectGroup({
+		searchQuery,
+		showExceptionsOnly,
+	});
+
+	// Tab navigation
 	const handleTabChange = useCallback((tab: GroupViewTab) => {
 		setActiveTab(tab);
 	}, []);
 
+	// Group-by toggle (person vs project)
 	const handleGroupByModeChange = useCallback((mode: GroupByMode) => {
 		setGroupByMode(mode);
 	}, []);
 
+	// Search & exception filtering
+	const handleSearchChange = useCallback((query: string) => {
+		setSearchQuery(query);
+	}, []);
+
+	const handleToggleExceptions = useCallback(() => {
+		setShowExceptionsOnly((prev) => !prev);
+	}, []);
+
+	// Gantt timeline range switch (vecka vs månad)
+	const handleGanttRangeChange = useCallback((range: GanttTimeRange) => {
+		setGanttTimeRange(range);
+	}, []);
+
+	// Row expansion
 	const handleToggleEmployee = useCallback((employeeId: string) => {
 		setExpandedEmployees((prev) => ({
 			...prev,
@@ -68,13 +86,13 @@ export function useWorktimeGroup() {
 		if (groupByMode === "project") {
 			handleExpandAllProjects();
 		} else {
-			const expanded: Record<string, boolean> = {};
+			const allExpanded: Record<string, boolean> = {};
 			groupData.employees.forEach((emp) => {
-				expanded[emp.id] = true;
+				allExpanded[emp.id] = true;
 			});
-			setExpandedEmployees(expanded);
+			setExpandedEmployees(allExpanded);
 		}
-	}, [groupByMode, handleExpandAllProjects, groupData.employees]);
+	}, [groupByMode, groupData.employees, handleExpandAllProjects]);
 
 	const handleCollapseAll = useCallback(() => {
 		if (groupByMode === "project") {
@@ -84,30 +102,19 @@ export function useWorktimeGroup() {
 		}
 	}, [groupByMode, handleCollapseAllProjects]);
 
-	const handleToggleExceptions = useCallback(() => {
-		setShowExceptionsOnly((prev) => !prev);
-	}, []);
-
-	const handleSearchChange = useCallback((query: string) => {
-		setSearchQuery(query);
-	}, []);
-
-	const handleGanttRangeChange = useCallback((range: GanttTimeRange) => {
-		setGanttTimeRange(range);
-	}, []);
-
-	// Filtered employees list
+	// Filtered employees list based on search and exception toggle
 	const filteredEmployees = useMemo(() => {
 		return groupData.employees.filter((emp: EmployeeGroupSummary) => {
 			if (showExceptionsOnly && !emp.hasDeviation) {
 				return false;
 			}
 			if (searchQuery.trim() !== "") {
-				const query = searchQuery.toLowerCase();
-				const matchName = emp.name.toLowerCase().includes(query);
-				const matchRole = emp.role.toLowerCase().includes(query);
-				const matchTeam = emp.team.toLowerCase().includes(query);
-				if (!matchName && !matchRole && !matchTeam) {
+				const q = searchQuery.toLowerCase();
+				const matchName = emp.name.toLowerCase().includes(q);
+				const matchRole = emp.role.toLowerCase().includes(q);
+				const matchEmpCode = emp.empCode ? emp.empCode.toLowerCase().includes(q) : false;
+				const matchTeam = emp.team ? emp.team.toLowerCase().includes(q) : false;
+				if (!matchName && !matchRole && !matchEmpCode && !matchTeam) {
 					return false;
 				}
 			}
@@ -115,7 +122,7 @@ export function useWorktimeGroup() {
 		});
 	}, [groupData.employees, showExceptionsOnly, searchQuery]);
 
-	// Open action confirmation dialogs
+	// Day approval/rejection action handling
 	const handleOpenApproveDay = useCallback(
 		(employeeId: string, dayId: string) => {
 			setConfirmAction({ employeeId, dayId, action: "approve" });
@@ -145,6 +152,7 @@ export function useWorktimeGroup() {
 
 				const updatedDays = emp.days.map((day) => {
 					if (day.id !== dayId) return day;
+
 					return {
 						...day,
 						actionStatus: (action === "approve"
@@ -185,9 +193,9 @@ export function useWorktimeGroup() {
 		});
 
 		if (action === "approve") {
-			toast.success(t(localizationConstants.worktimeGroupToastApproved));
+			showToast("success", t(localizationConstants.worktimeGroupToastApproved));
 		} else {
-			toast.error(t(localizationConstants.worktimeGroupToastRejected));
+			showToast("error", t(localizationConstants.worktimeGroupToastRejected));
 		}
 
 		setConfirmAction(null);
@@ -195,37 +203,10 @@ export function useWorktimeGroup() {
 
 	const handleRemind = useCallback(
 		(_employeeId: string) => {
-			toast.info(t(localizationConstants.worktimeGroupToastReminded));
+			showToast("info", t(localizationConstants.worktimeGroupToastReminded));
 		},
 		[t]
 	);
-
-	// Week navigation preserving state
-	const handlePrevWeek = useCallback(() => {
-		setGroupData((prev) => {
-			const nextWeek = prev.weekNumber > 1 ? prev.weekNumber - 1 : 52;
-			const nextYear = prev.weekNumber > 1 ? prev.year : prev.year - 1;
-			return {
-				...prev,
-				weekNumber: nextWeek,
-				year: nextYear,
-				dateRange: `${nextWeek === 51 ? "16 Dec - 22 Dec" : `Vecka ${nextWeek}, ${nextYear}`}`,
-			};
-		});
-	}, []);
-
-	const handleNextWeek = useCallback(() => {
-		setGroupData((prev) => {
-			const nextWeek = prev.weekNumber < 52 ? prev.weekNumber + 1 : 1;
-			const nextYear = prev.weekNumber < 52 ? prev.year : prev.year + 1;
-			return {
-				...prev,
-				weekNumber: nextWeek,
-				year: nextYear,
-				dateRange: `${nextWeek === 1 ? "30 Dec - 05 Jan" : `Vecka ${nextWeek}, ${nextYear}`}`,
-			};
-		});
-	}, []);
 
 	const handleResetThisWeek = useCallback(() => {
 		setGroupData(initialWorktimeGroupData);
@@ -258,8 +239,6 @@ export function useWorktimeGroup() {
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
 		handleRemind,
-		handlePrevWeek,
-		handleNextWeek,
 		handleResetThisWeek,
 	};
 }

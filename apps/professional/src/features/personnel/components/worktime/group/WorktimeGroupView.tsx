@@ -41,13 +41,11 @@ export function WorktimeGroupView() {
 		handleCloseConfirmDialog,
 		handleConfirmDayAction,
 		handleRemind,
-		handlePrevWeek,
-		handleNextWeek,
 	} = useWorktimeGroup();
 
 	const isProjectMode = groupByMode === "project";
 
-	// Timesheet employees with logged days
+	// Timesheet employees with logged days (matches rendered rows in calendar & list)
 	const timesheetEmployees = useMemo(() => {
 		return filteredEmployees.filter((emp) => emp.days && emp.days.length > 0);
 	}, [filteredEmployees]);
@@ -57,13 +55,13 @@ export function WorktimeGroupView() {
 		return [...filteredEmployees].sort((a, b) => a.name.localeCompare(b.name));
 	}, [filteredEmployees]);
 
-	// Dynamically derived totals computed from active filtered employees
+	// Dynamically derived totals computed from active timesheet employees
 	const computedTotals = useMemo(() => {
-		const totalLogged = filteredEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
-		const totalOt = filteredEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
-		const totalAta = filteredEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
-		const totalPlanned = filteredEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
-		const totalTravel = filteredEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
+		const totalLogged = timesheetEmployees.reduce((sum, emp) => sum + (emp.loggedHours || 0), 0);
+		const totalOt = timesheetEmployees.reduce((sum, emp) => sum + (emp.otHours || 0), 0);
+		const totalAta = timesheetEmployees.reduce((sum, emp) => sum + (emp.ataHours || 0), 0);
+		const totalPlanned = timesheetEmployees.reduce((sum, emp) => sum + (emp.plannedHours || 0), 0);
+		const totalTravel = timesheetEmployees.reduce((sum, emp) => sum + (emp.travelKm || 0), 0);
 
 		return {
 			totalPlanned,
@@ -73,19 +71,34 @@ export function WorktimeGroupView() {
 			totalTravel,
 			dailyTotals: groupData.totals.dailyTotals,
 		};
-	}, [filteredEmployees, groupData.totals.dailyTotals]);
+	}, [timesheetEmployees, groupData.totals.dailyTotals]);
+
+	// Dynamically derived totals computed from active filtered projects
+	const computedProjectTotals = useMemo(() => {
+		const totalLogged = filteredProjects.reduce((sum, p) => sum + (p.loggedHours || 0), 0);
+		const totalOt = filteredProjects.reduce((sum, p) => sum + (p.otHours || 0), 0);
+		const totalAta = filteredProjects.reduce((sum, p) => sum + (p.ataHours || 0), 0);
+
+		return {
+			totalLogged: Number(totalLogged.toFixed(1)),
+			totalOt: Number(totalOt.toFixed(1)),
+			totalAta: Number(totalAta.toFixed(1)),
+			footerLogged: Number(totalLogged.toFixed(1)),
+			footerOt: Number(totalOt.toFixed(1)),
+			footerAta: Number(totalAta.toFixed(1)),
+			dailyTotals: projectData.totals.dailyTotals,
+		};
+	}, [filteredProjects, projectData.totals.dailyTotals]);
 
 	return (
 		<div className="space-y-4">
-			{/* Top Header: Title, Date Navigator & Underline Tabs */}
+			{/* Top Header: Title, Date Pill & Group Toggle */}
 			<WorktimeGroupHeader
 				activeTab={activeTab}
 				groupByMode={groupByMode}
 				dateRange={isProjectMode ? projectData.dateRange : groupData.dateRange}
 				onTabChange={handleTabChange}
 				onGroupByChange={handleGroupByModeChange}
-				onPrevWeek={handlePrevWeek}
-				onNextWeek={handleNextWeek}
 			/>
 
 			{/* Filter Toolbar: Undantag, Search, Expand/Collapse */}
@@ -106,7 +119,7 @@ export function WorktimeGroupView() {
 				(isProjectMode ? (
 					<WorktimeProjectCalendarGrid
 						projects={filteredProjects}
-						dailyTotals={projectData.totals.dailyTotals}
+						dailyTotals={computedProjectTotals.dailyTotals}
 					/>
 				) : (
 					<WorktimeGroupCalendarGrid
@@ -120,7 +133,7 @@ export function WorktimeGroupView() {
 				(isProjectMode ? (
 					<WorktimeProjectListView
 						projects={filteredProjects}
-						totals={projectData.totals}
+						totals={computedProjectTotals}
 						expandedProjects={expandedProjects}
 						onToggleExpand={handleToggleProject}
 					/>
@@ -154,13 +167,13 @@ export function WorktimeGroupView() {
 
 			{/* Bottom Aggregated Metrics Footer with Derived Totals */}
 			<WorktimeGroupFooterBar
-				totalCount={isProjectMode ? filteredProjects.length : filteredEmployees.length}
+				totalCount={isProjectMode ? filteredProjects.length : timesheetEmployees.length}
 				itemType={isProjectMode ? "project" : "employee"}
 				weekNumber={groupData.weekNumber}
 				year={groupData.year}
-				totalLogged={isProjectMode ? projectData.totals.footerLogged : computedTotals.totalLogged}
-				totalOt={isProjectMode ? projectData.totals.footerOt : computedTotals.totalOt}
-				totalAta={isProjectMode ? projectData.totals.footerAta : computedTotals.totalAta}
+				totalLogged={isProjectMode ? computedProjectTotals.footerLogged : computedTotals.totalLogged}
+				totalOt={isProjectMode ? computedProjectTotals.footerOt : computedTotals.totalOt}
+				totalAta={isProjectMode ? computedProjectTotals.footerAta : computedTotals.totalAta}
 			/>
 
 			{/* Safe Confirmation Dialog */}

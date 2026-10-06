@@ -34,7 +34,6 @@ export function WorktimeGroupCalendarGrid({
 				...col,
 				totalHours,
 				otHours: totalOt,
-				otLabel: totalOt > 0 ? `ÖT: ${totalOt}h` : undefined,
 			};
 		});
 	}, [employees, dailyTotals]);
@@ -46,7 +45,7 @@ export function WorktimeGroupCalendarGrid({
 					<thead>
 						<tr className="bg-white border-b border-slate-200">
 							<th className="py-3 px-4 w-60 min-w-[200px] text-xs font-semibold text-slate-500 uppercase tracking-wider">
-								<Translate text={localizationConstants.worktimeGroupColEmployeeTeam} />
+								<Translate text={localizationConstants.worktimeGroupColEmployee} />
 							</th>
 							{computedDailyTotals.map((col) => (
 								<th
@@ -99,9 +98,9 @@ export function WorktimeGroupCalendarGrid({
 														? "0h"
 														: "—"}
 											</span>
-											{tot.otLabel && (
+											{tot.otHours > 0 && (
 												<span className="text-[10px] text-amber-600 font-semibold mt-0.5">
-													{tot.otLabel}
+													<Translate text={localizationConstants.worktimeGroupColOt} /> {tot.otHours}h
 												</span>
 											)}
 										</div>

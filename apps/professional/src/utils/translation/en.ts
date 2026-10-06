@@ -11554,8 +11554,6 @@ export const enPersonnelWorktimeGroup: PersonnelWorktimeGroupTranslation = {
 	worktimeGroupEmptyProjects: "No projects match your search criteria.",
 	worktimeGroupZoomIn: "Zoom in",
 	worktimeGroupZoomOut: "Zoom out",
-	worktimeGroupPrevRange: "Previous period",
-	worktimeGroupNextRange: "Next period",
 	worktimeGroupExpandRow: "Expand row",
 	worktimeGroupCollapseRow: "Collapse row",
 };
