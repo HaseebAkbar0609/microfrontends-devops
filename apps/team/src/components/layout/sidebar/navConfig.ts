@@ -330,11 +330,6 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			icon: ShieldUser,
 			items: [
 				{
-					id: "admin-settings",
-					label: localizationConstants.settings,
-					href: "/admin",
-				},
-				{
 					id: "admin-users",
 					label: localizationConstants.adminUsers,
 					href: "/admin/users",
@@ -413,8 +408,8 @@ const navHrefs = navConfig.flatMap((group) => [
 
 /**
  * True when `href` is the menu's most specific match for `pathname`. A parent
- * route such as `/admin` stays unlit on `/admin/users`, because a deeper menu
- * entry owns that page.
+ * route such as `/tools/my-pages` stays unlit on `/tools/my-pages/company`,
+ * because a deeper menu entry owns that page.
  */
 export function isActiveNavHref(href: string, pathname: string) {
 	return (
