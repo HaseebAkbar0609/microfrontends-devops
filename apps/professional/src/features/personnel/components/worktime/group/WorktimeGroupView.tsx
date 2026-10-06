@@ -19,6 +19,7 @@ export function WorktimeGroupView() {
 	const {
 		activeTab,
 		groupByMode,
+		selectedDateRange,
 		searchQuery,
 		showExceptionsOnly,
 		ganttTimeRange,
@@ -27,12 +28,10 @@ export function WorktimeGroupView() {
 		ganttEmployees,
 		computedTotals,
 		expandedEmployees,
-		projectData,
 		filteredProjects,
 		expandedProjects,
 		filteredProjectGanttRows,
 		computedProjectTotals,
-		overheadData,
 		expandedOverheadEmployees,
 		filteredOverheadEmployees,
 		computedOverheadDailyTotals,
@@ -40,6 +39,7 @@ export function WorktimeGroupView() {
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
+		handleDateRangeChange,
 		handleToggleEmployee,
 		handleToggleProject,
 		handleToggleOverheadEmployee,
@@ -85,13 +85,8 @@ export function WorktimeGroupView() {
 			<WorktimeGroupHeader
 				activeTab={activeTab}
 				groupByMode={groupByMode}
-				dateRange={
-					isOverheadMode
-						? overheadData.dateRange
-						: isProjectMode
-						? projectData.dateRange
-						: groupData.dateRange
-				}
+				dateRange={selectedDateRange}
+				onDateRangeChange={handleDateRangeChange}
 				onTabChange={handleTabChange}
 				onGroupByChange={handleGroupByModeChange}
 			/>

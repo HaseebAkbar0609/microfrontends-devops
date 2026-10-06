@@ -19,12 +19,17 @@ export function useWorktimeGroup() {
 	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState<GroupViewTab>("kalender");
 	const [groupByMode, setGroupByMode] = useState<GroupByMode>("person");
+	const [selectedDateRange, setSelectedDateRange] = useState<string>("23 Dec - 29 Dec");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showExceptionsOnly, setShowExceptionsOnly] = useState(false);
 	const [ganttTimeRange, setGanttTimeRange] = useState<GanttTimeRange>("vecka");
 	const [groupData, setGroupData] = useState<WorktimeGroupData>(
 		initialWorktimeGroupData
 	);
+
+	const handleDateRangeChange = useCallback((newRange: string) => {
+		setSelectedDateRange(newRange);
+	}, []);
 
 	// Expanded employee rows for list view
 	const [expandedEmployees, setExpandedEmployees] = useState<Record<string, boolean>>({
@@ -265,6 +270,7 @@ export function useWorktimeGroup() {
 	return {
 		activeTab,
 		groupByMode,
+		selectedDateRange,
 		searchQuery,
 		showExceptionsOnly,
 		ganttTimeRange,
@@ -287,6 +293,7 @@ export function useWorktimeGroup() {
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
+		handleDateRangeChange,
 		handleToggleEmployee,
 		handleToggleProject,
 		handleToggleOverheadEmployee,
