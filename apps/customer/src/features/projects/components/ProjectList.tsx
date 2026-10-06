@@ -17,6 +17,7 @@ import type { ActiveProjectItem } from "@/api-actions/project/active";
 import { resolveCompanyName } from "../utils/activeProject";
 import { normalizeProjectStatus } from "@/utils/statusNormalizer";
 import { ActiveProjectRowActions } from "./ActiveProjectRowActions";
+import { ACCEPTED_OFFER_QUOTE_STATUS } from "@/features/quote/constants";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -33,6 +34,8 @@ const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
 };
 
 const PROJECT_LIST_QUERY = { page: 1, pageSize: 10 } as const;
+/** Backend max for /project/active, which also returns requests whose offer is not yet accepted */
+const ACTIVE_PROJECTS_LIMIT = 100;
 
 type SortKey =
 	| "referenceNo"
@@ -127,10 +130,13 @@ export function ProjectList() {
 			setLoading(true);
 			setError(null);
 
+			// Only accepted offers are projects. /project/active returns every
+			// sent request, so it only enriches rows from the filtered list.
+			const activeById = new Map<string, ActiveProject>();
 			const combinedMap = new Map<string, ActiveProject>();
 
 			const activeRes = await getActiveProjectsAPIAction({
-				limit: PROJECT_LIST_QUERY.pageSize,
+				limit: ACTIVE_PROJECTS_LIMIT,
 			});
 			if (cancelled) return;
 
@@ -142,7 +148,7 @@ export function ProjectList() {
 				activeRes.data.data.forEach((item) => {
 					const mapped = mapActiveProjectToFrontend(item);
 					if (mapped.id) {
-						combinedMap.set(mapped.id, mapped);
+						activeById.set(mapped.id, mapped);
 					}
 				});
 			}
@@ -153,13 +159,14 @@ export function ProjectList() {
 					pageSize: PROJECT_LIST_QUERY.pageSize,
 					sortBy: sortKey || undefined,
 					sortOrder: sortDir || undefined,
+					quote_status: ACCEPTED_OFFER_QUOTE_STATUS,
 				});
 				if (cancelled) return;
 				if (listRes.success && listRes.data?.quotes) {
 					listRes.data.quotes.forEach((q: ApiQuoteItem) => {
 						const item = mapListProjectToFrontend(q);
 						if (item.id) {
-							const existing = combinedMap.get(item.id);
+							const existing = activeById.get(item.id);
 							combinedMap.set(
 								item.id,
 								existing

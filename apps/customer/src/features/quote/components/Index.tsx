@@ -6,7 +6,11 @@ import { Loader2 } from "lucide-react";
 import { PageHeader, ActionsToolbar } from "@/components/common";
 import { QuoteTable } from "@/features/quote/components/QuoteTable";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { BREADCRUMBS, PROJECT_STATUS_FILTER_OPTIONS } from "../constants";
+import {
+	ACCEPTED_OFFER_QUOTE_STATUS,
+	BREADCRUMBS,
+	PROJECT_STATUS_FILTER_OPTIONS,
+} from "../constants";
 import localizationConstants from "@/utils/translation/constants";
 import { getProjectListAPIAction } from "@/api-actions";
 import type { Quote } from "../types/types";
@@ -45,7 +49,14 @@ export default function OfferFeature() {
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
-				setQuotes(result.data.quotes);
+				// Accepted offers are active projects and are listed there instead.
+				// Filtered here because the list API's quote_status takes one value
+				// and cannot exclude one; move it server-side once the list pages.
+				setQuotes(
+					result.data.quotes.filter(
+						(q) => q.quote_status !== ACCEPTED_OFFER_QUOTE_STATUS,
+					),
+				);
 			} else {
 				setQuotes([]);
 				setLoadError(result.error ?? null);

@@ -56,6 +56,9 @@ export const PROJECT_STATUS_FILTER_OPTIONS = [
 	{ label: localizationConstants.statusRejected, value: "rejected" },
 ] as const;
 
+/** Project-list `quote_status` once the customer has accepted an offer: it is then an active project, no longer an offer */
+export const ACCEPTED_OFFER_QUOTE_STATUS = "approved";
+
 /** Map API `quote_status` value → translation key (same labels as the status filter) */
 export const PROJECT_STATUS_VALUE_TO_LABEL_KEY: Record<string, string> =
 	{
