@@ -1,8 +1,10 @@
+import { t } from "i18next";
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import { showToast } from "@/lib/toast";
 import type { ActionResult } from "@/types/api";
 import { handleApiError } from "@/utils/apiError";
+import localizationConstants from "@/utils/translation/constants";
 
 export async function approveQuoteAPIAction(
 	quoteId: string,
@@ -13,11 +15,11 @@ export async function approveQuoteAPIAction(
 
 	try {
 		await axiosInstance.patch(API_PATH.QUOTE.approve(quoteId.trim()));
-		showToast("success", "Quote approved successfully! Project is now active.");
+		showToast("success", t(localizationConstants.quoteApprovedSuccess));
 		return { success: true, data: null, error: null };
 	} catch (error: unknown) {
-		const result = handleApiError(error, "Failed to approve quote");
-		showToast("error", result.error || "Failed to approve quote");
+		const result = handleApiError(error, t(localizationConstants.quoteApproveFailed));
+		showToast("error", result.error || t(localizationConstants.quoteApproveFailed));
 		return result;
 	}
 }

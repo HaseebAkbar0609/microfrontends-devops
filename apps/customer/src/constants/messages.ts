@@ -1,63 +1,108 @@
+import { t } from "i18next";
+import localizationConstants from "@/utils/translation/constants";
+
 /**
- * Centralized auth-related user-facing messages.
- * Used so all login/error copy lives in one place: easier to change wording,
- * support i18n later, and keep UX consistent across AuthAction and any UI that shows these messages.
+ * Centralized user-facing messages for the API actions (toasts and returned errors).
+ * Each value is a getter that translates on read, so the text follows the current
+ * UI language. The copy itself lives in the localization files (sv.ts / en.ts).
  */
 export const authMessages = {
 	login: {
-		success: "Login successful",
-		failed: "Login failed. Please try again.",
-		invalidResponse: "Invalid response from server",
-		tokenNotReceived: "Authentication token was not received",
-	},
-	logout: {
-		success: "Logout successful",
-		failed: "Logout failed. Please try again.",
-		invalidResponse: "Invalid response from server",
+		get success() {
+			return t(localizationConstants.authLoginSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authLoginFailed);
+		},
+		get invalidResponse() {
+			return t(localizationConstants.errorInvalidServerResponse);
+		},
+		get tokenNotReceived() {
+			return t(localizationConstants.authTokenNotReceived);
+		},
 	},
 	register: {
-		success: "Registration successful. You can now log in.",
-		failed: "Registration failed. Please try again.",
-		invalidResponse: "Invalid response from server",
+		get success() {
+			return t(localizationConstants.authRegisterSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authRegisterFailed);
+		},
+		get invalidResponse() {
+			return t(localizationConstants.errorInvalidServerResponse);
+		},
 	},
 	forgotPassword: {
-		success:
-			"If an account exists for this email, you will receive reset instructions.",
-		failed: "Could not send reset email. Please try again.",
+		get success() {
+			return t(localizationConstants.authForgotPasswordSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authForgotPasswordFailed);
+		},
 	},
 	validateOTP: {
-		success: "OTP verified successfully.",
-		failed: "Invalid OTP. Please try again.",
+		get success() {
+			return t(localizationConstants.authOtpVerifiedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authOtpInvalid);
+		},
 	},
 	resetPassword: {
-		success: "Password reset successful.",
-		failed: "Could not reset password. Please try again.",
+		get success() {
+			return t(localizationConstants.authPasswordResetSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authPasswordResetFailed);
+		},
 	},
 	verifyEmail: {
-		success: "Email verified successfully.",
-		failed: "Email verification failed. Please try again.",
+		get success() {
+			return t(localizationConstants.authEmailVerifiedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.authEmailVerificationFailed);
+		},
 	},
 };
 
 export const projectMessages = {
 	save: {
-		success: "Project saved successfully",
-		failed: "Failed to save project. Please try again.",
-		invalidResponse: "Invalid response from server",
+		get success() {
+			return t(localizationConstants.projectSavedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.projectSaveFailed);
+		},
+		get invalidResponse() {
+			return t(localizationConstants.errorInvalidServerResponse);
+		},
 	},
 	archive: {
-		success: "Project archived successfully",
-		failed: "Failed to archive project. Please try again.",
+		get success() {
+			return t(localizationConstants.projectArchivedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.projectArchiveFailed);
+		},
 	},
 	delete: {
-		success: "Project deleted successfully",
-		failed: "Failed to delete project. Please try again.",
+		get success() {
+			return t(localizationConstants.projectDeletedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.projectDeleteFailed);
+		},
 	},
 };
 
 export const companyMessages = {
 	activeInactiveUser: {
-		success: "User status updated",
-		failed: "Failed to update user status",
+		get success() {
+			return t(localizationConstants.userStatusUpdatedSuccess);
+		},
+		get failed() {
+			return t(localizationConstants.userStatusUpdateFailed);
+		},
 	},
 };

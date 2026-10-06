@@ -128,15 +128,15 @@ export function UserProfileForm({
 				if (result.error) {
 					showToast("warning", result.error);
 				} else {
-					showToast("success", "User saved successfully");
+					showToast("success", t(localizationConstants.userSavedSuccess));
 				}
 				setIsSaved(true);
 				onSaved();
 			} else {
-				showToast("error", result.error || "Failed to save user");
+				showToast("error", result.error || t(localizationConstants.userSaveFailed));
 			}
 		} catch {
-			showToast("error", "An error occurred while saving user");
+			showToast("error", t(localizationConstants.userSaveUnexpectedError));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -148,13 +148,13 @@ export function UserProfileForm({
 			setIsSubmitting(true);
 			const result = await deleteCustomerUserAPIAction(user.id);
 			if (result.success) {
-				showToast("success", "User deleted successfully");
+				showToast("success", t(localizationConstants.userDeletedSuccess));
 				onSaved();
 			} else {
-				showToast("error", result.error || "Failed to delete user");
+				showToast("error", result.error || t(localizationConstants.userDeleteFailed));
 			}
 		} catch {
-			showToast("error", "An error occurred while deleting user");
+			showToast("error", t(localizationConstants.userDeleteUnexpectedError));
 		} finally {
 			setIsSubmitting(false);
 		}

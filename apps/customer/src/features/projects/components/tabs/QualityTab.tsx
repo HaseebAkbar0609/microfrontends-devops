@@ -316,10 +316,10 @@ function KMADocTable({
     setDocuments((prev) => prev.filter((d) => d.id !== docId));
     const res = await deleteProjectQualityDocumentAPIAction(projectId, docId);
     if (res.success) {
-      showToast("success", "Document deleted successfully");
+      showToast("success", t(localizationConstants.documentDeletedSuccess));
     } else {
       setDocuments(prevDocs);
-      showToast("error", res.error || "Failed to delete document");
+      showToast("error", res.error || t(localizationConstants.documentDeleteFailed));
     }
   };
 
@@ -521,10 +521,10 @@ function ControlTableRows({
     setControls((prev) => prev.filter((c) => c.id !== controlId));
     const res = await deleteProjectQualityControlAPIAction(projectId, controlId);
     if (res.success) {
-      showToast("success", "Control deleted successfully");
+      showToast("success", t(localizationConstants.kmaControlDeletedSuccess));
     } else {
       setControls(prevControls);
-      showToast("error", res.error || "Failed to delete control");
+      showToast("error", res.error || t(localizationConstants.kmaControlDeleteFailed));
     }
   };
 
@@ -806,11 +806,18 @@ function SecureCheckDetail({
     const res = await updateSecureCheckStatusAPIAction(projectId, currentCheck.id, nextStatus);
     if (res.success && res.data) {
       setCurrentCheck(res.data);
-      showToast("success", `Status updated to ${nextStatus}`);
+      showToast(
+        "success",
+        t(
+          nextStatus === "completed"
+            ? localizationConstants.kmaStatusUpdatedCompleted
+            : localizationConstants.kmaStatusUpdatedPending,
+        ),
+      );
       onStatusChange?.();
     } else {
       setCurrentCheck(prevCheck);
-      showToast("error", res.error || "Failed to update status");
+      showToast("error", res.error || t(localizationConstants.errorStatusUpdateFailed));
     }
     setUpdating(false);
   };
@@ -1075,10 +1082,10 @@ function SecureCheckListView({
     setChecks((prev) => prev.filter((c) => c.id !== checkId));
     const res = await deleteProjectSecureCheckAPIAction(projectId, checkId);
     if (res.success) {
-      showToast("success", "Secure check deleted successfully");
+      showToast("success", t(localizationConstants.kmaSecureCheckDeletedSuccess));
     } else {
       setChecks(prevChecks);
-      showToast("error", res.error || "Failed to delete secure check");
+      showToast("error", res.error || t(localizationConstants.kmaSecureCheckDeleteFailed));
     }
   };
 

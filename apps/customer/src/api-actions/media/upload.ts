@@ -1,8 +1,10 @@
+import { t } from "i18next";
 import axiosInstance from "@/lib/axiosInstance";
 import { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { MediaUploadResponse } from "@/features/quote/types/api";
 import { showToast } from "@/lib/toast";
 import { API_PATH } from "@/constants/api";
+import localizationConstants from "@/utils/translation/constants";
 
 const UPLOAD_PATH = API_PATH.MEDIA.UPLOAD;
 
@@ -27,7 +29,7 @@ export const uploadMediaAPIAction = async (
 				: (response.data as MediaUploadResponse);
 
 		if (!apiData) {
-			const errorMsg = "Invalid response from server";
+			const errorMsg = t(localizationConstants.errorInvalidServerResponse);
 			showToast("error", errorMsg);
 			return { success: false, data: null, error: errorMsg };
 		}
@@ -38,7 +40,7 @@ export const uploadMediaAPIAction = async (
 		};
 		const id = String(row.id ?? row.media_id ?? row.uuid ?? "").trim();
 		if (!id) {
-			const errorMsg = "Upload response missing media id";
+			const errorMsg = t(localizationConstants.mediaUploadMissingId);
 			showToast("error", errorMsg);
 			return { success: false, data: null, error: errorMsg };
 		}
@@ -55,7 +57,8 @@ export const uploadMediaAPIAction = async (
 	} catch (error: unknown) {
 		const apiError = error as ApiError;
 		const errorResponse = apiError.response?.data;
-		const errorMessage = errorResponse?.message || "Failed to upload media";
+		const errorMessage =
+			errorResponse?.message || t(localizationConstants.mediaUploadFailed);
 
 		showToast("error", errorMessage);
 		return {

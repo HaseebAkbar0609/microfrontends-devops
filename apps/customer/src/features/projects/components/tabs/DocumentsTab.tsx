@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ChevronDown, Trash2, ArrowUpDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { ProjectDocument } from "../../types";
 import {
@@ -25,6 +25,7 @@ interface DocumentsTabProps {
 }
 
 export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
+  const t = useTranslate();
   const [documents, setDocuments] = useState<ProjectDocument[]>([]);
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +100,7 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
         }
       }
 
-      showToast("success", "Documents uploaded successfully");
+      showToast("success", t(localizationConstants.documentsUploadedSuccess));
       setStagedFiles([]);
       void fetchDocuments();
     } catch (err: unknown) {
@@ -114,13 +115,13 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
             (r.status === "fulfilled" && !r.value.success),
         );
         if (failedCleanups.length > 0) {
-          cleanupFailedMsg = ` (Failed to clean up ${failedCleanups.length} file(s))`;
+          cleanupFailedMsg = ` (${t(localizationConstants.documentsCleanupFailed, { count: failedCleanups.length })})`;
         }
       }
       const error = err as Error;
       showToast(
         "error",
-        (error.message || "An error occurred during file upload") +
+        (error.message || t(localizationConstants.fileUploadUnexpectedError)) +
           cleanupFailedMsg,
       );
     } finally {
@@ -149,10 +150,10 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
     if (!projectId) return;
     const res = await deleteProjectDocumentAPIAction(projectId, id);
     if (res.success) {
-      showToast("success", "Document deleted successfully");
+      showToast("success", t(localizationConstants.documentDeletedSuccess));
       void fetchDocuments();
     } else {
-      showToast("error", res.error || "Failed to delete document");
+      showToast("error", res.error || t(localizationConstants.documentDeleteFailed));
     }
   };
 
