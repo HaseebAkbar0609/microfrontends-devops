@@ -8,9 +8,6 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		totalLogged: 125,
 		totalOt: 7,
 		totalAta: 6,
-		footerLogged: 164.5,
-		footerOt: 6.5,
-		footerAta: 14.5,
 		dailyTotals: [
 			{
 				dayIndex: 0,
@@ -84,13 +81,13 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 			travelKm: 115,
 			hasDeviation: false,
 			days: [
-				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 17, personCount: 2 },
-				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 16, personCount: 2 },
-				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 8, personCount: 1 },
-				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 8, personCount: 1 },
-				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, personCount: 0 },
+				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 17, otHours: 1, personCount: 2 },
+				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 16, otHours: 0, personCount: 2 },
+				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 8, otHours: 0, personCount: 1 },
+				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 8, otHours: 0, personCount: 1 },
+				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, otHours: 0, personCount: 0 },
 			],
 			employees: [
 				{
@@ -145,13 +142,13 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 			flags: 1,
 			hasDeviation: true,
 			days: [
-				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 18, personCount: 2 },
-				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 10, personCount: 1 },
-				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 8, personCount: 1 },
-				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, personCount: 0 },
+				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 18, otHours: 2, personCount: 2 },
+				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 10, otHours: 2, personCount: 1 },
+				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 8, otHours: 0, personCount: 1 },
+				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, otHours: 0, personCount: 0 },
 			],
 			employees: [
 				{
@@ -206,13 +203,13 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 			travelKm: 95,
 			hasDeviation: false,
 			days: [
-				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 8, personCount: 1 },
-				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 8, personCount: 1 },
-				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 0, personCount: 0 },
-				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 10, personCount: 1 },
-				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 16, personCount: 2 },
-				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, personCount: 0 },
+				{ dayIndex: 0, dayLabel: "MÅN", dayDate: "23 Dec", hours: 8, otHours: 0, personCount: 1 },
+				{ dayIndex: 1, dayLabel: "TIS", dayDate: "24 Dec", hours: 8, otHours: 0, personCount: 1 },
+				{ dayIndex: 2, dayLabel: "ONS", dayDate: "25 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 3, dayLabel: "TOR", dayDate: "26 Dec", hours: 0, otHours: 0, personCount: 0 },
+				{ dayIndex: 4, dayLabel: "FRE", dayDate: "27 Dec", hours: 10, otHours: 2, personCount: 1 },
+				{ dayIndex: 5, dayLabel: "LÖR", dayDate: "28 Dec", hours: 16, otHours: 0, personCount: 2 },
+				{ dayIndex: 6, dayLabel: "SÖN", dayDate: "29 Dec", hours: 0, otHours: 0, personCount: 0 },
 			],
 			employees: [
 				{
@@ -257,6 +254,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 	ganttRows: [
 		{
 			id: "gantt-proj-1",
+			projectId: "proj-1",
 			code: "P-001",
 			name: "Projekt 2025-001",
 			tasks: [
@@ -278,6 +276,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-2",
+			projectId: "proj-2",
 			code: "P-002",
 			name: "Projekt 2025-002",
 			tasks: [
@@ -292,6 +291,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-3",
+			projectId: "proj-1",
 			code: "P-001",
 			name: "Projekt 2025-001",
 			tasks: [
@@ -306,6 +306,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-4",
+			projectId: "proj-2",
 			code: "P-002",
 			name: "Projekt 2025-002",
 			tasks: [
@@ -320,6 +321,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-5",
+			projectId: "proj-1",
 			code: "P-001",
 			name: "Projekt 2025-001",
 			tasks: [
@@ -334,6 +336,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-6",
+			projectId: "proj-2",
 			code: "P-002",
 			name: "Projekt 2025-002",
 			tasks: [
@@ -348,6 +351,7 @@ export const initialWorktimeProjectData: WorktimeProjectGroupData = {
 		},
 		{
 			id: "gantt-proj-7",
+			projectId: "proj-1",
 			code: "P-001",
 			name: "Projekt 2025-001",
 			tasks: [],

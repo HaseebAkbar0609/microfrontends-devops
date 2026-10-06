@@ -9,9 +9,9 @@ interface WorktimeGroupFooterBarProps {
 	itemType?: "employee" | "project";
 	weekNumber?: number;
 	year?: number;
-	totalLogged: number | string;
-	totalOt: number | string;
-	totalAta: number | string;
+	totalLogged: number;
+	totalOt: number;
+	totalAta: number;
 }
 
 export function WorktimeGroupFooterBar({
@@ -46,9 +46,7 @@ export function WorktimeGroupFooterBar({
 					<span>
 						<Translate text={localizationConstants.worktimeGroupFooterTotalLogged} />:{" "}
 					</span>
-					<strong className="text-slate-900 font-bold">
-						{typeof totalLogged === "number" ? `${totalLogged}h` : totalLogged.endsWith("h") ? totalLogged : `${totalLogged}h`}
-					</strong>
+					<strong className="text-slate-900 font-bold">{totalLogged}h</strong>
 				</div>
 
 				<div>

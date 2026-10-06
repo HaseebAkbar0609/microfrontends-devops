@@ -83,6 +83,7 @@ export interface ProjectDayEntry {
 	dayLabel: string; // e.g. "MÅN"
 	dayDate: string; // e.g. "23 Dec"
 	hours: number; // e.g. 17
+	otHours?: number; // e.g. 1
 	personCount: number; // e.g. 2
 }
 
@@ -127,6 +128,7 @@ export interface ProjectGanttTaskBar {
 
 export interface ProjectGanttRowItem {
 	id: string;
+	projectId?: string;
 	code: string;
 	name: string;
 	tasks: ProjectGanttTaskBar[];
@@ -136,9 +138,6 @@ export interface WorktimeProjectTotals {
 	totalLogged: number; // 125
 	totalOt: number; // 7
 	totalAta: number; // 6
-	footerLogged: number; // 164.5
-	footerOt: number; // 6.5
-	footerAta: number; // 14.5
 	dailyTotals: DailyGroupTotal[];
 }
 

@@ -26,6 +26,7 @@ export function WorktimeGroupView() {
 		projectData,
 		filteredProjects,
 		expandedProjects,
+		filteredProjectGanttRows,
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,
@@ -83,9 +84,6 @@ export function WorktimeGroupView() {
 			totalLogged: Number(totalLogged.toFixed(1)),
 			totalOt: Number(totalOt.toFixed(1)),
 			totalAta: Number(totalAta.toFixed(1)),
-			footerLogged: Number(totalLogged.toFixed(1)),
-			footerOt: Number(totalOt.toFixed(1)),
-			footerAta: Number(totalAta.toFixed(1)),
 			dailyTotals: projectData.totals.dailyTotals,
 		};
 	}, [filteredProjects, projectData.totals.dailyTotals]);
@@ -153,7 +151,7 @@ export function WorktimeGroupView() {
 			{activeTab === "gantt" &&
 				(isProjectMode ? (
 					<WorktimeProjectGanttView
-						ganttRows={projectData.ganttRows}
+						ganttRows={filteredProjectGanttRows}
 						ganttTimeRange={ganttTimeRange}
 						onRangeChange={handleGanttRangeChange}
 					/>
@@ -171,9 +169,9 @@ export function WorktimeGroupView() {
 				itemType={isProjectMode ? "project" : "employee"}
 				weekNumber={groupData.weekNumber}
 				year={groupData.year}
-				totalLogged={isProjectMode ? computedProjectTotals.footerLogged : computedTotals.totalLogged}
-				totalOt={isProjectMode ? computedProjectTotals.footerOt : computedTotals.totalOt}
-				totalAta={isProjectMode ? computedProjectTotals.footerAta : computedTotals.totalAta}
+				totalLogged={isProjectMode ? computedProjectTotals.totalLogged : computedTotals.totalLogged}
+				totalOt={isProjectMode ? computedProjectTotals.totalOt : computedTotals.totalOt}
+				totalAta={isProjectMode ? computedProjectTotals.totalAta : computedTotals.totalAta}
 			/>
 
 			{/* Safe Confirmation Dialog */}

@@ -17,7 +17,7 @@ import { showToast } from "@/lib/toast";
 export function useWorktimeGroup() {
 	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState<GroupViewTab>("kalender");
-	const [groupByMode, setGroupByMode] = useState<GroupByMode>("project");
+	const [groupByMode, setGroupByMode] = useState<GroupByMode>("person");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showExceptionsOnly, setShowExceptionsOnly] = useState(false);
 	const [ganttTimeRange, setGanttTimeRange] = useState<GanttTimeRange>("vecka");
@@ -42,6 +42,7 @@ export function useWorktimeGroup() {
 		projectData,
 		expandedProjects,
 		filteredProjects,
+		filteredGanttRows: filteredProjectGanttRows,
 		handleToggleProject,
 		handleExpandAllProjects,
 		handleCollapseAllProjects,
@@ -224,6 +225,7 @@ export function useWorktimeGroup() {
 		projectData,
 		filteredProjects,
 		expandedProjects,
+		filteredProjectGanttRows,
 		confirmAction,
 		handleTabChange,
 		handleGroupByModeChange,

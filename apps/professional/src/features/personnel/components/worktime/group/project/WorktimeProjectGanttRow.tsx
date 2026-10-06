@@ -55,7 +55,7 @@ export function WorktimeProjectGanttRow({
 						<div
 							key={task.id}
 							className={cn(
-								"absolute h-7 rounded-md px-2.5 flex items-center shadow-xs text-xs font-medium truncate select-none cursor-pointer hover:brightness-105 transition-all",
+								"absolute h-7 rounded-md px-2.5 flex items-center shadow-xs text-xs font-medium truncate select-none cursor-default",
 								task.colorClass
 							)}
 							style={{

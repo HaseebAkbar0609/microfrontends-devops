@@ -15,22 +15,25 @@ export function WorktimeProjectCalendarGrid({
 	projects,
 	dailyTotals,
 }: WorktimeProjectCalendarGridProps) {
-	// Dynamically compute daily column totals from active projects so footer always matches table data
+	// Dynamically compute daily column totals & OT from active projects so footer always matches table data
 	const computedDailyTotals = useMemo(() => {
 		return dailyTotals.map((col) => {
 			const dayIndex = col.dayIndex;
 			let totalHours = 0;
+			let totalOt = 0;
 
 			projects.forEach((proj) => {
 				const day = proj.days?.find((d) => d.dayIndex === dayIndex);
 				if (day) {
 					totalHours += day.hours || 0;
+					totalOt += day.otHours || 0;
 				}
 			});
 
 			return {
 				...col,
 				totalHours,
+				otHours: totalOt,
 			};
 		});
 	}, [projects, dailyTotals]);
@@ -72,7 +75,11 @@ export function WorktimeProjectCalendarGrid({
 							</tr>
 						) : (
 							projects.map((proj) => (
-								<WorktimeProjectCalendarRow key={proj.id} project={proj} />
+								<WorktimeProjectCalendarRow
+									key={proj.id}
+									project={proj}
+									columns={computedDailyTotals}
+								/>
 							))
 						)}
 					</tbody>

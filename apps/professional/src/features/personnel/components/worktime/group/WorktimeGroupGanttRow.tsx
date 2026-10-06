@@ -68,7 +68,7 @@ export function WorktimeGroupGanttRow({ employee, isMonthView = false }: Worktim
 							>
 								<div
 									className={cn(
-										"h-7 rounded-sm px-2 flex items-center text-left text-white shadow-2xs transition-transform hover:brightness-105 cursor-pointer",
+										"h-7 rounded-sm px-2 flex items-center text-left text-white shadow-2xs cursor-default select-none",
 										task.colorClass
 									)}
 									title={`${task.title} (${task.project})`}
