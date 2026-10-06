@@ -12,6 +12,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { useTranslation } from "react-i18next";
 
 interface WorktimeDateRangePickerProps {
 	value: string;
@@ -22,6 +23,7 @@ export function WorktimeDateRangePicker({
 	value,
 	onChange,
 }: WorktimeDateRangePickerProps) {
+	const { t } = useTranslation();
 	const [open, setOpen] = useState(false);
 	const [selectedRange, setSelectedRange] = useState<DateRange | undefined>({
 		from: new Date(2024, 11, 23),
@@ -52,7 +54,7 @@ export function WorktimeDateRangePicker({
 				<button
 					type="button"
 					className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800 hover:bg-slate-50 shadow-2xs cursor-pointer transition-colors select-none"
-					aria-label="Select date range"
+					aria-label={t(localizationConstants.pickDatePlaceholder)}
 				>
 					<CalendarIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
 					<span>{value}</span>

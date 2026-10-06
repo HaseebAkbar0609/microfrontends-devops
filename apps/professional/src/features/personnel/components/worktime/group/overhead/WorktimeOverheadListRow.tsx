@@ -6,6 +6,7 @@ import { OverheadEmployeeSummary } from "@/features/personnel/types/worktimeGrou
 import { WorktimeOverheadListSubRow } from "./WorktimeOverheadListSubRow";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface WorktimeOverheadListRowProps {
@@ -19,6 +20,7 @@ export function WorktimeOverheadListRow({
 	isExpanded,
 	onToggle,
 }: WorktimeOverheadListRowProps) {
+	const { t } = useTranslation();
 	const getStatusBadge = (status: OverheadEmployeeSummary["status"]) => {
 		switch (status) {
 			case "inkickad":
@@ -59,7 +61,11 @@ export function WorktimeOverheadListRow({
 							type="button"
 							onClick={() => onToggle(employee.id)}
 							className="p-0.5 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600 cursor-pointer transition-colors"
-							aria-label={isExpanded ? "Collapse row" : "Expand row"}
+							aria-label={
+								isExpanded
+									? t(localizationConstants.worktimeGroupCollapseRow)
+									: t(localizationConstants.worktimeGroupExpandRow)
+							}
 						>
 							{isExpanded ? (
 								<ChevronDown className="w-4 h-4 text-slate-500" />
