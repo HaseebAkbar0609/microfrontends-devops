@@ -631,7 +631,11 @@ export type SupplierModule = {
 	supplierEditSubtitle: string;
 	supplierUpdatedSuccess: string;
 	supplierUpdateError: string;
+	supplierCreatedSuccess: string;
+	supplierCreateError: string;
 	validationSupplierCompanyNameRequired: string;
+	validationSupplierCompanyNameTooShort: string;
+	validationSupplierCompanyNameTooLong: string;
 	validationSupplierCategoryRequired: string;
 	validationSupplierOrgNoRequired: string;
 	validationSupplierOrgNoInvalid: string;
