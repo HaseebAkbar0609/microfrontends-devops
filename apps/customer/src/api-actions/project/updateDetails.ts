@@ -1,8 +1,10 @@
+import { t } from "i18next";
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import { showToast } from "@/lib/toast";
 import type { ActionResult } from "@/types/api";
 import { handleApiError } from "@/utils/apiError";
+import localizationConstants from "@/utils/translation/constants";
 
 export interface UpdateProjectDetailsPayload {
 	project_name?: string;
@@ -33,11 +35,11 @@ export async function updateProjectDetailsAPIAction(
 			payload,
 		);
 
-		showToast("success", "Project details updated successfully");
+		showToast("success", t(localizationConstants.projectDetailsUpdatedSuccess));
 		return { success: true, data: res.data?.data || null, error: null };
 	} catch (error: unknown) {
-		const result = handleApiError(error, "Failed to update project details");
-		showToast("error", result.error || "Failed to update project details");
+		const result = handleApiError(error, t(localizationConstants.projectDetailsUpdateFailed));
+		showToast("error", result.error || t(localizationConstants.projectDetailsUpdateFailed));
 		return result;
 	}
 }

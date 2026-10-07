@@ -16,6 +16,8 @@ export interface FormCitySelectProps<
 	name: TName;
 	countryId?: string;
 	label?: React.ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	placeholder?: string;
 	className?: string;
 	triggerClassName?: string;
@@ -51,6 +53,7 @@ export function FormCitySelect<
 	name,
 	countryId,
 	label,
+	optional,
 	placeholder,
 	className,
 	triggerClassName,
@@ -363,6 +366,7 @@ export function FormCitySelect<
 			control={control}
 			name={name}
 			label={label}
+			optional={optional}
 			placeholder={placeholder}
 			options={cityOptions}
 			disabled={

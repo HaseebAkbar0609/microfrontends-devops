@@ -59,7 +59,7 @@ export function AddGroupModal({ open, onOpenChange, panel }: AddGroupModalProps)
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="group-name" className="text-sm font-semibold text-slate-900">
-              Group Name <span className="text-red-500">*</span>
+              Group Name
             </Label>
             <Input
               id="group-name"

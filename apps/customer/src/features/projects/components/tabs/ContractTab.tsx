@@ -750,6 +750,7 @@ interface ContractTabProps {
 }
 
 export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
+	const t = useTranslate();
 	const [view, setView] = useState<ContractView>({ kind: "sub", tab: "list" });
 	const [contracts, setContracts] = useState<Contract[]>([]);
 	const [stagedData, setStagedData] = useState<{
@@ -867,7 +868,11 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 						for (const idToClean of newlyUploadedMediaIds) {
 							try { await deleteMediaAPIAction(idToClean); } catch {}
 						}
-						showToast("error", uploadRes.error || `Failed to upload ${d.name}`);
+						showToast(
+							"error",
+							uploadRes.error ||
+								t(localizationConstants.fileUploadFailedNamed, { name: d.name }),
+						);
 						return;
 					}
 				}
@@ -931,7 +936,7 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 				for (const idToClean of newlyUploadedMediaIds) {
 					try { await deleteMediaAPIAction(idToClean); } catch {}
 				}
-				showToast("error", res.error || "Failed to save contract");
+				showToast("error", res.error || t(localizationConstants.contractSaveFailed));
 			}
 		} else {
 			setView({ kind: "sub", tab: "list" });

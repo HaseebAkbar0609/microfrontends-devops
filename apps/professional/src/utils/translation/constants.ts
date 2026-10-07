@@ -6420,6 +6420,7 @@ export type RegisterTranslation = {
 };
 
 export type CommonTranslation = {
+	optionalFieldLabelSuffix: string;
 	search: string;
 	filter: string;
 	createNewButtonText: string;

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFormState } from "react-hook-form";
 import { CreateOfferFormValues, QuoteSupplier } from "../../types/form";
 import { getSuppliersAPIAction } from "@/api-actions";
 import { showToast } from "@/lib/toast";
@@ -57,6 +57,17 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { errors } = useFormState({
+		control: form.control,
+		name: "invitedSuppliers",
+	});
+	const supplierRequiredError = errors.invitedSuppliers?.message;
+	const hasInvitedSuppliers = invitedSuppliers.length > 0;
+
+	// setValue does not revalidate, so drop the "at least one" error once a supplier is added
+	useEffect(() => {
+		if (hasInvitedSuppliers) form.clearErrors("invitedSuppliers");
+	}, [hasInvitedSuppliers, form]);
 
 	const isSupplierSelected = useCallback(
 		(supplier: QuoteSupplier) => {
@@ -388,6 +399,12 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 							)}
 						</div>
 					</div>
+
+					{supplierRequiredError ? (
+						<p role="alert" className="text-destructive text-sm">
+							{t(supplierRequiredError)}
+						</p>
+					) : null}
 
 					{error ? (
 						<div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 shadow-sm">

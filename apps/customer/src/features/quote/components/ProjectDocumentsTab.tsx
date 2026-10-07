@@ -6,7 +6,8 @@ import { DocumentUpload } from "./documents/DocumentUpload";
 import { DocumentList } from "./documents/DocumentList";
 
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { projectMessages } from "@/constants/messages";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import type { ProjectDocument } from "../types/types";
 import { getProjectDocumentsAPIAction, deleteProjectDocumentAPIAction, type ApiProjectDocumentItem } from "@/api-actions";
 import { showToast } from "@/lib/toast";
@@ -17,6 +18,7 @@ interface ProjectDocumentsTabProps {
 }
 
 export function ProjectDocumentsTab({ projectId }: ProjectDocumentsTabProps) {
+	const t = useTranslate();
 	const [documents, setDocuments] = useState<readonly ProjectDocument[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -35,7 +37,7 @@ export function ProjectDocumentsTab({ projectId }: ProjectDocumentsTabProps) {
 			}));
 			setDocuments(mapped);
 		} else {
-			showToast("error", res.error || "Failed to fetch project documents");
+			showToast("error", res.error || projectMessages.load.documentsFailed);
 		}
 		setLoading(false);
 	}, [projectId]);
@@ -48,10 +50,10 @@ export function ProjectDocumentsTab({ projectId }: ProjectDocumentsTabProps) {
 		if (!projectId) return;
 		const res = await deleteProjectDocumentAPIAction(projectId, id);
 		if (res.success) {
-			showToast("success", "Document deleted successfully");
+			showToast("success", t(localizationConstants.documentDeletedSuccess));
 			void fetchDocuments();
 		} else {
-			showToast("error", res.error || "Failed to delete document");
+			showToast("error", res.error || t(localizationConstants.documentDeleteFailed));
 		}
 	};
 

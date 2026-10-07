@@ -28,6 +28,7 @@ import {
 import { ChevronDownIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
+import { withOptionalSuffix } from "./OptionalLabelSuffix";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
@@ -62,6 +63,8 @@ export interface FormSelectProps<
 	control: Control<TFieldValues>;
 	name: TName;
 	label?: React.ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	placeholder?: string;
 	options: FormSelectOption[];
 	disabled?: boolean;
@@ -91,6 +94,7 @@ export function FormSelect<
 	control,
 	name,
 	label,
+	optional,
 	placeholder,
 	options,
 	disabled,
@@ -302,7 +306,7 @@ export function FormSelect<
 						<FormItem className={cn("grid gap-2 ", className)}>
 							{label && (
 								<FormLabel className={labelClassName}>
-									{resolvedLabel}
+									{withOptionalSuffix(resolvedLabel, optional)}
 								</FormLabel>
 							)}
 							<DropdownMenu
@@ -320,6 +324,7 @@ export function FormSelect<
 									<DropdownMenuTrigger asChild disabled={disabled}>
 										<div
 											ref={field.ref}
+											tabIndex={disabled ? -1 : 0}
 											onBlur={field.onBlur}
 											className={cn(
 												"border-input data-[placeholder]:text-muted-foreground flex w-full 2xl:min-h-12 min-h-10 cursor-pointer items-start justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 ring-0 data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
@@ -480,7 +485,7 @@ export function FormSelect<
 					<FormItem className={cn("grid gap-2 ", className)}>
 						{label && (
 							<FormLabel className={labelClassName}>
-								{resolvedLabel}
+								{withOptionalSuffix(resolvedLabel, optional)}
 							</FormLabel>
 						)}
 						<Select
@@ -494,6 +499,7 @@ export function FormSelect<
 						>
 							<FormControl>
 								<SelectTrigger
+									ref={field.ref}
 									className={cn("w-full 2xl:h-12 h-10 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 ring-0", triggerClassName)}
 								>
 									<SelectValue

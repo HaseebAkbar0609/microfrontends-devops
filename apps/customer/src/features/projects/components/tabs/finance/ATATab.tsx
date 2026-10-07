@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate } from "@/utils/translation/translate";
+import { OptionalLabelSuffix } from "@/components/form";
 import localizationConstants from "@/utils/translation/constants";
 import type { ATAItem } from "./types";
 import { DUMMY_ATA_ITEMS } from "./data";
@@ -507,6 +508,7 @@ export function ATACreateForm({
                     className="text-xs font-medium text-[#09090B]"
                   >
                     <Translate text={localizationConstants.financeATATitle} />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-title-input"
@@ -523,6 +525,7 @@ export function ATACreateForm({
                     <Translate
                       text={localizationConstants.financeATAQualityStatusLabel}
                     />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-quality-status-input"
@@ -539,6 +542,7 @@ export function ATACreateForm({
                     <Translate
                       text={localizationConstants.financeATAEconomicStatusLabel}
                     />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-economic-status-input"
@@ -555,6 +559,7 @@ export function ATACreateForm({
                     <Translate
                       text={localizationConstants.financeATAStageLabel}
                     />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-category-input"
@@ -571,6 +576,7 @@ export function ATACreateForm({
                     <Translate
                       text={localizationConstants.financeATAReasonLabel}
                     />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-reason-input"
@@ -585,6 +591,7 @@ export function ATACreateForm({
                     className="text-xs font-medium text-[#09090B]"
                   >
                     <Translate text={localizationConstants.financeAmountCol} />
+                    <OptionalLabelSuffix />
                   </label>
                   <Input
                     id="ata-total-cost-input"

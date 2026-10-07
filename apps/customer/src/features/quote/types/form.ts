@@ -89,7 +89,9 @@ export const createOfferSchema = z.object({
 	// Step 3
 	description: z.string().optional(),
 	documents: z.array(DocumentSchema).optional(),
-	invitedSuppliers: z.array(SupplierSchema).optional(),
+	invitedSuppliers: z.array(SupplierSchema).min(1, {
+		message: localizationConstants.supplierSelectionRequired,
+	}),
 	internalSuppliers: z.array(SupplierSchema).optional(),
 });
 

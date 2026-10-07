@@ -31,6 +31,7 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ModalWrapper } from "@/components/modal";
+import { OptionalLabelSuffix } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -640,6 +641,7 @@ export function TimelineTab({ project }: TimelineTabProps) {
 							<Translate
 								text={localizationConstants.projectEstTimeLabel}
 							/>
+							<OptionalLabelSuffix />
 						</label>
 						<Input
 							type="number"
