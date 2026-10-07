@@ -31,6 +31,7 @@ import useModal from "@/features/auth/hooks/useModal";
 import { CreateOfferForm } from "./CreateOfferForm";
 import { CancelOfferDialog } from "./CancelOfferDialog";
 import { useStepHistory } from "../hooks/useStepHistory";
+import { useUnsavedChangesWarning } from "../hooks/useUnsavedChangesWarning";
 import {
 	NewInvitationForm,
 	NewInvitationFormValues,
@@ -91,7 +92,11 @@ export default function CreateOfferPage() {
 	const { isOpen, openModal, closeModal, type } = useModal<ModalType>();
 	const [isCancelOpen, setIsCancelOpen] = useState(false);
 	// Back (browser or wizard) keeps the input; Cancel asks, then drops it (TFS-1208)
-	const pushStep = useStepHistory(currentStep, setCurrentStep);
+	const { pushStep, stepBack } = useStepHistory(
+		currentStep,
+		setCurrentStep,
+		furthestStep,
+	);
 	const totalSteps = 5;
 
 	const [customerCategoryRows, setCustomerCategoryRows] = useState<
@@ -124,6 +129,8 @@ export default function CreateOfferPage() {
 		mode: "onChange",
 		reValidateMode: "onBlur",
 	});
+	const { isDirty } = form.formState;
+	useUnsavedChangesWarning(isDirty);
 
 	const selectedCategoryIds = form.watch("category");
 
@@ -446,7 +453,7 @@ export default function CreateOfferPage() {
 		setIsNextLoading(true);
 		try {
 			if (await persistSteps(4, true)) {
-				router.push(OFFER_LIST_PATH);
+				router.replace(OFFER_LIST_PATH);
 			}
 		} finally {
 			setIsNextLoading(false);
@@ -494,12 +501,18 @@ export default function CreateOfferPage() {
 		}
 	};
 
+	/** Leave the wizard; ask first only when there is unsaved input to lose */
+	const leaveWizard = () => {
+		if (isDirty) setIsCancelOpen(true);
+		else router.replace(OFFER_LIST_PATH);
+	};
+
 	const handleBack = () => {
 		if (currentStep > 1) {
-			pushStep(currentStep - 1);
+			stepBack();
 		} else {
 			// Back from the first step leaves the wizard, like Cancel
-			setIsCancelOpen(true);
+			leaveWizard();
 		}
 	};
 
@@ -509,7 +522,7 @@ export default function CreateOfferPage() {
 
 	const handleConfirmCancel = () => {
 		setIsCancelOpen(false);
-		router.push(OFFER_LIST_PATH);
+		router.replace(OFFER_LIST_PATH);
 	};
 
 	const handleSave = async () => {
@@ -527,13 +540,14 @@ export default function CreateOfferPage() {
 			const invalidStep = steps.find((step) =>
 				draftFields(step).some((field) => form.getFieldState(field).invalid),
 			);
-			if (invalidStep) pushStep(invalidStep);
+			if (invalidStep && invalidStep !== currentStep) pushStep(invalidStep);
 			return;
 		}
 
 		setIsSaveLoading(true);
 		try {
-			await persistSteps(lastStep, false);
+			// Saved input is no longer at risk, so clear the unsaved-changes state
+			if (await persistSteps(lastStep, false)) form.reset(form.getValues());
 		} finally {
 			setIsSaveLoading(false);
 		}
@@ -557,7 +571,9 @@ export default function CreateOfferPage() {
 				(orgNumber !== "" && (supplier.orgNumber ?? "").trim() === orgNumber),
 		);
 		if (!alreadyAdded) {
-			form.setValue("invitedSuppliers", [...currentSuppliers, supplierWithId]);
+			form.setValue("invitedSuppliers", [...currentSuppliers, supplierWithId], {
+				shouldDirty: true,
+			});
 		}
 		return true;
 	};
@@ -782,7 +798,7 @@ export default function CreateOfferPage() {
 						type="button"
 						variant="outline"
 						className="min-w-[160px] border-slate-200 text-slate-600 h-10 bg-transparent"
-						onClick={() => setIsCancelOpen(true)}
+						onClick={leaveWizard}
 					>
 						<Translate text={localizationConstants.cancel} />
 					</Button>
