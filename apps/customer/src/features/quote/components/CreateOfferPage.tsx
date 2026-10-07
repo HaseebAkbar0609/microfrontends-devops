@@ -29,6 +29,9 @@ import {
 } from "../types/form";
 import useModal from "@/features/auth/hooks/useModal";
 import { CreateOfferForm } from "./CreateOfferForm";
+import { CancelOfferDialog } from "./CancelOfferDialog";
+import { useStepHistory } from "../hooks/useStepHistory";
+import { useUnsavedChangesWarning } from "../hooks/useUnsavedChangesWarning";
 import {
 	NewInvitationForm,
 	NewInvitationFormValues,
@@ -38,15 +41,13 @@ import {
 	getProjectByIdAPIAction,
 	getProfessionalsSubcategoriesListAPIAction,
 	saveProjectAPIAction,
-	saveProjectDraftAPIAction,
-	type SaveProjectPayload,
 } from "@/api-actions";
 import { showToast } from "@/lib/toast";
 import { mapProjectDetailToFormHydration } from "../utils/projectDetailToForm";
 import type { FormSelectOption } from "@/components/form";
 import type { CustomerCategory } from "@/types/category";
 
-/** Fields validated per step (matches Next); step 5 uses full `trigger()` in save/next */
+/** Fields validated per step (Next; Save checks every step it persists); Send on step 5 uses full `trigger()` */
 const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 	number,
 	(keyof CreateOfferFormValues)[]
@@ -73,6 +74,8 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 };
 
 const CUSTOMER_CATEGORY_PAGE_SIZE = 40;
+/** Where Send and Cancel return to */
+const OFFER_LIST_PATH = "/business/offer";
 
 export default function CreateOfferPage() {
 	const router = useRouter();
@@ -81,10 +84,19 @@ export default function CreateOfferPage() {
 	const resumeProjectId = searchParams.get("projectId");
 	const [resumeReady, setResumeReady] = useState(!resumeProjectId);
 	const [currentStep, setCurrentStep] = useState(1);
+	/** Furthest step reached (Next or resume); Save persists every step up to it */
+	const [furthestStep, setFurthestStep] = useState(1);
 	const [projectId, setProjectId] = useState<string | undefined>();
 	const [isNextLoading, setIsNextLoading] = useState(false);
 	const [isSaveLoading, setIsSaveLoading] = useState(false);
 	const { isOpen, openModal, closeModal, type } = useModal<ModalType>();
+	const [isCancelOpen, setIsCancelOpen] = useState(false);
+	// Back (browser or wizard) keeps the input; Cancel asks, then drops it (TFS-1208)
+	const { pushStep, stepBack } = useStepHistory(
+		currentStep,
+		setCurrentStep,
+		furthestStep,
+	);
 	const totalSteps = 5;
 
 	const [customerCategoryRows, setCustomerCategoryRows] = useState<
@@ -117,6 +129,8 @@ export default function CreateOfferPage() {
 		mode: "onChange",
 		reValidateMode: "onBlur",
 	});
+	const { isDirty } = form.formState;
+	useUnsavedChangesWarning(isDirty);
 
 	const selectedCategoryIds = form.watch("category");
 
@@ -350,6 +364,7 @@ export default function CreateOfferPage() {
 				...values,
 			});
 			setCurrentStep(step);
+			setFurthestStep(step);
 			setResumeReady(true);
 		})();
 		return () => {
@@ -357,23 +372,88 @@ export default function CreateOfferPage() {
 		};
 	}, [resumeProjectId, form]);
 
+	const getStepPayload = (step: number, values: CreateOfferFormValues) => {
+		switch (step) {
+			case 1:
+				return {
+					first_name: values.firstName,
+					last_name: values.lastName,
+					mobile_number: values.mobileNumber,
+					personal_email: values.personalEmail,
+					address: values.address,
+					city: values.city,
+					postal_code: values.pincode,
+				};
+			case 2:
+				return {
+					project_name: values.projectName,
+					is_express: values.isExpressJob === "express",
+					client_no: values.clientNo,
+					order_no: values.orderNo || undefined,
+					object_no: values.objectNo || undefined,
+					creation_mode: "quote_first",
+					category_ids: Array.isArray(values.category)
+						? values.category
+						: values.category
+						? [values.category]
+						: [],
+					project_address: values.projectAddress,
+					project_contact_city: values.projectCity,
+					project_contact_postal_code: values.projectPostalCode,
+					directions: values.directions,
+					project_type: values.isExpressJob as "express" | "b2c",
+				};
+			case 3:
+				return {
+					project_description: values.description,
+					media_ids: values.documents
+						?.map((d) => d.id)
+						.filter(Boolean),
+				};
+			case 4:
+				return mapSuppliersForSave(
+					values.invitedSuppliers,
+				);
+			default:
+				return {};
+		}
+	};
+
+	/**
+	 * Steps only live in form state until Save or Send (TFS-1208). The API saves one step
+	 * per call and creates the project on step 1, so replay steps 1..lastStep in order.
+	 */
+	const persistSteps = async (lastStep: number, isSend: boolean) => {
+		const values = form.getValues();
+		let id = projectId;
+		let saved = true;
+		for (let step = 1; step <= lastStep; step++) {
+			const isLast = step === lastStep;
+			const result = await saveProjectAPIAction(
+				{
+					project_id: id,
+					step,
+					data: getStepPayload(step, values),
+					is_send: isSend && isLast,
+				},
+				{ showSuccessToast: isLast && !isSend },
+			);
+			if (!result.success || !result.data) {
+				saved = false;
+				break;
+			}
+			id = result.data.project_id;
+		}
+		// Keep the id even after a partial failure so a retry updates the same draft
+		setProjectId(id);
+		return saved;
+	};
+
 	const onSubmit: SubmitHandler<CreateOfferFormValues> = async (_values) => {
 		setIsNextLoading(true);
 		try {
-			const values = form.getValues();
-			const payload: SaveProjectPayload = {
-				project_id: projectId,
-				step: 4,
-				is_send: true,
-				data: mapSuppliersForSave(values.invitedSuppliers),
-			};
-
-			const result = await saveProjectAPIAction(payload, {
-				showSuccessToast: false,
-			});
-
-			if (result.success) {
-				router.push("/business/offer");
+			if (await persistSteps(4, true)) {
+				router.replace(OFFER_LIST_PATH);
 			}
 		} finally {
 			setIsNextLoading(false);
@@ -410,77 +490,9 @@ export default function CreateOfferPage() {
 
 		if (isValid) {
 			if (activeStep < totalSteps) {
-				setIsNextLoading(true);
-				const values = form.getValues();
-
-				const getStepPayload = (step: number) => {
-					switch (step) {
-						case 1:
-							return {
-								first_name: values.firstName,
-								last_name: values.lastName,
-								mobile_number: values.mobileNumber,
-								personal_email: values.personalEmail,
-								address: values.address,
-								city: values.city,
-								postal_code: values.pincode,
-							};
-						case 2:
-							return {
-								project_name: values.projectName,
-								is_express: values.isExpressJob === "express",
-								client_no: values.clientNo,
-								order_no: values.orderNo || undefined,
-								object_no: values.objectNo || undefined,
-								creation_mode: "quote_first",
-								category_ids: Array.isArray(values.category)
-									? values.category
-									: values.category
-									? [values.category]
-									: [],
-								project_address: values.projectAddress,
-								project_contact_city: values.projectCity,
-								project_contact_postal_code:
-									values.projectPostalCode,
-								directions: values.directions,
-								project_type: values.isExpressJob as
-									| "express"
-									| "b2c",
-							};
-						case 3:
-							return {
-								project_description: values.description,
-								media_ids: values.documents
-									?.map((d) => d.id)
-									.filter(Boolean),
-							};
-						case 4:
-							return mapSuppliersForSave(
-								values.invitedSuppliers,
-							);
-						default:
-							return {};
-					}
-				};
-
-				/** Next from invite step (4): is_send true; other steps stay draft */
-				const payload: SaveProjectPayload = {
-					project_id: projectId,
-					step: activeStep,
-					data: getStepPayload(activeStep),
-					is_send: activeStep === 5,
-				};
-
-				try {
-					const result = await saveProjectAPIAction(payload);
-
-					if (result.success && result.data) {
-						setProjectId(result.data.project_id);
-						setCurrentStep(activeStep + 1);
-					}
-				} finally {
-					setIsNextLoading(false);
-				}
+				// Next only moves between steps; nothing is saved until Save or Send
+				pushStep(activeStep + 1);
+				setFurthestStep((step) => Math.max(step, activeStep + 1));
 			} else {
 				void form.handleSubmit(onSubmit, () => {
 					showToast("error", t(localizationConstants.validationCheckIncorrectFields));
@@ -489,102 +501,58 @@ export default function CreateOfferPage() {
 		}
 	};
 
+	/** Leave the wizard; ask first only when there is unsaved input to lose */
+	const leaveWizard = () => {
+		if (isDirty) setIsCancelOpen(true);
+		else router.replace(OFFER_LIST_PATH);
+	};
+
 	const handleBack = () => {
 		if (currentStep > 1) {
-			setCurrentStep(currentStep - 1);
+			stepBack();
 		} else {
-			router.back();
+			// Back from the first step leaves the wizard, like Cancel
+			leaveWizard();
 		}
 	};
 
 	const handleEditStep = (step: number) => {
-		setCurrentStep(step);
+		pushStep(step);
+	};
+
+	const handleConfirmCancel = () => {
+		setIsCancelOpen(false);
+		router.replace(OFFER_LIST_PATH);
 	};
 
 	const handleSave = async () => {
-		const raw = Number(currentStep);
-		const saveStep =
-			Number.isFinite(raw) && raw >= 1 && raw <= 5 ? Math.trunc(raw) : 1;
-
+		// Save every step entered so far, not just the visible one (overview counts as step 4)
+		const lastStep = Math.min(Math.max(currentStep, furthestStep), 4);
+		const steps = Array.from({ length: lastStep }, (_, i) => i + 1);
 		// A draft may have no supplier yet; Next on step 4 and Send require one
-		const isValid =
-			saveStep === 4
-				? await form.trigger(
-						(
-							Object.keys(form.getValues()) as (keyof CreateOfferFormValues)[]
-						).filter((field) => field !== "invitedSuppliers"),
-					)
-				: await form.trigger(
-						CREATE_OFFER_STEP_VALIDATION_FIELDS[
-							saveStep as keyof typeof CREATE_OFFER_STEP_VALIDATION_FIELDS
-						] ?? [],
-					);
-		if (!isValid) return;
-
-		const values = form.getValues();
-
-		const getStepPayload = (step: number) => {
-			switch (step) {
-				case 1:
-					return {
-						first_name: values.firstName,
-						last_name: values.lastName,
-						mobile_number: values.mobileNumber,
-						personal_email: values.personalEmail,
-						address: values.address,
-						city: values.city,
-						postal_code: values.pincode,
-					};
-				case 2:
-					return {
-						project_name: values.projectName,
-						is_express: values.isExpressJob === "express",
-						client_no: values.clientNo,
-						order_no: values.orderNo || undefined,
-						object_no: values.objectNo || undefined,
-						creation_mode: "quote_first",
-						category_ids: Array.isArray(values.category)
-							? values.category
-							: values.category
-							? [values.category]
-							: [],
-						project_address: values.projectAddress,
-						project_contact_city: values.projectCity,
-						project_contact_postal_code: values.projectPostalCode,
-						directions: values.directions,
-						project_type: values.isExpressJob as "express" | "b2c",
-					};
-				case 3:
-					return {
-						project_description: values.description,
-						media_ids: values.documents
-							?.map((d) => d.id)
-							.filter(Boolean),
-					};
-				case 4:
-					return mapSuppliersForSave(
-						values.invitedSuppliers,
-					);
-				default:
-					return {};
-			}
-		};
-
-		const saveData = getStepPayload(saveStep);
-		const payload: SaveProjectPayload = {
-			project_id: projectId,
-			step: saveStep === 5 ? 4 : saveStep,
-			data: saveData,
-		};
+		const draftFields = (step: number) =>
+			CREATE_OFFER_STEP_VALIDATION_FIELDS[step].filter(
+				(field) => field !== "invitedSuppliers",
+			);
+		const isValid = await form.trigger(steps.flatMap(draftFields));
+		if (!isValid) {
+			// Back does not validate, so the invalid field can sit on another step
+			const invalidStep = steps.find((step) =>
+				draftFields(step).some((field) => form.getFieldState(field).invalid),
+			);
+			if (invalidStep && invalidStep !== currentStep) pushStep(invalidStep);
+			return;
+		}
 
 		setIsSaveLoading(true);
-		const result = await saveProjectDraftAPIAction(payload);
-		setIsSaveLoading(false);
-
-		if (result.success && result.data) {
-			setProjectId(result.data.project_id);
+		try {
+			// Saved input is no longer at risk, so clear the unsaved-changes state
+			if (await persistSteps(lastStep, false)) form.reset(form.getValues());
+		} finally {
+			setIsSaveLoading(false);
 		}
 	};
+	/** Kept in form state only; persisted with the other steps on Save or Send */
 	const handleAddSupplier = async (
 		newSupplier: NewInvitationFormValues,
 	): Promise<boolean> => {
@@ -593,48 +561,21 @@ export default function CreateOfferPage() {
 			...newSupplier,
 			id: Math.random().toString(36).substr(2, 9),
 		};
-
-		const updatedSuppliers = [...currentSuppliers, supplierWithId];
-
-		// Save only the newly added supplier as per user request
-		const payload: SaveProjectPayload = {
-			project_id: projectId,
-			step: 4,
-			data: {
-				suppliers: [
-					{
-						company_name: newSupplier.companyName,
-						category: newSupplier.category || undefined,
-						organization_number: newSupplier.orgNumber,
-						first_name: newSupplier.contactFirstName,
-						last_name: newSupplier.contactLastName,
-						email: newSupplier.emailAddress,
-						mobile_number: newSupplier.mobileNumber,
-					},
-				],
-			},
-		};
-
-		setIsSaveLoading(true);
-		try {
-			const result = await saveProjectDraftAPIAction(payload);
-
-			if (result.success && result.data) {
-				const savedId = result.data.project_id;
-				setProjectId(savedId);
-				const freshProject = await getProjectByIdAPIAction(savedId);
-				if (freshProject.success && freshProject.data) {
-					const { values } = mapProjectDetailToFormHydration(freshProject.data);
-					form.setValue("invitedSuppliers", values.invitedSuppliers ?? updatedSuppliers);
-				} else {
-					form.setValue("invitedSuppliers", updatedSuppliers);
-				}
-				return true;
-			}
-			return false;
-		} finally {
-			setIsSaveLoading(false);
+		// Same email or org number is the same supplier (the API skips it too), so add it once
+		const email = newSupplier.emailAddress.trim().toLowerCase();
+		const orgNumber = newSupplier.orgNumber.trim();
+		const alreadyAdded = currentSuppliers.some(
+			(supplier) =>
+				// Suppliers picked from the list can come back without an email
+				(supplier.emailAddress ?? "").trim().toLowerCase() === email ||
+				(orgNumber !== "" && (supplier.orgNumber ?? "").trim() === orgNumber),
+		);
+		if (!alreadyAdded) {
+			form.setValue("invitedSuppliers", [...currentSuppliers, supplierWithId], {
+				shouldDirty: true,
+			});
 		}
+		return true;
 	};
 
 	if (!resumeReady) {
@@ -844,6 +785,12 @@ export default function CreateOfferPage() {
 				categoriesLoading={professionalSubcategoriesLoading}
 			/>
 
+			<CancelOfferDialog
+				open={isCancelOpen}
+				onOpenChange={setIsCancelOpen}
+				onConfirm={handleConfirmCancel}
+			/>
+
 			{/* Sticky Footer */}
 			<footer className="p-4 bg-white border-t z-10">
 				<div className="flex items-center justify-end gap-3 px-2">
@@ -851,7 +798,7 @@ export default function CreateOfferPage() {
 						type="button"
 						variant="outline"
 						className="min-w-[160px] border-slate-200 text-slate-600 h-10 bg-transparent"
-						onClick={() => router.back()}
+						onClick={leaveWizard}
 					>
 						<Translate text={localizationConstants.cancel} />
 					</Button>

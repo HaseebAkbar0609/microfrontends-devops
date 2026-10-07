@@ -389,6 +389,11 @@ export const enOfferModule: OfferModule = {
 	validationPincodeRequired: "Postal code is require",
 	cancel: "Cancel",
 	next: "Next",
+	cancelOfferConfirmTitle: "Discard unsaved changes?",
+	cancelOfferConfirmDescription:
+		"Anything you have entered since you last saved will be lost, and you return to the offer list.",
+	cancelOfferKeepEditing: "Keep editing",
+	cancelOfferDiscard: "Discard changes",
 	save: "Save",
 	step: "Step",
 	postalcode: "Postal code",

@@ -358,6 +358,10 @@ export type OfferModule = {
 	validationPincodeRequired: string;
 	cancel: string;
 	next: string;
+	cancelOfferConfirmTitle: string;
+	cancelOfferConfirmDescription: string;
+	cancelOfferKeepEditing: string;
+	cancelOfferDiscard: string;
 	save: string;
 	step: string;
 	postalcode: string;

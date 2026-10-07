@@ -151,7 +151,9 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 			}
 
 			if (!isSupplierSelected(supplier)) {
-				form.setValue("invitedSuppliers", [...invitedSuppliers, supplier]);
+				form.setValue("invitedSuppliers", [...invitedSuppliers, supplier], {
+					shouldDirty: true,
+				});
 			}
 			setError(null);
 			return;
@@ -170,6 +172,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 						!supplier.orgNumber ||
 						item.orgNumber !== supplier.orgNumber),
 			),
+			{ shouldDirty: true },
 		);
 		setError(null);
 	};

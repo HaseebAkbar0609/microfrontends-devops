@@ -386,6 +386,11 @@ export const svOfferModule: OfferModule = {
 	validationPincodeRequired: "Postnummer krävs",
 	cancel: "Avbryt",
 	next: "Nästa",
+	cancelOfferConfirmTitle: "Släng osparade ändringar?",
+	cancelOfferConfirmDescription:
+		"Det du har fyllt i sedan du senast sparade försvinner, och du kommer tillbaka till offertlistan.",
+	cancelOfferKeepEditing: "Fortsätt redigera",
+	cancelOfferDiscard: "Släng ändringar",
 	save: "Spara",
 	step: "Steg",
 	postalcode: "Postnummer",
