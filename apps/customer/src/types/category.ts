@@ -8,4 +8,5 @@ export interface CustomerCategoriesListResponse {
 	success: boolean;
 	message?: string;
 	data: CustomerCategory[];
+	total_pages?: number;
 }

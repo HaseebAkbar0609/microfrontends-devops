@@ -640,6 +640,7 @@ export const svSupplierModule: SupplierModule = {
 	errorTitle: "Ett fel uppstod",
 	errorDetailsFailed: "Kunde inte ladda detaljer",
 	errorInvalidServerResponse: "Ogiltigt svar från servern",
+	categoriesLoadFailed: "Det gick inte att hämta kategorierna",
 	errorStatusUpdateFailed: "Det gick inte att uppdatera statusen",
 	errorDetailsDesc:
 		"Det gick inte att hämta informationen från servern. Kontrollera din anslutning.",
