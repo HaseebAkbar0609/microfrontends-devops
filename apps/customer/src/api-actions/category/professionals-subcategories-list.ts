@@ -7,29 +7,45 @@ import type {
 } from "@/types/category";
 import { normalizeCategory } from "./normalizeCategory";
 
+/** The endpoint defaults to 10 items per page, so ask for more and follow total_pages. */
+const SUBCATEGORIES_PAGE_SIZE = 100;
+
 /**
- * Professional subcategories for offers / invitations.
- * GET /api/v1/teams/professionals/subcategories/list
+ * All professional subcategories for offers / invitations / suppliers.
+ * GET /api/v1/teams/professionals/subcategories/list?page=&page_size=
  */
 export async function getProfessionalsSubcategoriesListAPIAction(): Promise<
 	ActionResult<CustomerCategory[]>
 > {
 	try {
-		const response = await axiosInstance.get<CustomerCategoriesListResponse>(
-			API_PATH.TEAMS.PROFESSIONALS_SUBCATEGORIES_LIST,
-		);
+		const items: CustomerCategory[] = [];
+		let page = 1;
+		let totalPages = 1;
 
-		const body = response.data;
+		while (page <= totalPages) {
+			const response = await axiosInstance.get<CustomerCategoriesListResponse>(
+				API_PATH.TEAMS.PROFESSIONALS_SUBCATEGORIES_LIST,
+				{ params: { page, page_size: SUBCATEGORIES_PAGE_SIZE } },
+			);
 
-		if (!body?.success || !Array.isArray(body.data)) {
-			return {
-				success: false,
-				data: null,
-				error: body?.message || "Failed to fetch categories",
-			};
+			const body = response.data;
+
+			if (!body?.success || !Array.isArray(body.data)) {
+				return {
+					success: false,
+					data: null,
+					error: body?.message || "Failed to fetch categories",
+				};
+			}
+
+			if (body.data.length === 0) break;
+			items.push(...body.data);
+			// No total_pages means an unpaginated response: stop after this page.
+			totalPages = body.total_pages ?? page;
+			page++;
 		}
 
-		const categories = body.data
+		const categories = items
 			.map((item) =>
 				normalizeCategory(
 					item && typeof item === "object"
