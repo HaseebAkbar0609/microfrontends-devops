@@ -1,6 +1,7 @@
 import { BreadcrumbItem } from "@/types/user";
 import {
 	ChatCompany,
+	ProjectCreationMode,
 	ProjectDocument,
 	Quote,
 	QuoteItem,
@@ -58,6 +59,27 @@ export const PROJECT_STATUS_FILTER_OPTIONS = [
 
 /** Project-list `quote_status` once the customer has accepted an offer: it is then an active project, no longer an offer */
 export const ACCEPTED_OFFER_QUOTE_STATUS = "approved";
+
+export const PROJECT_CREATION_MODE = {
+	quoteFirst: "quote_first",
+	directOrder: "direct_order",
+} as const satisfies Record<string, ProjectCreationMode>;
+
+export function isProjectCreationMode(
+	value: unknown,
+): value is ProjectCreationMode {
+	return Object.values<unknown>(PROJECT_CREATION_MODE).includes(value);
+}
+
+export const CREATE_OFFER_PATH = "/business/offer/create";
+/** Create-offer wizard query param carrying the creation mode */
+export const CREATION_MODE_QUERY_PARAM = "mode";
+/** New project or direct order started from Projects (Aktiva projekt) */
+export const CREATE_DIRECT_PROJECT_PATH = `${CREATE_OFFER_PATH}?${CREATION_MODE_QUERY_PARAM}=${PROJECT_CREATION_MODE.directOrder}`;
+
+export function resumeDraftPath(projectId: string): string {
+	return `${CREATE_OFFER_PATH}?projectId=${encodeURIComponent(projectId)}`;
+}
 
 /** Map API `quote_status` value → translation key (same labels as the status filter) */
 export const PROJECT_STATUS_VALUE_TO_LABEL_KEY: Record<string, string> =

@@ -1,3 +1,5 @@
+import type { ProjectCreationMode } from "@/features/quote/types/types";
+
 export interface ActiveProject {
 	id: string;
 	name: string;
@@ -30,6 +32,10 @@ export interface ActiveProject {
 	};
 	category: string;
 	description?: string;
+	/** Tells a project started from Projects apart from an accepted offer */
+	creationMode?: ProjectCreationMode;
+	/** False for a draft, which opens the wizard to continue it */
+	isCompleted?: boolean;
 }
 
 export interface ArchivedProject extends Omit<
@@ -110,6 +116,8 @@ export interface ApiQuoteItem {
 	order_no?: string;
 	category?: string;
 	created_at?: string;
+	creation_mode?: ProjectCreationMode;
+	is_completed?: boolean;
 }
 
 export interface ApiProjectDetailItem {

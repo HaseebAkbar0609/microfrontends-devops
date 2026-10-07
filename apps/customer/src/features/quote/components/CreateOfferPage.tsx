@@ -44,6 +44,12 @@ import {
 } from "@/api-actions";
 import { showToast } from "@/lib/toast";
 import { mapProjectDetailToFormHydration } from "../utils/projectDetailToForm";
+import {
+	CREATION_MODE_QUERY_PARAM,
+	isProjectCreationMode,
+	PROJECT_CREATION_MODE,
+} from "../constants";
+import type { ProjectCreationMode } from "../types/types";
 import type { FormSelectOption } from "@/components/form";
 import type { CustomerCategory } from "@/types/category";
 
@@ -74,14 +80,26 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 };
 
 const CUSTOMER_CATEGORY_PAGE_SIZE = 40;
-/** Where Send and Cancel return to */
+/** Where Send and Cancel return to: the list that shows the project */
 const OFFER_LIST_PATH = "/business/offer";
+const PROJECT_LIST_PATH = "/projectmanagement";
 
 export default function CreateOfferPage() {
 	const router = useRouter();
 	const t = useTranslate();
 	const searchParams = useSearchParams();
 	const resumeProjectId = searchParams.get("projectId");
+	const modeParam = searchParams.get(CREATION_MODE_QUERY_PARAM);
+	// A resumed draft replaces this with its stored mode
+	const [creationMode, setCreationMode] = useState<ProjectCreationMode>(
+		isProjectCreationMode(modeParam)
+			? modeParam
+			: PROJECT_CREATION_MODE.quoteFirst,
+	);
+	const listPath =
+		creationMode === PROJECT_CREATION_MODE.directOrder
+			? PROJECT_LIST_PATH
+			: OFFER_LIST_PATH;
 	const [resumeReady, setResumeReady] = useState(!resumeProjectId);
 	const [currentStep, setCurrentStep] = useState(1);
 	/** Furthest step reached (Next or resume); Save persists every step up to it */
@@ -355,9 +373,9 @@ export default function CreateOfferPage() {
 				setResumeReady(true);
 				return;
 			}
-			const { values, step } = mapProjectDetailToFormHydration(
-				result.data,
-			);
+			const { values, step, creationMode: storedMode } =
+				mapProjectDetailToFormHydration(result.data);
+			if (storedMode) setCreationMode(storedMode);
 			setProjectId(resumeProjectId.trim());
 			form.reset({
 				...DEFAULT_OFFER_FORM_VALUES,
@@ -383,6 +401,8 @@ export default function CreateOfferPage() {
 					address: values.address,
 					city: values.city,
 					postal_code: values.pincode,
+					// Only read when this save creates the project
+					creation_mode: creationMode,
 				};
 			case 2:
 				return {
@@ -391,7 +411,7 @@ export default function CreateOfferPage() {
 					client_no: values.clientNo,
 					order_no: values.orderNo || undefined,
 					object_no: values.objectNo || undefined,
-					creation_mode: "quote_first",
+					creation_mode: creationMode,
 					category_ids: Array.isArray(values.category)
 						? values.category
 						: values.category
@@ -453,7 +473,7 @@ export default function CreateOfferPage() {
 		setIsNextLoading(true);
 		try {
 			if (await persistSteps(4, true)) {
-				router.replace(OFFER_LIST_PATH);
+				router.replace(listPath);
 			}
 		} finally {
 			setIsNextLoading(false);
@@ -504,7 +524,7 @@ export default function CreateOfferPage() {
 	/** Leave the wizard; ask first only when there is unsaved input to lose */
 	const leaveWizard = () => {
 		if (isDirty) setIsCancelOpen(true);
-		else router.replace(OFFER_LIST_PATH);
+		else router.replace(listPath);
 	};
 
 	const handleBack = () => {
@@ -522,7 +542,7 @@ export default function CreateOfferPage() {
 
 	const handleConfirmCancel = () => {
 		setIsCancelOpen(false);
-		router.replace(OFFER_LIST_PATH);
+		router.replace(listPath);
 	};
 
 	const handleSave = async () => {

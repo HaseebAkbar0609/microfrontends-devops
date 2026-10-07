@@ -14,10 +14,19 @@ import {
 	getProjectListAPIAction,
 } from "@/api-actions";
 import type { ActiveProjectItem } from "@/api-actions/project/active";
-import { resolveCompanyName } from "../utils/activeProject";
+import {
+	byNewestFirst,
+	projectHref,
+	resolveCompanyName,
+} from "../utils/activeProject";
 import { normalizeProjectStatus } from "@/utils/statusNormalizer";
 import { ActiveProjectRowActions } from "./ActiveProjectRowActions";
-import { ACCEPTED_OFFER_QUOTE_STATUS } from "@/features/quote/constants";
+import { ProjectOriginBadge } from "./ProjectOriginBadge";
+import {
+	ACCEPTED_OFFER_QUOTE_STATUS,
+	CREATE_DIRECT_PROJECT_PATH,
+	PROJECT_CREATION_MODE,
+} from "@/features/quote/constants";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -113,6 +122,8 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
 		quoteReferenceNo: refCode,
 		progressPercent: 0,
 		category: q.category || "-",
+		creationMode: q.creation_mode,
+		isCompleted: q.is_completed,
 	};
 }
 
@@ -130,8 +141,9 @@ export function ProjectList() {
 			setLoading(true);
 			setError(null);
 
-			// Only accepted offers are projects. /project/active returns every
-			// sent request, so it only enriches rows from the filtered list.
+			// Projects are accepted offers plus projects started here (TFS-1202).
+			// /project/active returns every sent request, so it only enriches
+			// rows from the filtered lists.
 			const activeById = new Map<string, ActiveProject>();
 			const combinedMap = new Map<string, ActiveProject>();
 
@@ -154,16 +166,31 @@ export function ProjectList() {
 			}
 
 			if (!hasError) {
-				const listRes = await getProjectListAPIAction({
+				const listQuery = {
 					page: PROJECT_LIST_QUERY.page,
 					pageSize: PROJECT_LIST_QUERY.pageSize,
 					sortBy: sortKey || undefined,
 					sortOrder: sortDir || undefined,
-					quote_status: ACCEPTED_OFFER_QUOTE_STATUS,
-				});
+				};
+				const listResults = await Promise.all([
+					getProjectListAPIAction({
+						...listQuery,
+						quote_status: ACCEPTED_OFFER_QUOTE_STATUS,
+					}),
+					getProjectListAPIAction({
+						...listQuery,
+						creation_mode: PROJECT_CREATION_MODE.directOrder,
+					}),
+				]);
 				if (cancelled) return;
-				if (listRes.success && listRes.data?.quotes) {
-					listRes.data.quotes.forEach((q: ApiQuoteItem) => {
+				const failed = listResults.find(
+					(res) => !res.success || !res.data?.quotes,
+				);
+				if (!failed) {
+					const rows = listResults.flatMap(
+						(res) => res.data?.quotes ?? [],
+					);
+					rows.forEach((q: ApiQuoteItem) => {
 						const item = mapListProjectToFrontend(q);
 						if (item.id) {
 							const existing = activeById.get(item.id);
@@ -185,6 +212,8 @@ export function ProjectList() {
 												existing.category !== "-"
 													? existing.category
 													: item.category,
+											creationMode: item.creationMode,
+											isCompleted: item.isCompleted,
 										}
 									: item,
 							);
@@ -192,14 +221,14 @@ export function ProjectList() {
 					});
 				} else {
 					hasError = true;
-					setError(listRes.error || "Failed to load projects list");
+					setError(failed.error || "Failed to load projects list");
 				}
 			}
 
 			if (cancelled) return;
 
 			if (!hasError) {
-				setProjects(Array.from(combinedMap.values()));
+				setProjects(Array.from(combinedMap.values()).sort(byNewestFirst));
 			}
 			setLoading(false);
 		}
@@ -230,7 +259,7 @@ export function ProjectList() {
 				<div className="flex items-center gap-3 mb-5">
 					<div className="ml-auto flex items-center gap-3">
 						<Link
-							href="/business/offer/create"
+							href={CREATE_DIRECT_PROJECT_PATH}
 							className="h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
 						>
 							<Plus className="h-4 w-4" />
@@ -241,7 +270,7 @@ export function ProjectList() {
 							/>
 						</Link>
 						<Link
-							href="/business/offer/create"
+							href={CREATE_DIRECT_PROJECT_PATH}
 							className="h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
 						>
 							<Plus className="h-4 w-4" />
@@ -346,6 +375,7 @@ export function ProjectList() {
 									</tr>
 								) : (
 									projects.map((project) => {
+										const href = projectHref(project);
 										const badge =
 											STATUS_STYLE[project.status] ??
 											STATUS_STYLE["draft"];
@@ -356,7 +386,7 @@ export function ProjectList() {
 											>
 												<td className="px-4 py-3">
 													<Link
-														href={`/projectmanagement/${project.id}`}
+														href={href}
 														className="text-[#09090B] font-medium hover:underline"
 													>
 														{project.referenceNo}
@@ -364,11 +394,14 @@ export function ProjectList() {
 												</td>
 												<td className="px-4 py-3">
 													<Link
-														href={`/projectmanagement/${project.id}`}
+														href={href}
 														className="text-[#374151] hover:underline"
 													>
 														{project.name}
 													</Link>
+													<ProjectOriginBadge
+														creationMode={project.creationMode}
+													/>
 												</td>
 												<td className="px-4 py-3 text-[#374151]">
 													{project.orderNo ?? "—"}
@@ -395,6 +428,7 @@ export function ProjectList() {
 												<td className="px-4 py-3 text-right">
 													<ActiveProjectRowActions
 														projectId={project.id}
+														editHref={href}
 														onStatusChanged={() =>
 															setReloadKey(
 																(k) => k + 1,

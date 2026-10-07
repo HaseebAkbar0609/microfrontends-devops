@@ -1,7 +1,10 @@
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError } from "@/types/api";
-import type { Quote } from "@/features/quote/types/types";
+import type {
+	ProjectCreationMode,
+	Quote,
+} from "@/features/quote/types/types";
 import {
 	mapProjectRowToQuote,
 	parseProjectListResponse,
@@ -15,6 +18,7 @@ export interface GetProjectListParams {
 	sortOrder?: string;
 	quote_status?: string;
 	project_type?: string;
+	creation_mode?: ProjectCreationMode;
 }
 
 export interface ProjectListPayload {
@@ -34,6 +38,7 @@ export async function getProjectListAPIAction(
 		sortOrder,
 		quote_status,
 		project_type,
+		creation_mode,
 	} = params;
 
 	const normalizedPageSize = pageSize > 0 ? pageSize : 10;
@@ -48,6 +53,7 @@ export async function getProjectListAPIAction(
 	if (sortOrder) q.set("sort_order", sortOrder);
 	if (quote_status) q.set("quote_status", quote_status);
 	if (project_type) q.set("project_type", project_type);
+	if (creation_mode) q.set("creation_mode", creation_mode);
 
 	try {
 		const { data: body } = await axiosInstance.get<unknown>(

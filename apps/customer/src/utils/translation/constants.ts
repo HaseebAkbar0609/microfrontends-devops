@@ -1060,6 +1060,8 @@ export type ProjectsModule = {
 	projectMyProjects: string;
 	projectNewOrderDirect: string;
 	projectNewProject: string;
+	projectOriginAcceptedOffer: string;
+	projectOriginDirect: string;
 	// Contract tab
 	contractSubTabList: string;
 	contractSubTabContract: string;

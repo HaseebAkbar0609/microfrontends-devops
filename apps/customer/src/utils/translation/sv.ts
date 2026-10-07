@@ -1138,6 +1138,8 @@ export const svProjects: ProjectsModule = {
 	projectMyProjects: "Mina projekt",
 	projectNewOrderDirect: "Order Direkt",
 	projectNewProject: "Nytt projekt",
+	projectOriginAcceptedOffer: "Accepterad offert",
+	projectOriginDirect: "Direktprojekt",
 	// Contract tab
 	contractSubTabList: "Kontraktslista",
 	contractSubTabContract: "Kontrakt",

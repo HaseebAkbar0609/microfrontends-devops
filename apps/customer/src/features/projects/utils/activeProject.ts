@@ -1,3 +1,6 @@
+import { resumeDraftPath } from "@/features/quote/constants";
+import type { ActiveProject } from "../types";
+
 export interface ActiveProjectCompanySource {
   companyName?: string | null;
   company?: {
@@ -45,4 +48,18 @@ export function resolveCompanyName(
     normalizeOptionalString(source.primaryContact?.name);
 
   return resolvedCompanyName ?? buildStableFallbackCompanyName(seed);
+}
+
+/** Newest first, as the API orders each list: project codes (P-YYYY-NNNNNN) grow with creation */
+export function byNewestFirst(a: ActiveProject, b: ActiveProject): number {
+  return b.referenceNo.localeCompare(a.referenceNo, undefined, {
+    numeric: true,
+  });
+}
+
+/** A draft opens the wizard to continue it; anything else opens the project */
+export function projectHref(project: ActiveProject): string {
+  return project.isCompleted === false
+    ? resumeDraftPath(project.id)
+    : `/projectmanagement/${project.id}`;
 }

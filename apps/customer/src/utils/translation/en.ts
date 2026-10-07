@@ -1138,6 +1138,8 @@ export const enProjects: ProjectsModule = {
 	projectMyProjects: "My Projects",
 	projectNewOrderDirect: "New Order Direct",
 	projectNewProject: "New Project",
+	projectOriginAcceptedOffer: "Accepted offer",
+	projectOriginDirect: "Direct project",
 	// Contract tab
 	contractSubTabList: "Contract List",
 	contractSubTabContract: "Contract",

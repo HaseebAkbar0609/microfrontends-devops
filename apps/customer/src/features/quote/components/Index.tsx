@@ -9,6 +9,7 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import {
 	ACCEPTED_OFFER_QUOTE_STATUS,
 	BREADCRUMBS,
+	PROJECT_CREATION_MODE,
 	PROJECT_STATUS_FILTER_OPTIONS,
 } from "../constants";
 import localizationConstants from "@/utils/translation/constants";
@@ -46,6 +47,8 @@ export default function OfferFeature() {
 			project_type: SHOW_OFFER_DASHBOARD_FILTERS
 				? projectTypeFilter || undefined
 				: undefined,
+			// Projects started from Projects are listed there, not here
+			creation_mode: PROJECT_CREATION_MODE.quoteFirst,
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {

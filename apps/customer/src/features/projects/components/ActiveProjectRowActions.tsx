@@ -45,11 +45,14 @@ const CONFIRM_TEXT: Record<
 
 interface ActiveProjectRowActionsProps {
 	projectId: string;
+	/** Where Edit goes; defaults to the project page */
+	editHref?: string;
 	onStatusChanged: () => void;
 }
 
 export function ActiveProjectRowActions({
 	projectId,
+	editHref = `/projectmanagement/${projectId}`,
 	onStatusChanged,
 }: ActiveProjectRowActionsProps) {
 	const t = useTranslate();
@@ -95,7 +98,7 @@ export function ActiveProjectRowActions({
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-36">
 					<DropdownMenuItem asChild className="gap-2 cursor-pointer py-2">
-						<Link href={`/projectmanagement/${projectId}`}>
+						<Link href={editHref}>
 							<Pencil className="h-4 w-4 text-accent-foreground" />
 							<Translate text={localizationConstants.edit} />
 						</Link>
