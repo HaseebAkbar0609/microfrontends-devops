@@ -10,10 +10,7 @@ export {
   type ForgotPasswordAPIResponse,
 } from "./auth/forgot-password";
 export { logoutAPIAction } from "./auth/logout";
-export {
-  saveProjectAPIAction,
-  saveProjectDraftAPIAction,
-} from "./project/save";
+export { saveProjectAPIAction } from "./project/save";
 export {
   getProjectListAPIAction,
   type GetProjectListParams,
