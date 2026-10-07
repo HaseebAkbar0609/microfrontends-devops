@@ -402,6 +402,7 @@ export const svOfferModule: OfferModule = {
 	supplierRecipientCountInfo:
 		"Totalt antal mottagare inkluderar både kundvalda leverantörer och interna mottagare.",
 	supplierSelectionMaxExceeded: "Du kan välja högst 3 leverantörer.",
+	supplierSelectionRequired: "Bjud in minst en leverantör.",
 	searchLabel: "Sök",
 	loadingLabel: "Laddar leverantörer...",
 	newInvitationButton: "Ny inbjudan",

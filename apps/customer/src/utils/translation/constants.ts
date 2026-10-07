@@ -377,6 +377,7 @@ export type OfferModule = {
 	supplierSelectedCountLabel: string;
 	supplierRecipientCountInfo: string;
 	supplierSelectionMaxExceeded: string;
+	supplierSelectionRequired: string;
 	searchLabel: string;
 	loadingLabel: string;
 	newInvitationButton: string;
