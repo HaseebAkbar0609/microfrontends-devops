@@ -145,41 +145,11 @@ export const KUND_SECTIONS: ContentSection[] = [
 		titleKey: localizationConstants.contentSectionConsultantsTitle,
 		summaryKey: localizationConstants.contentSectionConsultantsSummary,
 		icon: Users,
-		itemLabelKey: localizationConstants.contentItemConsultant,
-		itemLabelPluralKey: localizationConstants.contentItemConsultantPlural,
-		fields: [
-			{
-				name: "name",
-				labelKey: localizationConstants.contentFieldName,
-				type: "text",
-				placeholderKey: localizationConstants.contentPlaceholderConsultantName,
-			},
-			{
-				name: "role",
-				labelKey: localizationConstants.contentFieldRole,
-				type: "text",
-				placeholderKey: localizationConstants.contentPlaceholderConsultantRole,
-			},
-			{
-				name: "email",
-				labelKey: localizationConstants.contentFieldEmail,
-				type: "text",
-				placeholderKey: localizationConstants.contentPlaceholderConsultantEmail,
-			},
-			{
-				name: "phone",
-				labelKey: localizationConstants.contentFieldPhone,
-				type: "text",
-				placeholderKey: localizationConstants.contentPlaceholderConsultantPhone,
-			},
-			{ name: "photo", labelKey: localizationConstants.contentFieldPhoto, type: "image" },
-			{
-				name: "description",
-				labelKey: localizationConstants.contentFieldConsultantDescription,
-				type: "textarea",
-				placeholderKey: localizationConstants.contentPlaceholderConsultantDescription,
-			},
-		],
+		itemLabelKey: localizationConstants.contentItemConsultantType,
+		itemLabelPluralKey: localizationConstants.contentItemConsultantTypePlural,
+		// Consultant types live on the server; the screen has its own form.
+		variant: "consultantTypes",
+		fields: [],
 	},
 	{
 		slug: "kategorier",

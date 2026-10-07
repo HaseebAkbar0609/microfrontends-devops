@@ -1,3 +1,4 @@
+import type { LanguageCode } from "@/constants/constant";
 import type { ContentGroupId } from "../types";
 
 /** The two dashboards this console administers. */
@@ -23,3 +24,24 @@ export const VIDEO_ACCEPT = "video/mp4,video/webm";
 
 /** Field types whose value is an array of data URLs rather than a string. */
 export const MEDIA_FIELD_TYPES = ["image", "images", "video"] as const;
+
+/** React Query cache key for the consultant type list. */
+export const CONSULTANT_TYPES_QUERY_KEY = ["team-content-consultant-types"] as const;
+
+/** The server's limits for a consultant type; the form schema mirrors them. */
+export const CONSULTANT_TYPE_LIMITS = {
+	nameLength: 100,
+	sections: 20,
+	sectionTitleLength: 200,
+	bulletsPerSection: 30,
+	bulletLength: 500,
+} as const;
+
+/**
+ * The team app stores "swe", the backend reads "sv" from Accept-Language. Sent
+ * so its translated error messages match the language the console is shown in.
+ */
+export const API_LANGUAGE = {
+	swe: "sv",
+	en: "en",
+} as const satisfies Record<LanguageCode, string>;
