@@ -695,146 +695,141 @@ export default function CreateOfferPage() {
 					</div>
 
 					{/* Progress Sidebar */}
-					{currentStep < 5 && (
-						<div className="w-full lg:w-80 shrink-0">
-							<Card className="border shadow-sm p-0 bg-white">
-								<CardContent className="p-5 space-y-2">
-									<div className="flex items-center justify-between text-sm font-medium">
-										<span className="text-slate-900">
-											<Translate
-												text={
-													localizationConstants.step
-												}
-											/>{" "}
-											{currentStep}/{totalSteps - 1}
-										</span>
-									</div>
-									<Progress
-										value={
-											(currentStep / (totalSteps - 1)) *
-											100
-										}
-										className="h-2 [&>div]:bg-slate-950"
-									/>
-								</CardContent>
-							</Card>
-							{currentStep === 4 && (
-								<div className="mt-3 space-y-3">
-									<Button
-										type="button"
-										className="h-11 w-full bg-slate-900 text-white hover:bg-slate-800 gap-2"
-										onClick={() =>
-											openModal(
-												MODAL_CONSTANTS.NEW_INVITATION,
-											)
-										}
-										disabled={invitedSuppliers.length >= 3}
-									>
-										<Plus className="h-4 w-4" />
+					<div className="w-full lg:w-80 shrink-0">
+						<Card className="border shadow-sm p-0 bg-white">
+							<CardContent className="p-5 space-y-2">
+								<div className="flex items-center justify-between text-sm font-medium">
+									<span className="text-slate-900">
 										<Translate
 											text={
-												localizationConstants.newInvitationButton
+												localizationConstants.step
 											}
-										/>
-									</Button>
+										/>{" "}
+										{currentStep}/{totalSteps}
+									</span>
+								</div>
+								<Progress
+									value={(currentStep / totalSteps) * 100}
+									className="h-2 [&>div]:bg-slate-950"
+								/>
+							</CardContent>
+						</Card>
+						{currentStep === 4 && (
+							<div className="mt-3 space-y-3">
+								<Button
+									type="button"
+									className="h-11 w-full bg-slate-900 text-white hover:bg-slate-800 gap-2"
+									onClick={() =>
+										openModal(
+											MODAL_CONSTANTS.NEW_INVITATION,
+										)
+									}
+									disabled={invitedSuppliers.length >= 3}
+								>
+									<Plus className="h-4 w-4" />
+									<Translate
+										text={
+											localizationConstants.newInvitationButton
+										}
+									/>
+								</Button>
 
-									<Card className="border shadow-sm p-0 bg-white">
-										<CardContent className="p-4">
-											<div className="flex items-start gap-3">
-												<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700">
-													<UsersRound className="h-5 w-5" />
+								<Card className="border shadow-sm p-0 bg-white">
+									<CardContent className="p-4">
+										<div className="flex items-start gap-3">
+											<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700">
+												<UsersRound className="h-5 w-5" />
+											</div>
+											<div className="min-w-0 flex-1">
+												<p className="text-sm font-semibold text-slate-900">
+													<Translate
+														text={
+															localizationConstants.supplierSelectionSummaryLabel
+														}
+													/>
+												</p>
+												<div className="mt-4 flex items-center gap-5">
+													<div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-[6px] border-slate-200 text-center">
+														<div>
+															<p className="text-lg font-semibold leading-none text-slate-900">
+																{
+																	invitedSuppliers.length
+																}
+																/3
+															</p>
+															<p className="mt-1 text-[10px] font-medium text-slate-500">
+																<Translate
+																	text={
+																		localizationConstants.supplierSelectedCountLabel
+																	}
+																/>
+															</p>
+														</div>
+													</div>
+													<div className="flex-1 space-y-3 text-xs">
+														<div className="flex items-center justify-between gap-4">
+															<span className="text-slate-500">
+																<Translate
+																	text={
+																		localizationConstants.selectedSuppliersLabel
+																	}
+																/>
+															</span>
+															<span className="font-semibold text-slate-900">
+																{
+																	invitedSuppliers.length
+																}
+															</span>
+														</div>
+														<div className="flex items-center justify-between gap-4">
+															<span className="text-slate-500">
+																<Translate
+																	text={
+																		localizationConstants.supplierInternalRecipientsLabel
+																	}
+																/>
+															</span>
+															<span className="font-semibold text-slate-900">
+																{
+																	internalSuppliers.length
+																}
+															</span>
+														</div>
+														<div className="border-t border-slate-200 pt-3">
+															<div className="flex items-center justify-between gap-4">
+																<span className="font-semibold text-slate-900">
+																	<Translate
+																		text={
+																			localizationConstants.supplierTotalRecipientsLabel
+																		}
+																	/>
+																</span>
+																<span className="font-semibold text-slate-900">
+																	{
+																		supplierRecipientTotal
+																	}
+																</span>
+															</div>
+														</div>
+													</div>
 												</div>
-												<div className="min-w-0 flex-1">
-													<p className="text-sm font-semibold text-slate-900">
+												<div className="mt-4 flex gap-3 rounded-md border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-slate-700">
+													<Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-700" />
+													<p>
 														<Translate
 															text={
-																localizationConstants.supplierSelectionSummaryLabel
+																localizationConstants.supplierRecipientCountInfo
 															}
 														/>
 													</p>
-													<div className="mt-4 flex items-center gap-5">
-														<div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-[6px] border-slate-200 text-center">
-															<div>
-																<p className="text-lg font-semibold leading-none text-slate-900">
-																	{
-																		invitedSuppliers.length
-																	}
-																	/3
-																</p>
-																<p className="mt-1 text-[10px] font-medium text-slate-500">
-																	<Translate
-																		text={
-																			localizationConstants.supplierSelectedCountLabel
-																		}
-																	/>
-																</p>
-															</div>
-														</div>
-														<div className="flex-1 space-y-3 text-xs">
-															<div className="flex items-center justify-between gap-4">
-																<span className="text-slate-500">
-																	<Translate
-																		text={
-																			localizationConstants.selectedSuppliersLabel
-																		}
-																	/>
-																</span>
-																<span className="font-semibold text-slate-900">
-																	{
-																		invitedSuppliers.length
-																	}
-																</span>
-															</div>
-															<div className="flex items-center justify-between gap-4">
-																<span className="text-slate-500">
-																	<Translate
-																		text={
-																			localizationConstants.supplierInternalRecipientsLabel
-																		}
-																	/>
-																</span>
-																<span className="font-semibold text-slate-900">
-																	{
-																		internalSuppliers.length
-																	}
-																</span>
-															</div>
-															<div className="border-t border-slate-200 pt-3">
-																<div className="flex items-center justify-between gap-4">
-																	<span className="font-semibold text-slate-900">
-																		<Translate
-																			text={
-																				localizationConstants.supplierTotalRecipientsLabel
-																			}
-																		/>
-																	</span>
-																	<span className="font-semibold text-slate-900">
-																		{
-																			supplierRecipientTotal
-																		}
-																	</span>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div className="mt-4 flex gap-3 rounded-md border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-slate-700">
-														<Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-700" />
-														<p>
-															<Translate
-																text={
-																	localizationConstants.supplierRecipientCountInfo
-																}
-															/>
-														</p>
-													</div>
 												</div>
 											</div>
-										</CardContent>
-									</Card>
-								</div>
-							)}
-						</div>
-					)}
+										</div>
+									</CardContent>
+								</Card>
+							</div>
+						)}
+					</div>
 				</div>
 			</main>
 
