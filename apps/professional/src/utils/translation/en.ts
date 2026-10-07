@@ -5468,6 +5468,7 @@ export const enOffer: OfferTranslation = {
 };
 
 export const enCommon: CommonTranslation = {
+	optionalFieldLabelSuffix: "(Optional)",
 	search: "Search",
 	filter: "Filter",
 	createNewButtonText: "Create new",

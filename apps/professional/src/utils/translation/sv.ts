@@ -6535,6 +6535,7 @@ export const svRegister: RegisterTranslation = {
 };
 
 export const svCommon: CommonTranslation = {
+	optionalFieldLabelSuffix: "(Valfritt)",
 	search: "Sök",
 	filter: "Filter",
 	createNewButtonText: "Skapa ny",
