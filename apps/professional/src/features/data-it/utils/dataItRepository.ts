@@ -1,44 +1,17 @@
 import type { DataItEmployeeOverview } from "../types/dataItOverview.types";
 import { initialDataItEmployees } from "../constants/dataItOverview.mock";
-import { DATA_IT_STORAGE_KEY } from "../constants/dataItOverview.constants";
 
 /**
- * Data IT Repository (Standard #6: Security & Sensitive Data)
- * Employee records and sensitive IT profiles are maintained in-memory and synchronized
- * via a secure encoding layer in sessionStorage to ensure seamless navigation across routes
- * and prevent plain-text exposure in localStorage.
+ * Data IT In-Memory Repository
+ * Employee mock records are maintained in-memory across client navigation.
+ * No personal data (PII) is written to browser storage.
  */
 
 type DataItListener = (items: DataItEmployeeOverview[]) => void;
 const listeners = new Set<DataItListener>();
 
 function loadInitialEmployees(): DataItEmployeeOverview[] {
-	if (typeof window === "undefined") return [...initialDataItEmployees];
-	try {
-		const raw = window.sessionStorage.getItem(DATA_IT_STORAGE_KEY);
-		if (raw) {
-			const decoded = decodeURIComponent(escape(window.atob(raw)));
-			const parsed = JSON.parse(decoded);
-			if (Array.isArray(parsed)) {
-				return parsed;
-			}
-		}
-	} catch (e) {
-		console.warn("Failed to read encoded data-it session", e);
-	}
-	// Initial seed for new session: persist once to session storage
-	syncToSession(initialDataItEmployees);
 	return [...initialDataItEmployees];
-}
-
-function syncToSession(items: DataItEmployeeOverview[]): void {
-	if (typeof window === "undefined") return;
-	try {
-		const encoded = window.btoa(unescape(encodeURIComponent(JSON.stringify(items))));
-		window.sessionStorage.setItem(DATA_IT_STORAGE_KEY, encoded);
-	} catch (e) {
-		console.warn("Failed to write encoded data-it session", e);
-	}
 }
 
 // Global reference prevents instance mismatch between webpack dynamic chunks
@@ -52,7 +25,6 @@ globalStore.__TFS_DATA_IT_RECORDS__ = inMemoryEmployees;
 
 function notifyListeners(): void {
 	globalStore.__TFS_DATA_IT_RECORDS__ = inMemoryEmployees;
-	syncToSession(inMemoryEmployees);
 	const current = [...inMemoryEmployees];
 	listeners.forEach((listener) => {
 		try {

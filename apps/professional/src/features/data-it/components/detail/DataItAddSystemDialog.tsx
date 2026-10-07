@@ -11,6 +11,7 @@ import {
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItSystemItem } from "../../types/dataItOverview.types";
+import { dataItRepository } from "../../utils/dataItRepository";
 
 interface DataItAddSystemDialogProps {
 	open: boolean;
@@ -25,24 +26,22 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function DataItAddSystemDialog({
 	open,
 	onOpenChange,
-	existingSystems,
-	employeeEmail,
 	onAdd,
 }: DataItAddSystemDialogProps) {
 	const t = useTranslate();
-	const [category, setCategory] = useState("Administration");
+	const [category, setCategory] = useState("");
 	const [programName, setProgramName] = useState("");
-	const [email, setEmail] = useState(employeeEmail);
-	const [passwordStatus, setPasswordStatus] = useState("•••••••• (SSO)");
-	const [monthlyCost, setMonthlyCost] = useState(500);
+	const [email, setEmail] = useState("");
+	const [passwordStatus, setPasswordStatus] = useState("");
+	const [monthlyCost, setMonthlyCost] = useState("");
 	const [errors, setErrors] = useState<Record<string, string>>({});
 
 	const resetForm = () => {
-		setCategory("Administration");
+		setCategory("");
 		setProgramName("");
-		setEmail(employeeEmail);
-		setPasswordStatus("•••••••• (SSO)");
-		setMonthlyCost(500);
+		setEmail("");
+		setPasswordStatus("");
+		setMonthlyCost("");
 		setErrors({});
 	};
 
@@ -60,17 +59,24 @@ export function DataItAddSystemDialog({
 		} else if (!EMAIL_REGEX.test(email.trim())) {
 			newErrors.email = t(localizationConstants.dataItValidationEmailInvalid);
 		}
+		if (!passwordStatus.trim()) {
+			newErrors.passwordStatus = t(localizationConstants.dataItValidationRequired);
+		}
+		if (!monthlyCost.trim() || isNaN(Number(monthlyCost)) || Number(monthlyCost) < 0) {
+			newErrors.monthlyCost = t(localizationConstants.dataItValidationRequired);
+		}
 
 		if (Object.keys(newErrors).length > 0) {
 			setErrors(newErrors);
 			return;
 		}
 
-		// Calculate guaranteed collision-free sequential ID
-		const maxNum = existingSystems.reduce((max, item) => {
+		// Calculate collision-free sequential ID across all repository systems
+		const allSystems = dataItRepository.getAll().flatMap((e) => e.systems);
+		const maxNum = allSystems.reduce((max, item) => {
 			const match = item.id.match(/\d+/);
 			return match ? Math.max(max, parseInt(match[0], 10)) : max;
-		}, 1012);
+		}, 200);
 		const newId = `SYS-${maxNum + 1}`;
 
 		onAdd({
@@ -174,26 +180,48 @@ export function DataItAddSystemDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemPassword)}
+								{t(localizationConstants.dataItColSystemPassword)} *
 							</label>
 							<input
 								type="text"
 								value={passwordStatus}
-								onChange={(e) => setPasswordStatus(e.target.value)}
-								className="mt-1 h-9 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-800 focus:outline-none focus:border-slate-400"
+								onChange={(e) => {
+									setPasswordStatus(e.target.value);
+									if (errors.passwordStatus)
+										setErrors((prev) => ({ ...prev, passwordStatus: "" }));
+								}}
+								className={`mt-1 h-9 w-full rounded-md border px-3 text-sm text-slate-800 focus:outline-none ${
+									errors.passwordStatus
+										? "border-rose-400 focus:border-rose-500"
+										: "border-slate-200 focus:border-slate-400"
+								}`}
 							/>
+							{errors.passwordStatus && (
+								<p className="mt-1 text-xs text-rose-500">{errors.passwordStatus}</p>
+							)}
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemMonthlyCost)} (SEK)
+								{t(localizationConstants.dataItColSystemMonthlyCost)} (SEK) *
 							</label>
 							<input
 								type="number"
 								min={0}
 								value={monthlyCost}
-								onChange={(e) => setMonthlyCost(Number(e.target.value))}
-								className="mt-1 h-9 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-800 focus:outline-none focus:border-slate-400"
+								onChange={(e) => {
+									setMonthlyCost(e.target.value);
+									if (errors.monthlyCost)
+										setErrors((prev) => ({ ...prev, monthlyCost: "" }));
+								}}
+								className={`mt-1 h-9 w-full rounded-md border px-3 text-sm text-slate-800 focus:outline-none ${
+									errors.monthlyCost
+										? "border-rose-400 focus:border-rose-500"
+										: "border-slate-200 focus:border-slate-400"
+								}`}
 							/>
+							{errors.monthlyCost && (
+								<p className="mt-1 text-xs text-rose-500">{errors.monthlyCost}</p>
+							)}
 						</div>
 					</div>
 

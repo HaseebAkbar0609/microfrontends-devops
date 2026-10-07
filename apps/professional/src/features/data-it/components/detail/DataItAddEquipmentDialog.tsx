@@ -11,6 +11,7 @@ import {
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEquipmentItem } from "../../types/dataItOverview.types";
+import { dataItRepository } from "../../utils/dataItRepository";
 
 interface DataItAddEquipmentDialogProps {
 	open: boolean;
@@ -22,31 +23,36 @@ interface DataItAddEquipmentDialogProps {
 export function DataItAddEquipmentDialog({
 	open,
 	onOpenChange,
-	existingEquipment,
 	onAdd,
 }: DataItAddEquipmentDialogProps) {
 	const t = useTranslate();
-	const [category, setCategory] = useState("Laptop");
-	const [type, setType] = useState("Laptop");
+	const [category, setCategory] = useState("");
+	const [type, setType] = useState("");
 	const [brand, setBrand] = useState("");
 	const [model, setModel] = useState("");
 	const [serialNumber, setSerialNumber] = useState("");
-	const [monthlyCost, setMonthlyCost] = useState(1500);
+	const [monthlyCost, setMonthlyCost] = useState("");
 	const [errors, setErrors] = useState<Record<string, string>>({});
 
 	const resetForm = () => {
-		setCategory("Laptop");
-		setType("Laptop");
+		setCategory("");
+		setType("");
 		setBrand("");
 		setModel("");
 		setSerialNumber("");
-		setMonthlyCost(1500);
+		setMonthlyCost("");
 		setErrors({});
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		const newErrors: Record<string, string> = {};
+		if (!category.trim()) {
+			newErrors.category = t(localizationConstants.dataItValidationRequired);
+		}
+		if (!type.trim()) {
+			newErrors.type = t(localizationConstants.dataItValidationRequired);
+		}
 		if (!brand.trim()) {
 			newErrors.brand = t(localizationConstants.dataItValidationRequired);
 		}
@@ -56,23 +62,27 @@ export function DataItAddEquipmentDialog({
 		if (!serialNumber.trim()) {
 			newErrors.serialNumber = t(localizationConstants.dataItValidationRequired);
 		}
+		if (!monthlyCost.trim() || isNaN(Number(monthlyCost)) || Number(monthlyCost) < 0) {
+			newErrors.monthlyCost = t(localizationConstants.dataItValidationRequired);
+		}
 
 		if (Object.keys(newErrors).length > 0) {
 			setErrors(newErrors);
 			return;
 		}
 
-		// Calculate guaranteed collision-free sequential ID
-		const maxNum = existingEquipment.reduce((max, item) => {
+		// Calculate collision-free sequential ID across all repository equipment
+		const allEquipment = dataItRepository.getAll().flatMap((e) => e.equipment);
+		const maxNum = allEquipment.reduce((max, item) => {
 			const match = item.id.match(/\d+/);
 			return match ? Math.max(max, parseInt(match[0], 10)) : max;
-		}, 1012);
+		}, 1000);
 		const newId = `EQ-${maxNum + 1}`;
 
 		onAdd({
 			id: newId,
-			category: category.trim() || "Laptop",
-			type: type.trim() || "Laptop",
+			category: category.trim(),
+			type: type.trim(),
 			brand: brand.trim(),
 			model: model.trim(),
 			serialNumber: serialNumber.trim(),
@@ -102,25 +112,45 @@ export function DataItAddEquipmentDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentCategory)}
+								{t(localizationConstants.dataItColEquipmentCategory)} *
 							</label>
 							<input
 								type="text"
 								value={category}
-								onChange={(e) => setCategory(e.target.value)}
-								className="mt-1 h-9 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-800 focus:outline-none focus:border-slate-400"
+								onChange={(e) => {
+									setCategory(e.target.value);
+									if (errors.category) setErrors((prev) => ({ ...prev, category: "" }));
+								}}
+								className={`mt-1 h-9 w-full rounded-md border px-3 text-sm text-slate-800 focus:outline-none ${
+									errors.category
+										? "border-rose-400 focus:border-rose-500"
+										: "border-slate-200 focus:border-slate-400"
+								}`}
 							/>
+							{errors.category && (
+								<p className="mt-1 text-xs text-rose-500">{errors.category}</p>
+							)}
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentType)}
+								{t(localizationConstants.dataItColEquipmentType)} *
 							</label>
 							<input
 								type="text"
 								value={type}
-								onChange={(e) => setType(e.target.value)}
-								className="mt-1 h-9 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-800 focus:outline-none focus:border-slate-400"
+								onChange={(e) => {
+									setType(e.target.value);
+									if (errors.type) setErrors((prev) => ({ ...prev, type: "" }));
+								}}
+								className={`mt-1 h-9 w-full rounded-md border px-3 text-sm text-slate-800 focus:outline-none ${
+									errors.type
+										? "border-rose-400 focus:border-rose-500"
+										: "border-slate-200 focus:border-slate-400"
+								}`}
 							/>
+							{errors.type && (
+								<p className="mt-1 text-xs text-rose-500">{errors.type}</p>
+							)}
 						</div>
 					</div>
 
@@ -194,15 +224,26 @@ export function DataItAddEquipmentDialog({
 
 					<div>
 						<label className="text-xs font-medium text-slate-500">
-							{t(localizationConstants.dataItColEquipmentMonthlyCost)} (SEK)
+							{t(localizationConstants.dataItColEquipmentMonthlyCost)} (SEK) *
 						</label>
 						<input
 							type="number"
 							min={0}
 							value={monthlyCost}
-							onChange={(e) => setMonthlyCost(Number(e.target.value))}
-							className="mt-1 h-9 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-800 focus:outline-none focus:border-slate-400"
+							onChange={(e) => {
+								setMonthlyCost(e.target.value);
+								if (errors.monthlyCost)
+									setErrors((prev) => ({ ...prev, monthlyCost: "" }));
+							}}
+							className={`mt-1 h-9 w-full rounded-md border px-3 text-sm text-slate-800 focus:outline-none ${
+								errors.monthlyCost
+									? "border-rose-400 focus:border-rose-500"
+									: "border-slate-200 focus:border-slate-400"
+							}`}
 						/>
+						{errors.monthlyCost && (
+							<p className="mt-1 text-xs text-rose-500">{errors.monthlyCost}</p>
+						)}
 					</div>
 
 					<DialogFooter className="mt-4 flex justify-end gap-2">
