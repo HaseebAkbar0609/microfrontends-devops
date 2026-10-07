@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { Laptop, Edit, ArrowUpDown } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { Laptop, Edit, ArrowUpDown, Plus, Trash2, Check, X } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEmployeeOverview, DataItEquipmentItem } from "../../types/dataItOverview.types";
@@ -9,35 +9,67 @@ import { showToast } from "@/lib/toast";
 
 interface DataItDetailEquipmentCardProps {
 	employee: DataItEmployeeOverview;
+	onUpdateEmployee?: (updated: DataItEmployeeOverview) => void;
 }
 
 type SortField = keyof DataItEquipmentItem;
 
 export function DataItDetailEquipmentCard({
 	employee,
+	onUpdateEmployee,
 }: DataItDetailEquipmentCardProps) {
 	const t = useTranslate();
+	const [isEditing, setIsEditing] = useState(false);
+	const [items, setItems] = useState<DataItEquipmentItem[]>(employee.equipment);
 	const [sortField, setSortField] = useState<SortField>("id");
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
+	useEffect(() => {
+		setItems(employee.equipment);
+	}, [employee]);
+
 	const handleSort = (field: SortField) => {
-		setSortDirection((prev) =>
-			sortField === field && prev === "asc" ? "desc" : "asc",
-		);
+		setSortDirection((prev) => (sortField === field && prev === "asc" ? "desc" : "asc"));
 		setSortField(field);
 	};
 
 	const sortedItems = useMemo(() => {
-		return [...employee.equipment].sort((a, b) => {
+		return [...items].sort((a, b) => {
 			const mult = sortDirection === "asc" ? 1 : -1;
 			const valA = String(a[sortField]);
 			const valB = String(b[sortField]);
 			return mult * valA.localeCompare(valB, undefined, { numeric: true });
 		});
-	}, [employee.equipment, sortField, sortDirection]);
+	}, [items, sortField, sortDirection]);
 
-	const handleEdit = () => {
-		showToast("info", t(localizationConstants.dataItToastComingSoon));
+	const handleAddItem = () => {
+		const newIndex = items.length + 1;
+		const newItem: DataItEquipmentItem = {
+			id: `EQ-${Date.now().toString().slice(-4)}`,
+			category: "Laptop",
+			type: "Laptop",
+			brand: "Dell",
+			model: `New Device ${newIndex}`,
+			serialNumber: `SN-${Math.floor(10000000 + Math.random() * 90000000)}`,
+			monthlyCost: 1500,
+		};
+		setItems((prev) => [...prev, newItem]);
+	};
+
+	const handleRemoveItem = (id: string) => {
+		setItems((prev) => prev.filter((item) => item.id !== id));
+	};
+
+	const handleSave = () => {
+		const updated: DataItEmployeeOverview = { ...employee, equipment: items };
+		onUpdateEmployee?.(updated);
+		showToast("success", t(localizationConstants.dataItToastSaveSuccess));
+		setIsEditing(false);
+	};
+
+	const handleCancel = () => {
+		setItems(employee.equipment);
+		setIsEditing(false);
 	};
 
 	return (
@@ -50,14 +82,43 @@ export function DataItDetailEquipmentCard({
 						{t(localizationConstants.dataItEquipmentCardTitle)}
 					</h3>
 				</div>
-				<button
-					type="button"
-					onClick={handleEdit}
-					className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none"
-				>
-					<Edit size={13} />
-					<span>{t(localizationConstants.dataItBtnEdit)}</span>
-				</button>
+				{!isEditing ? (
+					<button
+						type="button"
+						onClick={() => setIsEditing(true)}
+						className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none"
+					>
+						<Edit size={13} />
+						<span>{t(localizationConstants.dataItBtnEdit)}</span>
+					</button>
+				) : (
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={handleAddItem}
+							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+						>
+							<Plus size={13} />
+							<span>{t(localizationConstants.dataItAddEquipmentBtn)}</span>
+						</button>
+						<button
+							type="button"
+							onClick={handleCancel}
+							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50"
+						>
+							<X size={13} />
+							<span>{t(localizationConstants.dataItBtnCancel)}</span>
+						</button>
+						<button
+							type="button"
+							onClick={handleSave}
+							className="inline-flex items-center gap-1 rounded-md bg-slate-950 px-3 py-1 text-xs font-medium text-white hover:bg-slate-800"
+						>
+							<Check size={13} />
+							<span>{t(localizationConstants.dataItBtnSave)}</span>
+						</button>
+					</div>
+				)}
 			</div>
 
 			{/* Equipment Table */}
@@ -85,56 +146,12 @@ export function DataItDetailEquipmentCard({
 										<ArrowUpDown size={12} />
 									</button>
 								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("category")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColEquipmentCategory)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("type")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColEquipmentType)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("brand")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColEquipmentBrand)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("model")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColEquipmentModel)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("serialNumber")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColEquipmentSerial)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColEquipmentCategory)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColEquipmentType)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColEquipmentBrand)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColEquipmentModel)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColEquipmentSerial)}</th>
+								{isEditing && <th className="px-4 py-3 text-right" />}
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-slate-100 text-slate-700">
@@ -148,6 +165,17 @@ export function DataItDetailEquipmentCard({
 									<td className="px-6 py-3 font-mono text-xs text-slate-500">
 										{item.serialNumber}
 									</td>
+									{isEditing && (
+										<td className="px-4 py-3 text-right">
+											<button
+												type="button"
+												onClick={() => handleRemoveItem(item.id)}
+												className="rounded p-1 text-slate-400 hover:text-rose-600"
+											>
+												<Trash2 size={14} />
+											</button>
+										</td>
+									)}
 								</tr>
 							))}
 						</tbody>

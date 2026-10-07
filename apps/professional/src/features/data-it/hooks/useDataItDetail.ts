@@ -18,7 +18,16 @@ export function useDataItDetail(id: string) {
 			if (saved) {
 				const parsed = JSON.parse(saved);
 				if (Array.isArray(parsed) && parsed.length > 0) {
+					if (parsed.length < initialDataItEmployees.length) {
+						setEmployees(initialDataItEmployees);
+						localStorage.setItem(
+							DATA_IT_STORAGE_KEY,
+							JSON.stringify(initialDataItEmployees),
+						);
+						return;
+					}
 					setEmployees(parsed);
+					return;
 				}
 			}
 		} catch {
@@ -37,6 +46,18 @@ export function useDataItDetail(id: string) {
 		return match ?? employees[0] ?? initialDataItEmployees[0];
 	}, [employees, id]);
 
+	const updateEmployee = (updated: DataItEmployeeOverview) => {
+		setEmployees((prev) => {
+			const next = prev.map((e) => (e.id === updated.id ? updated : e));
+			try {
+				localStorage.setItem(DATA_IT_STORAGE_KEY, JSON.stringify(next));
+			} catch {
+				// Silently ignore storage errors
+			}
+			return next;
+		});
+	};
+
 	const totalMonthlyCost = useMemo(() => {
 		if (!employee) return 0;
 		const eqCost = employee.equipment.reduce((sum, item) => sum + item.monthlyCost, 0);
@@ -46,6 +67,7 @@ export function useDataItDetail(id: string) {
 
 	return {
 		employee,
+		updateEmployee,
 		activeTab,
 		setActiveTab,
 		totalMonthlyCost,

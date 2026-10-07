@@ -11473,6 +11473,12 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItEmptySystemDesc: string;
 	dataItRowsPerPage: string;
 	dataItPageOf: string;
+	dataItBtnSave: string;
+	dataItBtnCancel: string;
+	dataItToastSaveSuccess: string;
+	dataItValidationRequired: string;
+	dataItAddEquipmentBtn: string;
+	dataItAddSystemBtn: string;
 };
 
 

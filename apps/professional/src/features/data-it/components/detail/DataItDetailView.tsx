@@ -17,7 +17,7 @@ interface DataItDetailViewProps {
 
 export function DataItDetailView({ id }: DataItDetailViewProps) {
 	const t = useTranslate();
-	const { employee, activeTab, setActiveTab } = useDataItDetail(id);
+	const { employee, updateEmployee, activeTab, setActiveTab } = useDataItDetail(id);
 
 	return (
 		<div className="flex flex-1 flex-col gap-6 px-6 pt-4 pb-12">
@@ -91,13 +91,22 @@ export function DataItDetailView({ id }: DataItDetailViewProps) {
 			{/* Tab Content Cards */}
 			<div>
 				{activeTab === "basic" && (
-					<DataItDetailBasicInfoCard employee={employee} />
+					<DataItDetailBasicInfoCard
+						employee={employee}
+						onUpdateEmployee={updateEmployee}
+					/>
 				)}
 				{activeTab === "equipment" && (
-					<DataItDetailEquipmentCard employee={employee} />
+					<DataItDetailEquipmentCard
+						employee={employee}
+						onUpdateEmployee={updateEmployee}
+					/>
 				)}
 				{activeTab === "system" && (
-					<DataItDetailSystemCard employee={employee} />
+					<DataItDetailSystemCard
+						employee={employee}
+						onUpdateEmployee={updateEmployee}
+					/>
 				)}
 			</div>
 		</div>

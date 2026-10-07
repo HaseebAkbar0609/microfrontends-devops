@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { Server, Edit, ArrowUpDown } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { Server, Edit, ArrowUpDown, Plus, Trash2, Check, X } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEmployeeOverview, DataItSystemItem } from "../../types/dataItOverview.types";
@@ -9,33 +9,66 @@ import { showToast } from "@/lib/toast";
 
 interface DataItDetailSystemCardProps {
 	employee: DataItEmployeeOverview;
+	onUpdateEmployee?: (updated: DataItEmployeeOverview) => void;
 }
 
 type SortField = keyof DataItSystemItem;
 
-export function DataItDetailSystemCard({ employee }: DataItDetailSystemCardProps) {
+export function DataItDetailSystemCard({
+	employee,
+	onUpdateEmployee,
+}: DataItDetailSystemCardProps) {
 	const t = useTranslate();
+	const [isEditing, setIsEditing] = useState(false);
+	const [items, setItems] = useState<DataItSystemItem[]>(employee.systems);
 	const [sortField, setSortField] = useState<SortField>("programName");
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
+	useEffect(() => {
+		setItems(employee.systems);
+	}, [employee]);
+
 	const handleSort = (field: SortField) => {
-		setSortDirection((prev) =>
-			sortField === field && prev === "asc" ? "desc" : "asc",
-		);
+		setSortDirection((prev) => (sortField === field && prev === "asc" ? "desc" : "asc"));
 		setSortField(field);
 	};
 
 	const sortedItems = useMemo(() => {
-		return [...employee.systems].sort((a, b) => {
+		return [...items].sort((a, b) => {
 			const mult = sortDirection === "asc" ? 1 : -1;
 			const valA = String(a[sortField]);
 			const valB = String(b[sortField]);
 			return mult * valA.localeCompare(valB, undefined, { numeric: true });
 		});
-	}, [employee.systems, sortField, sortDirection]);
+	}, [items, sortField, sortDirection]);
 
-	const handleEdit = () => {
-		showToast("info", t(localizationConstants.dataItToastComingSoon));
+	const handleAddItem = () => {
+		const newIndex = items.length + 1;
+		const newItem: DataItSystemItem = {
+			id: `SYS-${Date.now().toString().slice(-4)}`,
+			category: "Admin",
+			programName: `System Application ${newIndex}`,
+			email: employee.email,
+			passwordStatus: "•••••••• (SSO)",
+			monthlyCost: 800,
+		};
+		setItems((prev) => [...prev, newItem]);
+	};
+
+	const handleRemoveItem = (id: string) => {
+		setItems((prev) => prev.filter((item) => item.id !== id));
+	};
+
+	const handleSave = () => {
+		const updated: DataItEmployeeOverview = { ...employee, systems: items };
+		onUpdateEmployee?.(updated);
+		showToast("success", t(localizationConstants.dataItToastSaveSuccess));
+		setIsEditing(false);
+	};
+
+	const handleCancel = () => {
+		setItems(employee.systems);
+		setIsEditing(false);
 	};
 
 	return (
@@ -48,14 +81,43 @@ export function DataItDetailSystemCard({ employee }: DataItDetailSystemCardProps
 						{t(localizationConstants.dataItSystemCardTitle)}
 					</h3>
 				</div>
-				<button
-					type="button"
-					onClick={handleEdit}
-					className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none"
-				>
-					<Edit size={13} />
-					<span>{t(localizationConstants.dataItBtnEdit)}</span>
-				</button>
+				{!isEditing ? (
+					<button
+						type="button"
+						onClick={() => setIsEditing(true)}
+						className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none"
+					>
+						<Edit size={13} />
+						<span>{t(localizationConstants.dataItBtnEdit)}</span>
+					</button>
+				) : (
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={handleAddItem}
+							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+						>
+							<Plus size={13} />
+							<span>{t(localizationConstants.dataItAddSystemBtn)}</span>
+						</button>
+						<button
+							type="button"
+							onClick={handleCancel}
+							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50"
+						>
+							<X size={13} />
+							<span>{t(localizationConstants.dataItBtnCancel)}</span>
+						</button>
+						<button
+							type="button"
+							onClick={handleSave}
+							className="inline-flex items-center gap-1 rounded-md bg-slate-950 px-3 py-1 text-xs font-medium text-white hover:bg-slate-800"
+						>
+							<Check size={13} />
+							<span>{t(localizationConstants.dataItBtnSave)}</span>
+						</button>
+					</div>
+				)}
 			</div>
 
 			{/* System Table */}
@@ -83,36 +145,10 @@ export function DataItDetailSystemCard({ employee }: DataItDetailSystemCardProps
 										<ArrowUpDown size={12} />
 									</button>
 								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("programName")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColSystemProgram)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("email")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColSystemEmail)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
-								<th className="px-6 py-3">
-									<button
-										type="button"
-										onClick={() => handleSort("passwordStatus")}
-										className="inline-flex items-center gap-1 hover:text-slate-800"
-									>
-										{t(localizationConstants.dataItColSystemPassword)}
-										<ArrowUpDown size={12} />
-									</button>
-								</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemProgram)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemEmail)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemPassword)}</th>
+								{isEditing && <th className="px-4 py-3 text-right" />}
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-slate-100 text-slate-700">
@@ -124,6 +160,17 @@ export function DataItDetailSystemCard({ employee }: DataItDetailSystemCardProps
 									<td className="px-6 py-3 font-mono text-xs text-slate-500">
 										{item.passwordStatus}
 									</td>
+									{isEditing && (
+										<td className="px-4 py-3 text-right">
+											<button
+												type="button"
+												onClick={() => handleRemoveItem(item.id)}
+												className="rounded p-1 text-slate-400 hover:text-rose-600"
+											>
+												<Trash2 size={14} />
+											</button>
+										</td>
+									)}
 								</tr>
 							))}
 						</tbody>

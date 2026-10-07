@@ -44,6 +44,14 @@ export function useDataItOverview() {
 			if (saved) {
 				const parsed = JSON.parse(saved);
 				if (Array.isArray(parsed) && parsed.length > 0) {
+					if (parsed.length < initialDataItEmployees.length) {
+						setEmployees(initialDataItEmployees);
+						localStorage.setItem(
+							DATA_IT_STORAGE_KEY,
+							JSON.stringify(initialDataItEmployees),
+						);
+						return;
+					}
 					setEmployees(parsed);
 					return;
 				}

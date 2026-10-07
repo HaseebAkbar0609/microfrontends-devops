@@ -108,7 +108,7 @@ export function DataItOverviewToolbar({
 				className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus:outline-none"
 			>
 				<Plus size={16} />
-				<span>+ {t(localizationConstants.dataItAddEmployeeBtn)}</span>
+				<span>{t(localizationConstants.dataItAddEmployeeBtn)}</span>
 			</button>
 		</div>
 	);

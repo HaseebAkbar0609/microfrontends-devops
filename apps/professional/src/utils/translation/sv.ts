@@ -11888,6 +11888,12 @@ export const svDataItOverviewAndDetail: DataItOverviewAndDetailTranslation = {
 	dataItEmptySystemDesc: "Medarbetaren har för närvarande inga registrerade systembehörigheter.",
 	dataItRowsPerPage: "Rader per sida",
 	dataItPageOf: "Sida {page} av {totalPages}",
+	dataItBtnSave: "Spara",
+	dataItBtnCancel: "Avbryt",
+	dataItToastSaveSuccess: "Ändringarna har sparats",
+	dataItValidationRequired: "Fältet är obligatoriskt",
+	dataItAddEquipmentBtn: "Lägg till utrustning",
+	dataItAddSystemBtn: "Lägg till system",
 };
 
 export const sv: Translation = {

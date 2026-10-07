@@ -11867,6 +11867,12 @@ export const enDataItOverviewAndDetail: DataItOverviewAndDetailTranslation = {
 	dataItEmptySystemDesc: "The employee currently has no registered system credentials.",
 	dataItRowsPerPage: "Rows per page",
 	dataItPageOf: "Page {page} of {totalPages}",
+	dataItBtnSave: "Save",
+	dataItBtnCancel: "Cancel",
+	dataItToastSaveSuccess: "Changes have been saved successfully",
+	dataItValidationRequired: "This field is required",
+	dataItAddEquipmentBtn: "Add equipment",
+	dataItAddSystemBtn: "Add system",
 };
 
 export const en: Translation = {
