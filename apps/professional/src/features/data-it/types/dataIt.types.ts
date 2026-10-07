@@ -8,27 +8,33 @@ export interface DataItKpiData {
 	securityScore: number;
 }
 
-export interface DeviceCategoryItem {
+export interface RawDeviceCategoryItem {
 	id: string;
 	labelKey: TranslationKeys;
 	count: number;
-	percentage: number;
 	colorClass: string;
 }
 
-export interface WarrantyExpiryDevice {
+export interface DeviceCategoryItem extends RawDeviceCategoryItem {
+	percentage: number;
+}
+
+export interface RawWarrantyExpiryDevice {
 	id: string;
 	name: string;
 	serialNumber: string;
 	assignedTo: string;
-	daysLeft: number;
 	expiryDate: string;
+}
+
+export interface WarrantyExpiryDevice extends RawWarrantyExpiryDevice {
+	daysLeft: number;
 }
 
 export interface UpcomingPurchaseItem {
 	id: string;
 	itemName: string;
-	category: string;
+	categoryKey: TranslationKeys;
 	quantity: number;
 	estimatedCostSek: number;
 	status: "APPROVED" | "PENDING";
@@ -40,14 +46,40 @@ export interface ActiveSupportTicketItem {
 	subject: string;
 	requester: string;
 	priority: "HIGH" | "NORMAL";
-	createdTime: string;
+	createdAt: string;
 }
 
 export interface DataItQuickAction {
 	id: string;
 	labelKey: TranslationKeys;
-	successMessageKey: TranslationKeys;
+	targetHref?: string;
 	icon: LucideIcon;
+}
+
+export interface DataItSecurityItem {
+	id: string;
+	labelKey: TranslationKeys;
+	valueKey?: TranslationKeys;
+	percentage?: number;
+	count?: number;
+	status: "ok" | "warn" | "error";
+}
+
+export interface DataItSystemStatusItem {
+	id: string;
+	name: string;
+	uptimePercentage: number;
+	statusKey: TranslationKeys;
+	status: "ok" | "warn";
+}
+
+export interface RawDataItDashboardState {
+	categories: RawDeviceCategoryItem[];
+	warrantyDevices: RawWarrantyExpiryDevice[];
+	upcomingPurchases: UpcomingPurchaseItem[];
+	supportTickets: ActiveSupportTicketItem[];
+	securityItems: DataItSecurityItem[];
+	systemStatusItems: DataItSystemStatusItem[];
 }
 
 export interface DataItDashboardState {
@@ -56,4 +88,7 @@ export interface DataItDashboardState {
 	warrantyDevices: WarrantyExpiryDevice[];
 	upcomingPurchases: UpcomingPurchaseItem[];
 	supportTickets: ActiveSupportTicketItem[];
+	securityItems: DataItSecurityItem[];
+	systemStatusItems: DataItSystemStatusItem[];
 }
+

@@ -1,16 +1,23 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
+import localizationConstants from "@/utils/translation/constants";
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import { DATA_IT_QUICK_ACTIONS } from "../../constants/dataItDashboard.mock";
 import type { DataItQuickAction } from "../../types/dataIt.types";
 
 export function QuickActionsWidget() {
+	const router = useRouter();
 	const t = useTranslate();
 
 	const handleActionClick = (action: DataItQuickAction) => {
-		showToast("success", t(action.successMessageKey));
+		if (action.targetHref) {
+			router.push(action.targetHref);
+		} else {
+			showToast("info", t(localizationConstants.economyComingSoon));
+		}
 	};
 
 	return (
@@ -40,3 +47,4 @@ export function QuickActionsWidget() {
 }
 
 export default QuickActionsWidget;
+

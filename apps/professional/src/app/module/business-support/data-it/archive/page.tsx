@@ -2,5 +2,5 @@ import { DataItSectionPlaceholder } from "@/features/data-it/components/placehol
 import localizationConstants from "@/utils/translation/constants";
 
 export default function ArchivePage() {
-	return <DataItSectionPlaceholder titleKey={localizationConstants.dataItArchive} />;
+	return <DataItSectionPlaceholder titleKey={localizationConstants.archiveItem} />;
 }

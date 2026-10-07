@@ -65,12 +65,12 @@ export const dataItNavItems: RouteTabItem[] = [
 	},
 	{
 		id: "documents",
-		labelKey: localizationConstants.dataItDocuments,
+		labelKey: localizationConstants.documentCenterItem,
 		href: `${DATA_IT_MODULE_BASE_URL}/documents`,
 	},
 	{
 		id: "archive",
-		labelKey: localizationConstants.dataItArchive,
+		labelKey: localizationConstants.archiveItem,
 		href: `${DATA_IT_MODULE_BASE_URL}/archive`,
 	},
 ];

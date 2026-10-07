@@ -11748,8 +11748,6 @@ export const enDataItDashboard: DataItDashboardTranslation = {
 	dataItPurchase: "Purchase Equipment",
 	dataItTemplates: "Templates",
 	dataItStatistics: "Statistics",
-	dataItDocuments: "Document Center",
-	dataItArchive: "Archive",
 
 	wDataItKpiTitle: "KPI Data IT Overview",
 	wDataItKpiDesc: "Overview of total IT assets, active systems, and support metrics.",
@@ -11786,19 +11784,15 @@ export const enDataItDashboard: DataItDashboardTranslation = {
 	dataItCreateSupportTicket: "Create new IT ticket",
 	dataItOrderHardware: "Order hardware / accessories",
 	dataItRequestPermissions: "Request system permissions",
-	dataItActionRegisteredSuccess: "New equipment was registered successfully.",
-	dataItActionTicketSuccess: "New support ticket was created.",
-	dataItActionOrderSuccess: "Hardware order request was submitted for approval.",
-	dataItActionPermissionSuccess: "Permission request was sent to administrator.",
 	dataItEmptyWarrantyTitle: "No warranties expiring soon",
-	dataItEmptyWarrantyDesc: "All devices have active warranties valid for over 90 days.",
 	dataItEmptySupportTitle: "No active support tickets",
-	dataItEmptySupportDesc: "There are currently no open or unresolved support cases.",
-	dataItDiscard: "Discard",
+	dataItEmptyCategoriesTitle: "No device categories available",
+	dataItEmptyPurchasesTitle: "No planned purchases",
 	dataItOperational: "Operational",
 	dataItUpToDate: "Up to date",
 	dataItCompleted: "Completed",
 	dataItPendingPatches: "Pending patches",
+	dataItPending: "Pending",
 	dataItMfaCompliance: "MFA compliance",
 	dataItDailyBackup: "Daily cloud backup",
 	dataItAntivirusStatus: "Antivirus definitions",
@@ -11806,8 +11800,9 @@ export const enDataItDashboard: DataItDashboardTranslation = {
 	dataItUnits: "units",
 	dataItCurrencySek: "SEK",
 	dataItAriaSections: "Data IT sections",
-	dataItAriaRearrange: "Rearrange dashboard",
+	dataItHoursAgo: "{count}h ago",
 };
+
 
 export const en: Translation = {
   ...enDocumentWorkflows,

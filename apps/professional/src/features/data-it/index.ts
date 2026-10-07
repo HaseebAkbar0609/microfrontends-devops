@@ -5,7 +5,6 @@ export * from "./constants/dataItDashboard.mock";
 export * from "./hooks/useDataItDashboard";
 export * from "./components/dashboard/DataItDashboardConfig";
 export * from "./components/dashboard/DataItDashboard";
-export * from "./components/dashboard/DataItDashboardPage";
 export * from "./components/widgets/KpiDataItWidget";
 export * from "./components/widgets/DevicesByCategoryWidget";
 export * from "./components/widgets/WarrantyExpiryWidget";

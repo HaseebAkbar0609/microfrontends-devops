@@ -1,36 +1,78 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { initialDataItDashboardState } from "../constants/dataItDashboard.mock";
-import { DATA_IT_REFRESH_DELAY_MS } from "../constants/dataItDashboard.constants";
-import type { DataItDashboardState } from "../types/dataIt.types";
+import { useState, useMemo } from "react";
+import { initialRawDataItDashboardState } from "../constants/dataItDashboard.mock";
+import { DATA_IT_EXPIRY_THRESHOLD_DAYS } from "../constants/dataItDashboard.constants";
+import type {
+	DataItDashboardState,
+	RawDataItDashboardState,
+} from "../types/dataIt.types";
 
 export function useDataItDashboard() {
-	const [state, setState] = useState<DataItDashboardState>(
-		initialDataItDashboardState,
+	const [rawState] = useState<RawDataItDashboardState>(
+		initialRawDataItDashboardState,
 	);
 	const [isRearranging, setIsRearranging] = useState(false);
 
-	const handleRefresh = useCallback(async () => {
-		await new Promise((resolve) =>
-			setTimeout(resolve, DATA_IT_REFRESH_DELAY_MS),
+	const state: DataItDashboardState = useMemo(() => {
+		const totalDevices = rawState.categories.reduce(
+			(acc, cat) => acc + cat.count,
+			0,
 		);
-		setState((prev) => ({
-			...prev,
-			kpi: {
-				...prev.kpi,
-				openTickets: Math.max(0, prev.kpi.openTickets),
-			},
+
+		const categories = rawState.categories.map((cat) => ({
+			...cat,
+			percentage:
+				totalDevices > 0 ? Math.round((cat.count / totalDevices) * 100) : 0,
 		}));
-	}, []);
+
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		const warrantyDevices = rawState.warrantyDevices
+			.map((device) => {
+				const exp = new Date(device.expiryDate);
+				exp.setHours(0, 0, 0, 0);
+				const daysLeft = Math.ceil(
+					(exp.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+				);
+				return {
+					...device,
+					daysLeft,
+				};
+			})
+			.filter(
+				(device) =>
+					device.daysLeft >= 0 &&
+					device.daysLeft <= DATA_IT_EXPIRY_THRESHOLD_DAYS,
+			);
+
+		const openTickets = rawState.supportTickets.length;
+		const activeSystems = rawState.systemStatusItems.length;
+		const securityScore = 98;
+
+		return {
+			kpi: {
+				totalDevices,
+				activeSystems,
+				openTickets,
+				securityScore,
+			},
+			categories,
+			warrantyDevices,
+			upcomingPurchases: rawState.upcomingPurchases,
+			supportTickets: rawState.supportTickets,
+			securityItems: rawState.securityItems,
+			systemStatusItems: rawState.systemStatusItems,
+		};
+	}, [rawState]);
 
 	return {
 		state,
-		setState,
 		isRearranging,
 		setIsRearranging,
-		handleRefresh,
 	};
 }
 
 export default useDataItDashboard;
+

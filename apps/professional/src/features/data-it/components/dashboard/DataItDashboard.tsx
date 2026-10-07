@@ -3,7 +3,6 @@
 import React, { useMemo } from "react";
 import { ModuleWidgetDashboard } from "@/features/widgetdashboard/components/ModuleWidgetDashboard";
 import { DashboardRearrangeRail } from "@/features/widgetdashboard/components/rail/DashboardRearrangeRail";
-import localizationConstants from "@/utils/translation/constants";
 import { useDataItDashboard } from "../../hooks/useDataItDashboard";
 import {
 	buildDataItInitialWidgets,
@@ -16,12 +15,11 @@ import {
 } from "../../constants/dataItDashboard.constants";
 
 export function DataItDashboard() {
-	const { state, isRearranging, setIsRearranging, handleRefresh } =
-		useDataItDashboard();
+	const { state, isRearranging, setIsRearranging } = useDataItDashboard();
 
 	const widgetMap = useMemo(
-		() => buildDataItWidgetMap(state, handleRefresh),
-		[state, handleRefresh],
+		() => buildDataItWidgetMap(state),
+		[state],
 	);
 
 	const initialWidgets = useMemo(
@@ -52,7 +50,6 @@ export function DataItDashboard() {
 					placedItemIds={placedItemIds}
 					isRearranging={isRearranging}
 					showToggle={true}
-					discardLabel={localizationConstants.dataItDiscard}
 					onToggleRearrange={() => setIsRearranging((prev) => !prev)}
 					onSave={() => {
 						saveLayout?.();
@@ -69,3 +66,4 @@ export function DataItDashboard() {
 }
 
 export default DataItDashboard;
+

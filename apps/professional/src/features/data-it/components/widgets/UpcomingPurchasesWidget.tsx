@@ -4,6 +4,7 @@ import React from "react";
 import { ShoppingBag, CheckCircle, Clock } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { formatCurrency } from "@/utils/formatCurrency";
 import type { UpcomingPurchaseItem } from "../../types/dataIt.types";
 
 interface UpcomingPurchasesWidgetProps {
@@ -13,6 +14,17 @@ interface UpcomingPurchasesWidgetProps {
 export function UpcomingPurchasesWidget({
 	purchases,
 }: UpcomingPurchasesWidgetProps) {
+	if (purchases.length === 0) {
+		return (
+			<div className="flex h-32 flex-col items-center justify-center text-center text-slate-500">
+				<ShoppingBag className="mb-1 h-6 w-6 text-slate-400" />
+				<p className="text-xs font-medium">
+					<Translate text={localizationConstants.dataItEmptyPurchasesTitle} />
+				</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="space-y-2 pt-2">
 			{purchases.map((item) => (
@@ -29,7 +41,9 @@ export function UpcomingPurchasesWidget({
 								{item.itemName}
 							</p>
 							<p className="text-[11px] text-slate-500">
-								{item.estimatedCostSek.toLocaleString("sv-SE")}{" "}
+								{item.quantity}{" "}
+								<Translate text={localizationConstants.dataItUnits} /> ·{" "}
+								{formatCurrency(item.estimatedCostSek)}{" "}
 								<Translate text={localizationConstants.dataItCurrencySek} />
 							</p>
 						</div>
@@ -55,3 +69,4 @@ export function UpcomingPurchasesWidget({
 }
 
 export default UpcomingPurchasesWidget;
+

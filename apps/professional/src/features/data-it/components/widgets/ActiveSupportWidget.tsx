@@ -3,7 +3,7 @@
 import React from "react";
 import { AlertTriangle, Clock, Inbox } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { useTranslate, Translate } from "@/utils/translation/translate";
 import type { ActiveSupportTicketItem } from "../../types/dataIt.types";
 
 interface ActiveSupportWidgetProps {
@@ -11,6 +11,21 @@ interface ActiveSupportWidgetProps {
 }
 
 export function ActiveSupportWidget({ tickets }: ActiveSupportWidgetProps) {
+	const t = useTranslate();
+
+	const formatRelativeTime = (isoString: string) => {
+		const created = new Date(isoString);
+		const now = new Date();
+		const diffHours = Math.max(
+			1,
+			Math.round((now.getTime() - created.getTime()) / (1000 * 60 * 60)),
+		);
+		return t(localizationConstants.dataItHoursAgo).replace(
+			"{count}",
+			String(diffHours),
+		);
+	};
+
 	if (tickets.length === 0) {
 		return (
 			<div className="flex h-32 flex-col items-center justify-center text-center text-slate-500">
@@ -34,7 +49,9 @@ export function ActiveSupportWidget({ tickets }: ActiveSupportWidgetProps) {
 							<span className="text-[11px] font-bold text-slate-900">
 								{ticket.ticketNumber}
 							</span>
-							<span className="text-[10px] text-slate-400">· {ticket.createdTime}</span>
+							<span className="text-[10px] text-slate-400">
+								· {formatRelativeTime(ticket.createdAt)}
+							</span>
 						</div>
 						<p className="truncate text-xs text-slate-700">
 							{ticket.subject}
@@ -64,3 +81,4 @@ export function ActiveSupportWidget({ tickets }: ActiveSupportWidgetProps) {
 }
 
 export default ActiveSupportWidget;
+

@@ -2,9 +2,10 @@ import React from "react";
 import {
 	Folder,
 	LayoutGrid,
-	Coins,
-	Shield,
+	Clock,
+	ShoppingCart,
 	User,
+	Zap,
 	ShieldCheck,
 	Server,
 	Layers,
@@ -45,12 +46,12 @@ export const DATA_IT_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
 		id: "warranty",
 		label: localizationConstants.wDataItWarrantyExpiryTitle,
-		icon: Coins,
+		icon: Clock,
 	},
 	{
 		id: "purchases",
 		label: localizationConstants.wDataItUpcomingPurchasesTitle,
-		icon: Shield,
+		icon: ShoppingCart,
 	},
 	{
 		id: "support",
@@ -60,7 +61,7 @@ export const DATA_IT_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
 		id: "actions",
 		label: localizationConstants.wDataItQuickActionsTitle,
-		icon: Coins,
+		icon: Zap,
 	},
 	{
 		id: "security",
@@ -76,7 +77,6 @@ export const DATA_IT_SIDEBAR_ITEMS: WidgetItem[] = [
 
 export function buildDataItWidgetMap(
 	state: DataItDashboardState,
-	onRefresh?: () => Promise<void>,
 ): Record<string, WidgetProps> {
 	return {
 		emptyPage: {
@@ -88,65 +88,52 @@ export function buildDataItWidgetMap(
 			icon: Folder,
 			content: <KpiDataItWidget kpi={state.kpi} />,
 			expandedContent: <KpiDataItWidget kpi={state.kpi} />,
-			onRefresh,
 		},
 		categories: {
 			title: localizationConstants.wDataItDevicesByCategoryTitle,
 			icon: LayoutGrid,
 			content: <DevicesByCategoryWidget categories={state.categories} />,
 			expandedContent: <DevicesByCategoryWidget categories={state.categories} />,
-			onRefresh,
 		},
 		warranty: {
 			title: localizationConstants.wDataItWarrantyExpiryTitle,
-			icon: Coins,
+			icon: Clock,
 			content: <WarrantyExpiryWidget devices={state.warrantyDevices} />,
 			expandedContent: <WarrantyExpiryWidget devices={state.warrantyDevices} />,
-			emptyTitle: localizationConstants.dataItEmptyWarrantyTitle,
-			emptyDescription: localizationConstants.dataItEmptyWarrantyDesc,
-			isEmpty: state.warrantyDevices.length === 0,
-			onRefresh,
 		},
 		purchases: {
 			title: localizationConstants.wDataItUpcomingPurchasesTitle,
-			icon: Shield,
+			icon: ShoppingCart,
 			content: <UpcomingPurchasesWidget purchases={state.upcomingPurchases} />,
 			expandedContent: <UpcomingPurchasesWidget purchases={state.upcomingPurchases} />,
-			onRefresh,
 		},
 		support: {
 			title: localizationConstants.wDataItActiveSupportTitle,
 			icon: User,
 			content: <ActiveSupportWidget tickets={state.supportTickets} />,
 			expandedContent: <ActiveSupportWidget tickets={state.supportTickets} />,
-			emptyTitle: localizationConstants.dataItEmptySupportTitle,
-			emptyDescription: localizationConstants.dataItEmptySupportDesc,
-			isEmpty: state.supportTickets.length === 0,
-			onRefresh,
 		},
 		actions: {
 			title: localizationConstants.wDataItQuickActionsTitle,
-			icon: Coins,
+			icon: Zap,
 			content: <QuickActionsWidget />,
 			expandedContent: <QuickActionsWidget />,
-			onRefresh,
 		},
 		security: {
 			title: localizationConstants.wDataItSecurityStatusTitle,
 			icon: ShieldCheck,
-			content: <SecurityStatusWidget />,
-			expandedContent: <SecurityStatusWidget />,
-			onRefresh,
+			content: <SecurityStatusWidget items={state.securityItems} />,
+			expandedContent: <SecurityStatusWidget items={state.securityItems} />,
 		},
 		system: {
 			title: localizationConstants.wDataItSystemStatusTitle,
 			icon: Server,
-			content: <SystemStatusWidget />,
-			expandedContent: <SystemStatusWidget />,
-			onRefresh,
+			content: <SystemStatusWidget items={state.systemStatusItems} />,
+			expandedContent: <SystemStatusWidget items={state.systemStatusItems} />,
 		},
 	};
 }
+
 
 export function buildDataItInitialWidgets(
 	widgetMap: Record<string, WidgetProps>,

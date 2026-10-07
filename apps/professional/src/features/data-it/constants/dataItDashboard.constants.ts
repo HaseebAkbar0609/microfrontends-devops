@@ -4,4 +4,4 @@ export const DATA_IT_DASHBOARD_STORAGE_KEY =
 export const DATA_IT_SOURCE_LOCATION = "data_it_dashboard";
 
 export const DATA_IT_EXPIRY_THRESHOLD_DAYS = 90;
-export const DATA_IT_REFRESH_DELAY_MS = 600;
+

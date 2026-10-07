@@ -11356,8 +11356,6 @@ export type DataItDashboardTranslation = {
 	dataItPurchase: string;
 	dataItTemplates: string;
 	dataItStatistics: string;
-	dataItDocuments: string;
-	dataItArchive: string;
 	wDataItKpiTitle: string;
 	wDataItKpiDesc: string;
 	wDataItDevicesByCategoryTitle: string;
@@ -11392,19 +11390,15 @@ export type DataItDashboardTranslation = {
 	dataItCreateSupportTicket: string;
 	dataItOrderHardware: string;
 	dataItRequestPermissions: string;
-	dataItActionRegisteredSuccess: string;
-	dataItActionTicketSuccess: string;
-	dataItActionOrderSuccess: string;
-	dataItActionPermissionSuccess: string;
 	dataItEmptyWarrantyTitle: string;
-	dataItEmptyWarrantyDesc: string;
 	dataItEmptySupportTitle: string;
-	dataItEmptySupportDesc: string;
-	dataItDiscard: string;
+	dataItEmptyCategoriesTitle: string;
+	dataItEmptyPurchasesTitle: string;
 	dataItOperational: string;
 	dataItUpToDate: string;
 	dataItCompleted: string;
 	dataItPendingPatches: string;
+	dataItPending: string;
 	dataItMfaCompliance: string;
 	dataItDailyBackup: string;
 	dataItAntivirusStatus: string;
@@ -11412,8 +11406,9 @@ export type DataItDashboardTranslation = {
 	dataItUnits: string;
 	dataItCurrencySek: string;
 	dataItAriaSections: string;
-	dataItAriaRearrange: string;
+	dataItHoursAgo: string;
 };
+
 
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {

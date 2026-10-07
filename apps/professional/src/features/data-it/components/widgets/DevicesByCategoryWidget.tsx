@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { LayoutGrid } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import type { DeviceCategoryItem } from "../../types/dataIt.types";
@@ -12,6 +13,17 @@ interface DevicesByCategoryWidgetProps {
 export function DevicesByCategoryWidget({
 	categories,
 }: DevicesByCategoryWidgetProps) {
+	if (categories.length === 0) {
+		return (
+			<div className="flex h-32 flex-col items-center justify-center text-center text-slate-500">
+				<LayoutGrid className="mb-1 h-6 w-6 text-slate-400" />
+				<p className="text-xs font-medium">
+					<Translate text={localizationConstants.dataItEmptyCategoriesTitle} />
+				</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="space-y-2.5 pt-2">
 			{categories.map((cat) => (
@@ -39,3 +51,4 @@ export function DevicesByCategoryWidget({
 }
 
 export default DevicesByCategoryWidget;
+
