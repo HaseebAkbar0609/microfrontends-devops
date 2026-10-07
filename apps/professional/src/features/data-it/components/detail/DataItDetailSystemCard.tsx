@@ -6,6 +6,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEmployeeOverview, DataItSystemItem } from "../../types/dataItOverview.types";
 import { showToast } from "@/lib/toast";
+import { DataItAddSystemDialog } from "./DataItAddSystemDialog";
 
 interface DataItDetailSystemCardProps {
 	employee: DataItEmployeeOverview;
@@ -21,6 +22,7 @@ export function DataItDetailSystemCard({
 	const t = useTranslate();
 	const [isEditing, setIsEditing] = useState(false);
 	const [items, setItems] = useState<DataItSystemItem[]>(employee.systems);
+	const [addDialogOpen, setAddDialogOpen] = useState(false);
 	const [sortField, setSortField] = useState<SortField>("programName");
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -41,19 +43,6 @@ export function DataItDetailSystemCard({
 			return mult * valA.localeCompare(valB, undefined, { numeric: true });
 		});
 	}, [items, sortField, sortDirection]);
-
-	const handleAddItem = () => {
-		const newIndex = items.length + 1;
-		const newItem: DataItSystemItem = {
-			id: `SYS-${Date.now().toString().slice(-4)}`,
-			category: "Admin",
-			programName: `System Application ${newIndex}`,
-			email: employee.email,
-			passwordStatus: "•••••••• (SSO)",
-			monthlyCost: 800,
-		};
-		setItems((prev) => [...prev, newItem]);
-	};
 
 	const handleRemoveItem = (id: string) => {
 		setItems((prev) => prev.filter((item) => item.id !== id));
@@ -94,7 +83,7 @@ export function DataItDetailSystemCard({
 					<div className="flex items-center gap-2">
 						<button
 							type="button"
-							onClick={handleAddItem}
+							onClick={() => setAddDialogOpen(true)}
 							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
 						>
 							<Plus size={13} />
@@ -132,20 +121,20 @@ export function DataItDetailSystemCard({
 				</div>
 			) : (
 				<div className="overflow-x-auto">
-					<table className="w-full min-w-[650px] border-collapse text-left text-sm">
+					<table className="w-full min-w-[700px] border-collapse text-left text-sm">
 						<thead>
 							<tr className="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold text-slate-500">
 								<th className="px-6 py-3">
 									<button
 										type="button"
-										onClick={() => handleSort("category")}
+										onClick={() => handleSort("programName")}
 										className="inline-flex items-center gap-1 hover:text-slate-800"
 									>
-										{t(localizationConstants.dataItColSystemCategory)}
+										{t(localizationConstants.dataItColSystemProgram)}
 										<ArrowUpDown size={12} />
 									</button>
 								</th>
-								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemProgram)}</th>
+								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemCategory)}</th>
 								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemEmail)}</th>
 								<th className="px-6 py-3">{t(localizationConstants.dataItColSystemPassword)}</th>
 								{isEditing && <th className="px-4 py-3 text-right" />}
@@ -154,8 +143,8 @@ export function DataItDetailSystemCard({
 						<tbody className="divide-y divide-slate-100 text-slate-700">
 							{sortedItems.map((item) => (
 								<tr key={item.id} className="hover:bg-slate-50/60">
-									<td className="px-6 py-3 font-medium text-slate-900">{item.category}</td>
-									<td className="px-6 py-3">{item.programName}</td>
+									<td className="px-6 py-3 font-medium text-slate-900">{item.programName}</td>
+									<td className="px-6 py-3">{item.category}</td>
 									<td className="px-6 py-3 text-slate-500">{item.email}</td>
 									<td className="px-6 py-3 font-mono text-xs text-slate-500">
 										{item.passwordStatus}
@@ -177,6 +166,14 @@ export function DataItDetailSystemCard({
 					</table>
 				</div>
 			)}
+
+			<DataItAddSystemDialog
+				open={addDialogOpen}
+				onOpenChange={setAddDialogOpen}
+				existingSystems={items}
+				employeeEmail={employee.email}
+				onAdd={(newItem) => setItems((prev) => [...prev, newItem])}
+			/>
 		</div>
 	);
 }

@@ -12,6 +12,8 @@ interface DataItDetailBasicInfoCardProps {
 	onUpdateEmployee?: (updated: DataItEmployeeOverview) => void;
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function DataItDetailBasicInfoCard({
 	employee,
 	onUpdateEmployee,
@@ -51,8 +53,20 @@ export function DataItDetailBasicInfoCard({
 
 	const handleSave = () => {
 		const newErrors: Record<string, string> = {};
-		if (!formData.name.trim()) newErrors.name = t(localizationConstants.dataItValidationRequired);
-		if (!formData.email.trim()) newErrors.email = t(localizationConstants.dataItValidationRequired);
+		if (!formData.personCode.trim()) {
+			newErrors.personCode = t(localizationConstants.dataItValidationRequired);
+		}
+		if (!formData.name.trim()) {
+			newErrors.name = t(localizationConstants.dataItValidationRequired);
+		}
+		if (!formData.email.trim()) {
+			newErrors.email = t(localizationConstants.dataItValidationRequired);
+		} else if (!EMAIL_REGEX.test(formData.email.trim())) {
+			newErrors.email = t(localizationConstants.dataItValidationEmailInvalid);
+		}
+		if (!formData.role.trim()) {
+			newErrors.role = t(localizationConstants.dataItValidationRequired);
+		}
 
 		if (Object.keys(newErrors).length > 0) {
 			setErrors(newErrors);
@@ -133,10 +147,14 @@ export function DataItDetailBasicInfoCard({
 										if (errors[f.key]) setErrors((prev) => ({ ...prev, [f.key]: "" }));
 									}}
 									className={`mt-1 h-9 w-full rounded-md border bg-white px-3 text-sm text-slate-800 focus:outline-none ${
-										errors[f.key] ? "border-rose-400 focus:border-rose-500" : "border-slate-200 focus:border-slate-400"
+										errors[f.key]
+											? "border-rose-400 focus:border-rose-500"
+											: "border-slate-200 focus:border-slate-400"
 									}`}
 								/>
-								{errors[f.key] && <p className="mt-1 text-xs text-rose-500">{errors[f.key]}</p>}
+								{errors[f.key] && (
+									<p className="mt-1 text-xs text-rose-500">{errors[f.key]}</p>
+								)}
 							</div>
 						) : (
 							<p className="mt-1 text-sm font-medium text-slate-800">{formData[f.key]}</p>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Eye, MoreHorizontal, Trash2, Archive, Edit } from "lucide-react";
+import { Eye, MoreHorizontal, Trash2, Archive, RotateCcw, Edit } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
@@ -12,13 +12,13 @@ import { DATA_IT_MODULE_BASE_URL } from "../../constants/dataItNav.config";
 interface DataItOverviewTableRowProps {
 	emp: DataItEmployeeOverview;
 	onRequestDelete: (emp: DataItEmployeeOverview) => void;
-	onRequestArchive: (emp: DataItEmployeeOverview) => void;
+	onRequestStatusChange: (emp: DataItEmployeeOverview) => void;
 }
 
 export function DataItOverviewTableRow({
 	emp,
 	onRequestDelete,
-	onRequestArchive,
+	onRequestStatusChange,
 }: DataItOverviewTableRowProps) {
 	const t = useTranslate();
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -47,7 +47,7 @@ export function DataItOverviewTableRow({
 			<td className="px-4 py-3 text-slate-600">{formattedEq}</td>
 			<td className="px-4 py-3 text-slate-600">{formattedSys}</td>
 			<td className="px-4 py-3 font-medium text-slate-800">
-				{formatCurrency(totalCost)} kr/{t(localizationConstants.dataItMonthUnit)}
+				{formatCurrency(totalCost)} {t(localizationConstants.dataItCurrencyPerMonth)}
 			</td>
 			<td className="px-4 py-3">
 				<span
@@ -96,12 +96,21 @@ export function DataItOverviewTableRow({
 									type="button"
 									onClick={() => {
 										setMenuOpen(false);
-										onRequestArchive(emp);
+										onRequestStatusChange(emp);
 									}}
 									className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
 								>
-									<Archive size={13} />
-									<span>{t(localizationConstants.dataItActionArchive)}</span>
+									{emp.status === "ACTIVE" ? (
+										<>
+											<Archive size={13} />
+											<span>{t(localizationConstants.dataItActionArchive)}</span>
+										</>
+									) : (
+										<>
+											<RotateCcw size={13} />
+											<span>{t(localizationConstants.dataItActionActivate)}</span>
+										</>
+									)}
 								</button>
 								<button
 									type="button"

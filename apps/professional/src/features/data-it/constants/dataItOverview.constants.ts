@@ -1,4 +1,4 @@
-export const DATA_IT_STORAGE_KEY = "tfs_data_it_overview_employees_v1";
+export const DATA_IT_STORAGE_KEY = "tfs_data_it_overview_v2";
 
 export const DEFAULT_PAGE_SIZE = 10;
 

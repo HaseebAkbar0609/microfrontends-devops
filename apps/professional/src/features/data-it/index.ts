@@ -20,3 +20,4 @@ export * from "./hooks/useDataItOverview";
 export * from "./hooks/useDataItDetail";
 export * from "./components/overview/DataItOverviewView";
 export * from "./components/detail/DataItDetailView";
+export * from "./utils/dataItRepository";

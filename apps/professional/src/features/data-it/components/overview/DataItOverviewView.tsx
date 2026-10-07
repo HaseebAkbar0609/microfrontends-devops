@@ -4,11 +4,13 @@ import React from "react";
 import { useDataItOverview } from "../../hooks/useDataItOverview";
 import { DataItOverviewToolbar } from "./DataItOverviewToolbar";
 import { DataItOverviewTable } from "./DataItOverviewTable";
-import { DataItOverviewPagination } from "./DataItOverviewPagination";
-import { DataItOverviewDialogs } from "./DataItOverviewDialogs";
+import { TablePagination } from "@/components/table/TablePagination";
+import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
+import localizationConstants from "@/utils/translation/constants";
 
 export function DataItOverviewView() {
 	const {
+		isLoading,
 		searchQuery,
 		setSearchQuery,
 		statusFilter,
@@ -25,10 +27,10 @@ export function DataItOverviewView() {
 		requestDelete,
 		confirmDelete,
 		cancelDelete,
-		archiveTarget,
-		requestArchive,
-		confirmArchive,
-		cancelArchive,
+		statusTarget,
+		requestStatusChange,
+		confirmStatusChange,
+		cancelStatusChange,
 	} = useDataItOverview();
 
 	return (
@@ -41,33 +43,64 @@ export function DataItOverviewView() {
 				onStatusFilterChange={setStatusFilter}
 			/>
 
-			{/* Main Card Container with Table & Pagination */}
+			{/* Main Card Container with Table & Shared TablePagination */}
 			<div className="rounded-lg border border-slate-200 bg-white shadow-sm">
 				<DataItOverviewTable
+					isLoading={isLoading}
 					employees={paginatedEmployees}
 					sortState={sortState}
 					onSort={handleSort}
 					onRequestDelete={requestDelete}
-					onRequestArchive={requestArchive}
+					onRequestStatusChange={requestStatusChange}
 				/>
 
-				<DataItOverviewPagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-					pageSize={pageSize}
-					onPageChange={setCurrentPage}
-					onPageSizeChange={setPageSize}
-				/>
+				<div className="px-4">
+					<TablePagination
+						currentPage={currentPage}
+						totalPages={totalPages}
+						pageSize={pageSize}
+						onPageChange={setCurrentPage}
+						onPageSizeChange={setPageSize}
+					/>
+				</div>
 			</div>
 
-			{/* Safe Confirmation Modals */}
-			<DataItOverviewDialogs
-				deleteTarget={deleteTarget}
-				onConfirmDelete={confirmDelete}
-				onCancelDelete={cancelDelete}
-				archiveTarget={archiveTarget}
-				onConfirmArchive={confirmArchive}
-				onCancelArchive={cancelArchive}
+			{/* Standard Radix-based Accessible Confirmation Dialogs */}
+			<ConfirmActionDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={(open) => !open && cancelDelete()}
+				title={localizationConstants.dataItDeleteConfirmTitle}
+				description={localizationConstants.dataItDeleteConfirmDesc}
+				confirmLabel={localizationConstants.dataItActionDelete}
+				subject={deleteTarget ? `${deleteTarget.name} (#${deleteTarget.id})` : undefined}
+				destructive
+				onConfirm={confirmDelete}
+			/>
+
+			<ConfirmActionDialog
+				open={Boolean(statusTarget)}
+				onOpenChange={(open) => !open && cancelStatusChange()}
+				title={
+					statusTarget?.nextStatus === "ACTIVE"
+						? localizationConstants.dataItActivateConfirmTitle
+						: localizationConstants.dataItArchiveConfirmTitle
+				}
+				description={
+					statusTarget?.nextStatus === "ACTIVE"
+						? localizationConstants.dataItActivateConfirmDesc
+						: localizationConstants.dataItArchiveConfirmDesc
+				}
+				confirmLabel={
+					statusTarget?.nextStatus === "ACTIVE"
+						? localizationConstants.dataItActionActivate
+						: localizationConstants.dataItActionArchive
+				}
+				subject={
+					statusTarget
+						? `${statusTarget.employee.name} (#${statusTarget.employee.id})`
+						: undefined
+				}
+				onConfirm={confirmStatusChange}
 			/>
 		</div>
 	);

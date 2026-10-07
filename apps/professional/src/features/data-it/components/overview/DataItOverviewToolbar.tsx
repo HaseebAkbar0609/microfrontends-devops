@@ -38,6 +38,7 @@ export function DataItOverviewToolbar({
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
 						placeholder={t(localizationConstants.dataItSearchPlaceholder)}
+						aria-label={t(localizationConstants.dataItSearchPlaceholder)}
 						className="h-10 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 placeholder-slate-400 transition-colors focus:border-slate-400 focus:outline-none"
 					/>
 				</div>
@@ -47,6 +48,7 @@ export function DataItOverviewToolbar({
 					<button
 						type="button"
 						onClick={() => setFilterOpen((prev) => !prev)}
+						aria-label={t(localizationConstants.dataItFilterAll)}
 						className="inline-flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none"
 					>
 						<Filter size={15} className="text-slate-500" />

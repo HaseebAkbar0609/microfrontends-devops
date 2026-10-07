@@ -19,6 +19,31 @@ export function DataItDetailView({ id }: DataItDetailViewProps) {
 	const t = useTranslate();
 	const { employee, updateEmployee, activeTab, setActiveTab } = useDataItDetail(id);
 
+	if (!employee) {
+		return (
+			<div className="flex flex-1 flex-col gap-6 px-6 pt-4 pb-12">
+				<div className="flex items-center gap-2">
+					<Link
+						href={`${DATA_IT_MODULE_BASE_URL}/overview`}
+						className="inline-flex items-center gap-1.5 text-lg font-bold text-slate-900 transition-colors hover:text-slate-600"
+						aria-label={t(localizationConstants.dataItBackToOverview)}
+					>
+						<ArrowLeft size={20} />
+						<span>{t(localizationConstants.dataItBackToOverview)}</span>
+					</Link>
+				</div>
+				<div className="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white p-12 text-center shadow-sm">
+					<p className="text-base font-semibold text-slate-800">
+						{t(localizationConstants.dataItEmployeeNotFound)}
+					</p>
+					<p className="mt-1 text-sm text-slate-500">
+						{t(localizationConstants.dataItEmployeeNotFoundDesc)}
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex flex-1 flex-col gap-6 px-6 pt-4 pb-12">
 			{/* Back Button & Title Header */}
@@ -40,7 +65,7 @@ export function DataItDetailView({ id }: DataItDetailViewProps) {
 
 			{/* Sub-Tabs (Grundläggande info | Utrustning | System) */}
 			<div className="border-b border-slate-200">
-				<nav className="flex space-x-8" aria-label="Detail tabs">
+				<nav className="flex space-x-8" aria-label={t(localizationConstants.dataItAriaDetailTabs)}>
 					<button
 						type="button"
 						onClick={() => setActiveTab("basic")}

@@ -8,18 +8,23 @@ import type {
 	DataItOverviewSortField,
 } from "../types/dataItOverview.types";
 import {
-	DATA_IT_STORAGE_KEY,
 	DEFAULT_PAGE_SIZE,
 	DEFAULT_SORT_FIELD,
 	DEFAULT_SORT_DIRECTION,
 } from "../constants/dataItOverview.constants";
-import { initialDataItEmployees } from "../constants/dataItOverview.mock";
+import { dataItRepository } from "../utils/dataItRepository";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 
+export interface DataItStatusTarget {
+	employee: DataItEmployeeOverview;
+	nextStatus: "ACTIVE" | "INACTIVE";
+}
+
 export function useDataItOverview() {
 	const t = useTranslate();
+	const [isLoading, setIsLoading] = useState(true);
 	const [employees, setEmployees] = useState<DataItEmployeeOverview[]>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] =
@@ -31,51 +36,42 @@ export function useDataItOverview() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
-	// Safe confirmation dialog states
+	// Confirmation states for delete and status transitions
 	const [deleteTarget, setDeleteTarget] =
 		useState<DataItEmployeeOverview | null>(null);
-	const [archiveTarget, setArchiveTarget] =
-		useState<DataItEmployeeOverview | null>(null);
+	const [statusTarget, setStatusTarget] =
+		useState<DataItStatusTarget | null>(null);
 
-	// Load initial state safely from localStorage
+	// Initialize and subscribe to repository
 	useEffect(() => {
-		try {
-			const saved = localStorage.getItem(DATA_IT_STORAGE_KEY);
-			if (saved) {
-				const parsed = JSON.parse(saved);
-				if (Array.isArray(parsed) && parsed.length > 0) {
-					if (parsed.length < initialDataItEmployees.length) {
-						setEmployees(initialDataItEmployees);
-						localStorage.setItem(
-							DATA_IT_STORAGE_KEY,
-							JSON.stringify(initialDataItEmployees),
-						);
-						return;
-					}
-					setEmployees(parsed);
-					return;
-				}
-			}
-		} catch {
-			// Fallback on error
-		}
-		setEmployees(initialDataItEmployees);
+		setEmployees(dataItRepository.getAll());
+		setIsLoading(false);
+
+		const unsubscribe = dataItRepository.subscribe((updated) => {
+			setEmployees(updated);
+		});
+		return unsubscribe;
 	}, []);
 
-	// Save to localStorage when changed
-	const saveEmployees = useCallback(
-		(updated: DataItEmployeeOverview[]) => {
-			setEmployees(updated);
-			try {
-				localStorage.setItem(DATA_IT_STORAGE_KEY, JSON.stringify(updated));
-			} catch {
-				// Silently catch storage errors
-			}
+	// Filter with page reset handlers
+	const handleSearchChange = useCallback((query: string) => {
+		setSearchQuery(query);
+		setCurrentPage(1);
+	}, []);
+
+	const handleStatusFilterChange = useCallback(
+		(status: DataItOverviewFilterStatus) => {
+			setStatusFilter(status);
+			setCurrentPage(1);
 		},
 		[],
 	);
 
-	// Filter employees
+	const handlePageSizeChange = useCallback((size: number) => {
+		setPageSize(size);
+		setCurrentPage(1);
+	}, []);
+
 	const filteredEmployees = useMemo(() => {
 		return employees.filter((emp) => {
 			if (statusFilter !== "ALL" && emp.status !== statusFilter) {
@@ -92,7 +88,7 @@ export function useDataItOverview() {
 		});
 	}, [employees, statusFilter, searchQuery]);
 
-	// Sort employees
+	// Sort logic
 	const sortedEmployees = useMemo(() => {
 		return [...filteredEmployees].sort((a, b) => {
 			const mult = sortState.direction === "asc" ? 1 : -1;
@@ -129,14 +125,13 @@ export function useDataItOverview() {
 	// Pagination
 	const totalItems = sortedEmployees.length;
 	const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-	const safePage = Math.min(currentPage, totalPages);
+	const safePage = Math.min(Math.max(1, currentPage), totalPages);
 
 	const paginatedEmployees = useMemo(() => {
 		const start = (safePage - 1) * pageSize;
 		return sortedEmployees.slice(start, start + pageSize);
 	}, [sortedEmployees, safePage, pageSize]);
 
-	// Sorting toggle handler
 	const handleSort = useCallback((field: DataItOverviewSortField) => {
 		setSortState((prev) => ({
 			field,
@@ -145,55 +140,58 @@ export function useDataItOverview() {
 		}));
 	}, []);
 
-	// Delete confirmation flow
+	// Delete handlers
 	const requestDelete = useCallback((emp: DataItEmployeeOverview) => {
 		setDeleteTarget(emp);
 	}, []);
 
 	const confirmDelete = useCallback(() => {
 		if (!deleteTarget) return;
-		const updated = employees.filter((e) => e.id !== deleteTarget.id);
-		saveEmployees(updated);
+		dataItRepository.delete(deleteTarget.id);
 		showToast("success", t(localizationConstants.dataItToastDeleted));
 		setDeleteTarget(null);
-	}, [deleteTarget, employees, saveEmployees, t]);
+	}, [deleteTarget, t]);
 
 	const cancelDelete = useCallback(() => {
 		setDeleteTarget(null);
 	}, []);
 
-	// Archive confirmation flow
-	const requestArchive = useCallback((emp: DataItEmployeeOverview) => {
-		setArchiveTarget(emp);
+	// Status transition handlers (Archive vs Activate)
+	const requestStatusChange = useCallback((emp: DataItEmployeeOverview) => {
+		setStatusTarget({
+			employee: emp,
+			nextStatus: emp.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+		});
 	}, []);
 
-	const confirmArchive = useCallback(() => {
-		if (!archiveTarget) return;
-		const updated = employees.map((e) =>
-			e.id === archiveTarget.id
-				? { ...e, status: (e.status === "ACTIVE" ? "INACTIVE" : "ACTIVE") as DataItEmployeeOverview["status"] }
-				: e,
-		);
-		saveEmployees(updated);
-		showToast("success", t(localizationConstants.dataItToastArchived));
-		setArchiveTarget(null);
-	}, [archiveTarget, employees, saveEmployees, t]);
+	const confirmStatusChange = useCallback(() => {
+		if (!statusTarget) return;
+		const { employee, nextStatus } = statusTarget;
+		dataItRepository.update({ ...employee, status: nextStatus });
+		if (nextStatus === "INACTIVE") {
+			showToast("success", t(localizationConstants.dataItToastArchived));
+		} else {
+			showToast("success", t(localizationConstants.dataItToastActivated));
+		}
+		setStatusTarget(null);
+	}, [statusTarget, t]);
 
-	const cancelArchive = useCallback(() => {
-		setArchiveTarget(null);
+	const cancelStatusChange = useCallback(() => {
+		setStatusTarget(null);
 	}, []);
 
 	return {
+		isLoading,
 		searchQuery,
-		setSearchQuery,
+		setSearchQuery: handleSearchChange,
 		statusFilter,
-		setStatusFilter,
+		setStatusFilter: handleStatusFilterChange,
 		sortState,
 		handleSort,
 		currentPage: safePage,
 		setCurrentPage,
 		pageSize,
-		setPageSize,
+		setPageSize: handlePageSizeChange,
 		totalItems,
 		totalPages,
 		paginatedEmployees,
@@ -201,9 +199,9 @@ export function useDataItOverview() {
 		requestDelete,
 		confirmDelete,
 		cancelDelete,
-		archiveTarget,
-		requestArchive,
-		confirmArchive,
-		cancelArchive,
+		statusTarget,
+		requestStatusChange,
+		confirmStatusChange,
+		cancelStatusChange,
 	};
 }

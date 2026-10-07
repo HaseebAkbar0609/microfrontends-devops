@@ -11431,6 +11431,7 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItActionEdit: string;
 	dataItActionDelete: string;
 	dataItActionArchive: string;
+	dataItActionActivate: string;
 	dataItMonthUnit: string;
 	dataItEmptyOverview: string;
 	dataItEmptyOverviewDesc: string;
@@ -11438,10 +11439,13 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItDeleteConfirmDesc: string;
 	dataItArchiveConfirmTitle: string;
 	dataItArchiveConfirmDesc: string;
+	dataItActivateConfirmTitle: string;
+	dataItActivateConfirmDesc: string;
 	dataItConfirm: string;
 	dataItCancel: string;
 	dataItToastDeleted: string;
 	dataItToastArchived: string;
+	dataItToastActivated: string;
 	dataItToastComingSoon: string;
 	dataItDetails: string;
 	dataItBackToOverview: string;
@@ -11463,6 +11467,7 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItColEquipmentBrand: string;
 	dataItColEquipmentModel: string;
 	dataItColEquipmentSerial: string;
+	dataItColEquipmentMonthlyCost: string;
 	dataItEmptyEquipment: string;
 	dataItEmptyEquipmentDesc: string;
 	dataItSystemCardTitle: string;
@@ -11470,16 +11475,23 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItColSystemProgram: string;
 	dataItColSystemEmail: string;
 	dataItColSystemPassword: string;
+	dataItColSystemMonthlyCost: string;
 	dataItEmptySystem: string;
 	dataItEmptySystemDesc: string;
-	dataItRowsPerPage: string;
-	dataItPageOf: string;
 	dataItBtnSave: string;
 	dataItBtnCancel: string;
 	dataItToastSaveSuccess: string;
 	dataItValidationRequired: string;
+	dataItValidationEmailInvalid: string;
 	dataItAddEquipmentBtn: string;
+	dataItAddEquipmentModalTitle: string;
 	dataItAddSystemBtn: string;
+	dataItAddSystemModalTitle: string;
+	dataItEmployeeNotFound: string;
+	dataItEmployeeNotFoundDesc: string;
+	dataItCurrencyPerMonth: string;
+	dataItAriaSortBy: string;
+	dataItAriaDetailTabs: string;
 };
 
 

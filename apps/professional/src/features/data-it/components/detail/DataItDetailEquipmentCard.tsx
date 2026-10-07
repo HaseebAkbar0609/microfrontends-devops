@@ -6,6 +6,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEmployeeOverview, DataItEquipmentItem } from "../../types/dataItOverview.types";
 import { showToast } from "@/lib/toast";
+import { DataItAddEquipmentDialog } from "./DataItAddEquipmentDialog";
 
 interface DataItDetailEquipmentCardProps {
 	employee: DataItEmployeeOverview;
@@ -21,6 +22,7 @@ export function DataItDetailEquipmentCard({
 	const t = useTranslate();
 	const [isEditing, setIsEditing] = useState(false);
 	const [items, setItems] = useState<DataItEquipmentItem[]>(employee.equipment);
+	const [addDialogOpen, setAddDialogOpen] = useState(false);
 	const [sortField, setSortField] = useState<SortField>("id");
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -41,20 +43,6 @@ export function DataItDetailEquipmentCard({
 			return mult * valA.localeCompare(valB, undefined, { numeric: true });
 		});
 	}, [items, sortField, sortDirection]);
-
-	const handleAddItem = () => {
-		const newIndex = items.length + 1;
-		const newItem: DataItEquipmentItem = {
-			id: `EQ-${Date.now().toString().slice(-4)}`,
-			category: "Laptop",
-			type: "Laptop",
-			brand: "Dell",
-			model: `New Device ${newIndex}`,
-			serialNumber: `SN-${Math.floor(10000000 + Math.random() * 90000000)}`,
-			monthlyCost: 1500,
-		};
-		setItems((prev) => [...prev, newItem]);
-	};
 
 	const handleRemoveItem = (id: string) => {
 		setItems((prev) => prev.filter((item) => item.id !== id));
@@ -95,7 +83,7 @@ export function DataItDetailEquipmentCard({
 					<div className="flex items-center gap-2">
 						<button
 							type="button"
-							onClick={handleAddItem}
+							onClick={() => setAddDialogOpen(true)}
 							className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
 						>
 							<Plus size={13} />
@@ -182,6 +170,13 @@ export function DataItDetailEquipmentCard({
 					</table>
 				</div>
 			)}
+
+			<DataItAddEquipmentDialog
+				open={addDialogOpen}
+				onOpenChange={setAddDialogOpen}
+				existingEquipment={items}
+				onAdd={(newItem) => setItems((prev) => [...prev, newItem])}
+			/>
 		</div>
 	);
 }
