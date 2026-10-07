@@ -157,15 +157,22 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
       if (result.success) {
         showToast(
           "success",
-          `User ${isActivating ? "activated" : "deactivated"} successfully`,
+          t(
+            isActivating
+              ? localizationConstants.userActivatedSuccess
+              : localizationConstants.userDeactivatedSuccess,
+          ),
         );
         onRefresh?.();
       } else {
-        showToast("error", result.error || "Failed to update user status");
+        showToast(
+          "error",
+          result.error || t(localizationConstants.userStatusUpdateFailed),
+        );
       }
       closeModal();
     } catch {
-      showToast("error", "An error occurred while updating status");
+      showToast("error", t(localizationConstants.userStatusUnexpectedError));
     } finally {
       setIsPending(false);
     }

@@ -70,7 +70,10 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 				setFiles((prev) => prev.filter((item) => item !== file));
 			}
 
-			showToast("success", "Documents uploaded and saved successfully");
+			showToast(
+				"success",
+				t(localizationConstants.documentsUploadedAndSavedSuccess),
+			);
 			setComments("");
 			if (fileInputRef.current) fileInputRef.current.value = "";
 			onUploadSuccess();
@@ -78,7 +81,7 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 			const errorMessage =
 				err instanceof Error && err.message
 					? err.message
-					: "An error occurred during file upload";
+					: t(localizationConstants.fileUploadUnexpectedError);
 			if (hasAtLeastOneLinked) {
 				showToast("warning", t(localizationConstants.partialUploadWarning));
 				onUploadSuccess();

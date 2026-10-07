@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { kmaMessages } from "@/constants/messages";
 import { showToast } from "@/lib/toast";
 import {
   getProjectQualityDocumentsAPIAction,
@@ -299,7 +300,7 @@ function KMADocTable({
       if (res.success && res.data) {
         setDocuments(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load documents");
+        showToast("error", res.error || kmaMessages.load.documentsFailed);
       }
       setLoading(false);
     }
@@ -316,10 +317,10 @@ function KMADocTable({
     setDocuments((prev) => prev.filter((d) => d.id !== docId));
     const res = await deleteProjectQualityDocumentAPIAction(projectId, docId);
     if (res.success) {
-      showToast("success", "Document deleted successfully");
+      showToast("success", t(localizationConstants.documentDeletedSuccess));
     } else {
       setDocuments(prevDocs);
-      showToast("error", res.error || "Failed to delete document");
+      showToast("error", res.error || t(localizationConstants.documentDeleteFailed));
     }
   };
 
@@ -496,7 +497,7 @@ function ControlTableRows({
         const newCreators = res.data.map((c) => c.createdBy).filter(Boolean);
         setAllCreators((prev) => Array.from(new Set([...prev, ...newCreators])));
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load controls");
+        showToast("error", res.error || kmaMessages.load.controlsFailed);
       }
       setLoading(false);
     }
@@ -521,10 +522,10 @@ function ControlTableRows({
     setControls((prev) => prev.filter((c) => c.id !== controlId));
     const res = await deleteProjectQualityControlAPIAction(projectId, controlId);
     if (res.success) {
-      showToast("success", "Control deleted successfully");
+      showToast("success", t(localizationConstants.kmaControlDeletedSuccess));
     } else {
       setControls(prevControls);
-      showToast("error", res.error || "Failed to delete control");
+      showToast("error", res.error || t(localizationConstants.kmaControlDeleteFailed));
     }
   };
 
@@ -723,7 +724,7 @@ function SplitView({
           setSelectedFolder((prev) => prev || res.data?.[0]?.id || null);
         }
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load folders");
+        showToast("error", res.error || kmaMessages.load.foldersFailed);
       }
       setLoadingFolders(false);
     }
@@ -806,11 +807,18 @@ function SecureCheckDetail({
     const res = await updateSecureCheckStatusAPIAction(projectId, currentCheck.id, nextStatus);
     if (res.success && res.data) {
       setCurrentCheck(res.data);
-      showToast("success", `Status updated to ${nextStatus}`);
+      showToast(
+        "success",
+        t(
+          nextStatus === "completed"
+            ? localizationConstants.kmaStatusUpdatedCompleted
+            : localizationConstants.kmaStatusUpdatedPending,
+        ),
+      );
       onStatusChange?.();
     } else {
       setCurrentCheck(prevCheck);
-      showToast("error", res.error || "Failed to update status");
+      showToast("error", res.error || t(localizationConstants.errorStatusUpdateFailed));
     }
     setUpdating(false);
   };
@@ -1058,7 +1066,7 @@ function SecureCheckListView({
       if (res.success && res.data) {
         setChecks(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load secure checks");
+        showToast("error", res.error || kmaMessages.load.secureChecksFailed);
       }
       setLoading(false);
     }
@@ -1075,10 +1083,10 @@ function SecureCheckListView({
     setChecks((prev) => prev.filter((c) => c.id !== checkId));
     const res = await deleteProjectSecureCheckAPIAction(projectId, checkId);
     if (res.success) {
-      showToast("success", "Secure check deleted successfully");
+      showToast("success", t(localizationConstants.kmaSecureCheckDeletedSuccess));
     } else {
       setChecks(prevChecks);
-      showToast("error", res.error || "Failed to delete secure check");
+      showToast("error", res.error || t(localizationConstants.kmaSecureCheckDeleteFailed));
     }
   };
 
@@ -1374,7 +1382,7 @@ function DeviationsSubTab({ projectId }: { projectId?: string }) {
       if (res.success && res.data) {
         setDeviations(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load deviations");
+        showToast("error", res.error || kmaMessages.load.deviationsFailed);
       }
       setLoading(false);
     }

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { MoreVertical, Check, X, Plus, Trash2, Eye, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { PaymentPlan, PaymentPlanRow, PaymentPlanStatus } from "./types";
 import { fmtAmount, newRowId } from "./helpers";
@@ -346,6 +346,7 @@ export function PaymentPlanCreate({
 }: {
   onBack: () => void; onCreate: (plan: PaymentPlan) => void; plansCount: number; project?: ActiveProject;
 }) {
+  const t = useTranslate();
   const projectNo = project?.projectNo || project?.clientNo || "2024-01";
   const [rows, setRows] = useState<PaymentPlanRow[]>([
     { id: newRowId(), date: "", paymentItem: "", description: "", amount: 0, withheldFunds: 0, rgt: 0 },
@@ -409,7 +410,7 @@ export function PaymentPlanCreate({
       try {
         const res = await saveProjectPaymentPlanAPIAction(project.id, newPlan);
         if (!res?.success) {
-          toast.error(res?.error || "Failed to create payment plan");
+          toast.error(res?.error || t(localizationConstants.paymentPlanCreateFailed));
           return;
         }
         if (res.data) {
@@ -524,6 +525,7 @@ export function PaymentPlanViewEdit({
   onSave: (updated: PaymentPlan) => void; onStatusChange: (status: PaymentPlanStatus) => void;
   onSwitchToEdit: () => void; project?: ActiveProject;
 }) {
+  const t = useTranslate();
   const [rows, setRows] = useState<PaymentPlanRow[]>(plan.rows);
   const [showDeclineDialog, setShowDeclineDialog] = useState(false);
   const [declineReason, setDeclineReason] = useState("");
@@ -544,7 +546,7 @@ export function PaymentPlanViewEdit({
     if (project?.id) {
       const res = await updatePaymentPlanStatusAPIAction(project.id, plan.id, status, reason);
       if (!res?.success) {
-        toast.error(res?.error || "Failed to update status");
+        toast.error(res?.error || t(localizationConstants.errorStatusUpdateFailed));
         return false;
       }
     }
@@ -556,7 +558,7 @@ export function PaymentPlanViewEdit({
     if (project?.id) {
       const res = await saveProjectPaymentPlanAPIAction(project.id, updated);
       if (!res?.success) {
-        toast.error(res?.error || "Failed to save payment plan");
+        toast.error(res?.error || t(localizationConstants.paymentPlanSaveFailed));
         return false;
       }
     }

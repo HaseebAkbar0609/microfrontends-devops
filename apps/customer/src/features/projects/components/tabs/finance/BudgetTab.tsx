@@ -213,6 +213,7 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
 }
 
 export function BudgetCreateForm({ onBack, budget, project }: { onBack: () => void; budget?: BudgetItem; project?: ActiveProject }) {
+  const t = useTranslate();
   const [step, setStep] = useState(1);
   const [budgetName, setBudgetName] = useState(budget?.projectName ?? "");
   const [sections, setSections] = useState<BudgetSection[]>(
@@ -279,7 +280,7 @@ export function BudgetCreateForm({ onBack, budget, project }: { onBack: () => vo
       });
       setSaving(false);
       if (!res.success) {
-        toast.error(res.error || "Failed to save budget");
+        toast.error(res.error || t(localizationConstants.budgetSaveFailed));
         return;
       }
     }

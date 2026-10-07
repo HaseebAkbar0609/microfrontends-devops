@@ -17,8 +17,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { projectMessages } from "@/constants/messages";
 import { MODAL_CONSTANTS, type ModalType } from "@/constants/constant";
 import {
 	createOfferSchema,
@@ -75,6 +76,7 @@ const CUSTOMER_CATEGORY_PAGE_SIZE = 40;
 
 export default function CreateOfferPage() {
 	const router = useRouter();
+	const t = useTranslate();
 	const searchParams = useSearchParams();
 	const resumeProjectId = searchParams.get("projectId");
 	const [resumeReady, setResumeReady] = useState(!resumeProjectId);
@@ -335,7 +337,7 @@ export default function CreateOfferPage() {
 			);
 			if (cancelled) return;
 			if (!result.success || !result.data) {
-				showToast("error", result.error || "Failed to load project");
+				showToast("error", result.error || projectMessages.load.projectFailed);
 				setResumeReady(true);
 				return;
 			}
@@ -398,13 +400,11 @@ export default function CreateOfferPage() {
 				activeStep === 5
 					? (Object.keys(form.getValues()) as (keyof CreateOfferFormValues)[])
 					: CREATE_OFFER_STEP_VALIDATION_FIELDS[activeStep] ?? [];
-			const message = fields
-				.map((field) => form.getFieldState(field).error?.message)
-				.find(Boolean);
-			showToast(
-				"error",
-				message || "Please review the required fields.",
+			const firstInvalidField = fields.find(
+				(field) => form.getFieldState(field).invalid,
 			);
+			if (firstInvalidField) form.setFocus(firstInvalidField);
+			showToast("error", t(localizationConstants.validationCheckIncorrectFields));
 			return;
 		}
 
@@ -483,7 +483,7 @@ export default function CreateOfferPage() {
 				}
 			} else {
 				void form.handleSubmit(onSubmit, () => {
-					showToast("error", "Please review the required fields.");
+					showToast("error", t(localizationConstants.validationCheckIncorrectFields));
 				})();
 			}
 		}
