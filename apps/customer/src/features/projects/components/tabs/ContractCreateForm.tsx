@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { OptionalLabelSuffix } from "@/components/form";
 
 import type { ActiveProject } from "../../types";
 
@@ -55,15 +56,18 @@ interface ContractCreateFormProps {
 
 function FormField({
   label,
+  optional,
   children,
 }: {
   label: string;
+  optional?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div>
       <label className="block text-sm font-medium text-[#09090B] mb-1.5">
         {label}
+        {optional && <OptionalLabelSuffix />}
       </label>
       {children}
     </div>
@@ -399,6 +403,7 @@ export function ContractCreateForm({
               </div>
               <FormField
                 label={t(localizationConstants.contractDirectionsLabel)}
+                optional
               >
                 <textarea
                   value={form.directions}
