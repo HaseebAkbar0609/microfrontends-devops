@@ -43,3 +43,5 @@ export type { PhoneInputProps } from "./PhoneInput";
 
 export { CustomerDetailsCard } from "./CustomerDetailsCard";
 export type { CustomerDetailsCardProps } from "./CustomerDetailsCard";
+
+export { OptionalLabelSuffix, withOptionalSuffix } from "./OptionalLabelSuffix";

@@ -163,7 +163,7 @@ function ReferenceField({
         if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}
     >
-      <Label className={labelClass}>{label} *</Label>
+      <Label className={labelClass}>{label}</Label>
       <Input
         className={inputClass}
         role="combobox"
@@ -228,7 +228,7 @@ function Step1({
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div className="sm:col-span-2 flex flex-col gap-1.5">
         <Label className={labelClass}>
-          <Translate text={localizationConstants.companyNameLabel} /> *
+          <Translate text={localizationConstants.companyNameLabel} />
         </Label>
         <Input
           className={inputClass}
@@ -245,7 +245,7 @@ function Step1({
 
       <div className="sm:col-span-2 flex flex-col gap-1.5">
         <Label className={labelClass}>
-          <Translate text={localizationConstants.orgNumberLabel} /> *
+          <Translate text={localizationConstants.orgNumberLabel} />
         </Label>
         <Input
           className={inputClass}
@@ -300,7 +300,7 @@ function Step2({
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label className={labelClass}>
-          <Translate text={localizationConstants.nameLabel} /> *
+          <Translate text={localizationConstants.nameLabel} />
         </Label>
         <Input
           className={inputClass}
@@ -317,7 +317,7 @@ function Step2({
 
       <div className="flex flex-col gap-1.5">
         <Label className={labelClass}>
-          <Translate text={localizationConstants.emailLabel} /> *
+          <Translate text={localizationConstants.emailLabel} />
         </Label>
         <Input
           type="email"
@@ -335,7 +335,7 @@ function Step2({
 
       <div className="flex flex-col gap-1.5">
         <Label className={labelClass}>
-          <Translate text={localizationConstants.phoneLabel} /> *
+          <Translate text={localizationConstants.phoneLabel} />
         </Label>
         <Input
           className={inputClass}

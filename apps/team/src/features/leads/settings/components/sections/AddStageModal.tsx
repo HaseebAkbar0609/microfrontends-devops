@@ -65,7 +65,7 @@ export function AddStageModal({ pipelineId }: AddStageModalProps) {
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-semibold text-slate-900">
-              Stage Name <span className="text-red-500">*</span>
+              Stage Name
             </Label>
             <Input
               id="name"
