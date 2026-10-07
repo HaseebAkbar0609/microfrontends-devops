@@ -45,14 +45,14 @@ const CONFIRM_TEXT: Record<
 
 interface ActiveProjectRowActionsProps {
 	projectId: string;
-	/** Where Edit goes; defaults to the project page */
-	editHref?: string;
+	/** Where Edit goes: the project, or the wizard for a draft */
+	editHref: string;
 	onStatusChanged: () => void;
 }
 
 export function ActiveProjectRowActions({
 	projectId,
-	editHref = `/projectmanagement/${projectId}`,
+	editHref,
 	onStatusChanged,
 }: ActiveProjectRowActionsProps) {
 	const t = useTranslate();

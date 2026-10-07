@@ -47,7 +47,9 @@ import { mapProjectDetailToFormHydration } from "../utils/projectDetailToForm";
 import {
 	CREATION_MODE_QUERY_PARAM,
 	isProjectCreationMode,
+	OFFER_LIST_PATH,
 	PROJECT_CREATION_MODE,
+	PROJECT_LIST_PATH,
 } from "../constants";
 import type { ProjectCreationMode } from "../types/types";
 import type { FormSelectOption } from "@/components/form";
@@ -80,9 +82,6 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 };
 
 const CUSTOMER_CATEGORY_PAGE_SIZE = 40;
-/** Where Send and Cancel return to: the list that shows the project */
-const OFFER_LIST_PATH = "/business/offer";
-const PROJECT_LIST_PATH = "/projectmanagement";
 
 export default function CreateOfferPage() {
 	const router = useRouter();
@@ -96,6 +95,7 @@ export default function CreateOfferPage() {
 			? modeParam
 			: PROJECT_CREATION_MODE.quoteFirst,
 	);
+	// Send and Cancel return to the list that shows the project
 	const listPath =
 		creationMode === PROJECT_CREATION_MODE.directOrder
 			? PROJECT_LIST_PATH

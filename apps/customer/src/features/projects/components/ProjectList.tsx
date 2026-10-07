@@ -1,32 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, Loader2, ArrowUpDown } from "lucide-react";
 import { PageHeader } from "@/components/common";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BreadcrumbItem } from "@/types/user";
-import type { ActiveProject, ApiQuoteItem } from "../types";
 import { cn } from "@/lib/utils";
-import {
-	getActiveProjectsAPIAction,
-	getProjectListAPIAction,
-} from "@/api-actions";
-import type { ActiveProjectItem } from "@/api-actions/project/active";
-import {
-	byNewestFirst,
-	projectHref,
-	resolveCompanyName,
-} from "../utils/activeProject";
-import { normalizeProjectStatus } from "@/utils/statusNormalizer";
+import { projectHref, type ProjectSortKey } from "../utils/activeProject";
+import { useActiveProjectList } from "../hooks/useActiveProjectList";
 import { ActiveProjectRowActions } from "./ActiveProjectRowActions";
 import { ProjectOriginBadge } from "./ProjectOriginBadge";
-import {
-	ACCEPTED_OFFER_QUOTE_STATUS,
-	CREATE_DIRECT_PROJECT_PATH,
-	PROJECT_CREATION_MODE,
-} from "@/features/quote/constants";
+import { CREATE_DIRECT_PROJECT_PATH } from "@/features/quote/constants";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -42,210 +27,9 @@ const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
 	"on-hold": { bg: "bg-yellow-50", text: "text-yellow-600" },
 };
 
-const PROJECT_LIST_QUERY = { page: 1, pageSize: 10 } as const;
-/** Backend max for /project/active, which also returns requests whose offer is not yet accepted */
-const ACTIVE_PROJECTS_LIMIT = 100;
-
-type SortKey =
-	| "referenceNo"
-	| "name"
-	| "orderNo"
-	| "quoteReferenceNo"
-	| "companyName"
-	| "status";
-
-function mapActiveProjectToFrontend(item: ActiveProjectItem): ActiveProject {
-	const normStatus = normalizeProjectStatus(item.status);
-	const rawItem = item as unknown as Record<string, unknown>;
-	const rawOrderNo = (rawItem.orderNo || rawItem.order_no) as
-		| string
-		| undefined;
-	const orderNo = rawOrderNo && rawOrderNo !== "-" ? rawOrderNo : "—";
-	return {
-		id: item.id,
-		name: item.name || "Untitled Project",
-		referenceNo:
-			item.projectCode ||
-			(item.id ? item.id.substring(0, 8).toUpperCase() : "PROJ-1"),
-		clientNo: "-",
-		projectNo: item.projectCode || "-",
-		startDate: item.startDate || "-",
-		endDate: item.dueDate || "-",
-		contactPersonName: item.primaryContact?.name || "-",
-		mobileNumber: "-",
-		email: "-",
-		address: "-",
-		postalCode: "-",
-		companyName: resolveCompanyName(item, item.name),
-		status: normStatus,
-		statusLabel: item.statusLabel || item.status,
-		orderNo: orderNo,
-		quoteReferenceNo: "-",
-		progressPercent: item.progressPercent ?? 0,
-		updatedAt: item.updatedAt,
-		category: "-",
-	};
-}
-
-function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
-	const projName =
-		q.projectName || q.project_name || q.name || "Untitled Project";
-	const rawId = q.project_id || q.id || "";
-	const rawRef = q.refNo || q.ref_no || q.project_code || q.projectCode;
-	const refCode =
-		rawRef && rawRef !== "-"
-			? rawRef
-			: rawId
-				? rawId.substring(0, 8).toUpperCase()
-				: "-";
-	const normStatus = normalizeProjectStatus(q.quote_status || q.status);
-	const rawOrderNo = q.orderNo || q.order_no;
-	const orderNo = rawOrderNo && rawOrderNo !== "-" ? rawOrderNo : "—";
-	return {
-		id: rawId,
-		name: projName,
-		referenceNo: refCode,
-		clientNo: q.clientNo || q.client_no || "-",
-		projectNo: refCode,
-		startDate: "-",
-		endDate: "-",
-		contactPersonName: "-",
-		mobileNumber: "-",
-		email: "-",
-		address: "-",
-		postalCode: "-",
-		companyName:
-			q.companyName || q.company_name || resolveCompanyName({}, projName),
-		status: normStatus,
-		statusLabel: q.quote_status || q.status || "Active",
-		orderNo: orderNo,
-		quoteReferenceNo: refCode,
-		progressPercent: 0,
-		category: q.category || "-",
-		creationMode: q.creation_mode,
-		isCompleted: q.is_completed,
-	};
-}
-
 export function ProjectList() {
-	const [projects, setProjects] = useState<ActiveProject[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-	const [sortKey, setSortKey] = useState<SortKey>("referenceNo");
-	const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-	const [reloadKey, setReloadKey] = useState(0);
-
-	useEffect(() => {
-		let cancelled = false;
-		async function loadProjects() {
-			setLoading(true);
-			setError(null);
-
-			// Projects are accepted offers plus projects started here (TFS-1202).
-			// /project/active returns every sent request, so it only enriches
-			// rows from the filtered lists.
-			const activeById = new Map<string, ActiveProject>();
-			const combinedMap = new Map<string, ActiveProject>();
-
-			const activeRes = await getActiveProjectsAPIAction({
-				limit: ACTIVE_PROJECTS_LIMIT,
-			});
-			if (cancelled) return;
-
-			let hasError = false;
-			if (!activeRes.success) {
-				hasError = true;
-				setError(activeRes.error || "Failed to load active projects");
-			} else if (activeRes.data?.data) {
-				activeRes.data.data.forEach((item) => {
-					const mapped = mapActiveProjectToFrontend(item);
-					if (mapped.id) {
-						activeById.set(mapped.id, mapped);
-					}
-				});
-			}
-
-			if (!hasError) {
-				const listQuery = {
-					page: PROJECT_LIST_QUERY.page,
-					pageSize: PROJECT_LIST_QUERY.pageSize,
-					sortBy: sortKey || undefined,
-					sortOrder: sortDir || undefined,
-				};
-				const listResults = await Promise.all([
-					getProjectListAPIAction({
-						...listQuery,
-						quote_status: ACCEPTED_OFFER_QUOTE_STATUS,
-					}),
-					getProjectListAPIAction({
-						...listQuery,
-						creation_mode: PROJECT_CREATION_MODE.directOrder,
-					}),
-				]);
-				if (cancelled) return;
-				const failed = listResults.find(
-					(res) => !res.success || !res.data?.quotes,
-				);
-				if (!failed) {
-					const rows = listResults.flatMap(
-						(res) => res.data?.quotes ?? [],
-					);
-					rows.forEach((q: ApiQuoteItem) => {
-						const item = mapListProjectToFrontend(q);
-						if (item.id) {
-							const existing = activeById.get(item.id);
-							combinedMap.set(
-								item.id,
-								existing
-									? {
-											...existing,
-											clientNo:
-												existing.clientNo !== "-"
-													? existing.clientNo
-													: item.clientNo,
-											quoteReferenceNo:
-												existing.quoteReferenceNo !==
-												"-"
-													? existing.quoteReferenceNo
-													: item.quoteReferenceNo,
-											category:
-												existing.category !== "-"
-													? existing.category
-													: item.category,
-											creationMode: item.creationMode,
-											isCompleted: item.isCompleted,
-										}
-									: item,
-							);
-						}
-					});
-				} else {
-					hasError = true;
-					setError(failed.error || "Failed to load projects list");
-				}
-			}
-
-			if (cancelled) return;
-
-			if (!hasError) {
-				setProjects(Array.from(combinedMap.values()).sort(byNewestFirst));
-			}
-			setLoading(false);
-		}
-
-		void loadProjects();
-		return () => {
-			cancelled = true;
-		};
-	}, [sortKey, sortDir, reloadKey]);
-
-	function toggleSort(key: SortKey) {
-		if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-		else {
-			setSortKey(key);
-			setSortDir("asc");
-		}
-	}
+	const { projects, loading, error, sortKey, toggleSort, reload } =
+		useActiveProjectList();
 
 	return (
 		<div className="flex flex-1 flex-col">
@@ -313,7 +97,7 @@ export function ProjectList() {
 												key: "status",
 												label: localizationConstants.status,
 											},
-										] as { key: SortKey; label: string }[]
+										] as { key: ProjectSortKey; label: string }[]
 									).map(({ key, label }) => (
 										<th
 											key={key}
@@ -429,11 +213,7 @@ export function ProjectList() {
 													<ActiveProjectRowActions
 														projectId={project.id}
 														editHref={href}
-														onStatusChanged={() =>
-															setReloadKey(
-																(k) => k + 1,
-															)
-														}
+														onStatusChanged={reload}
 													/>
 												</td>
 											</tr>

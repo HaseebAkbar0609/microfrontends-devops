@@ -71,7 +71,11 @@ export function isProjectCreationMode(
 	return Object.values<unknown>(PROJECT_CREATION_MODE).includes(value);
 }
 
-export const CREATE_OFFER_PATH = "/business/offer/create";
+/** Get offer list (Få offert) */
+export const OFFER_LIST_PATH = "/business/offer";
+/** Active projects list (Aktiva projekt) */
+export const PROJECT_LIST_PATH = "/projectmanagement";
+export const CREATE_OFFER_PATH = `${OFFER_LIST_PATH}/create`;
 /** Create-offer wizard query param carrying the creation mode */
 export const CREATION_MODE_QUERY_PARAM = "mode";
 /** New project or direct order started from Projects (Aktiva projekt) */

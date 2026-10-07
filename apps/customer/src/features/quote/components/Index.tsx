@@ -9,6 +9,7 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import {
 	ACCEPTED_OFFER_QUOTE_STATUS,
 	BREADCRUMBS,
+	CREATE_OFFER_PATH,
 	PROJECT_CREATION_MODE,
 	PROJECT_STATUS_FILTER_OPTIONS,
 } from "../constants";
@@ -86,7 +87,7 @@ export default function OfferFeature() {
 			<ActionsToolbar
 				searchValue={search}
 				onSearchChange={(val) => changeQuery("search", val)}
-				onCreateClick={() => router.push("/business/offer/create")}
+				onCreateClick={() => router.push(CREATE_OFFER_PATH)}
 				showSearch={SHOW_OFFER_DASHBOARD_FILTERS}
 				showFilters={SHOW_OFFER_DASHBOARD_FILTERS}
 				filters={[
