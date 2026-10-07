@@ -11409,6 +11409,72 @@ export type DataItDashboardTranslation = {
 	dataItHoursAgo: string;
 };
 
+// TFS-1150: Data IT Overview & Detail View
+export type DataItOverviewAndDetailTranslation = {
+	dataItSearchPlaceholder: string;
+	dataItFilterAll: string;
+	dataItFilterActive: string;
+	dataItFilterInactive: string;
+	dataItAddEmployeeBtn: string;
+	dataItColId: string;
+	dataItColName: string;
+	dataItColEmail: string;
+	dataItColRole: string;
+	dataItColEquipment: string;
+	dataItColSystem: string;
+	dataItColTotalCost: string;
+	dataItColStatus: string;
+	dataItStatusActive: string;
+	dataItStatusInactive: string;
+	dataItActionView: string;
+	dataItActionEdit: string;
+	dataItActionDelete: string;
+	dataItActionArchive: string;
+	dataItMonthUnit: string;
+	dataItEmptyOverview: string;
+	dataItEmptyOverviewDesc: string;
+	dataItDeleteConfirmTitle: string;
+	dataItDeleteConfirmDesc: string;
+	dataItArchiveConfirmTitle: string;
+	dataItArchiveConfirmDesc: string;
+	dataItConfirm: string;
+	dataItCancel: string;
+	dataItToastDeleted: string;
+	dataItToastArchived: string;
+	dataItToastComingSoon: string;
+	dataItDetails: string;
+	dataItBackToOverview: string;
+	dataItTabBasicInfo: string;
+	dataItTabEquipment: string;
+	dataItTabSystem: string;
+	dataItBtnEdit: string;
+	dataItBasicInfoCardTitle: string;
+	dataItFieldId: string;
+	dataItFieldPerson: string;
+	dataItFieldName: string;
+	dataItFieldEmail: string;
+	dataItFieldRole: string;
+	dataItFieldPhone: string;
+	dataItEquipmentCardTitle: string;
+	dataItColEquipmentId: string;
+	dataItColEquipmentCategory: string;
+	dataItColEquipmentType: string;
+	dataItColEquipmentBrand: string;
+	dataItColEquipmentModel: string;
+	dataItColEquipmentSerial: string;
+	dataItEmptyEquipment: string;
+	dataItEmptyEquipmentDesc: string;
+	dataItSystemCardTitle: string;
+	dataItColSystemCategory: string;
+	dataItColSystemProgram: string;
+	dataItColSystemEmail: string;
+	dataItColSystemPassword: string;
+	dataItEmptySystem: string;
+	dataItEmptySystemDesc: string;
+	dataItRowsPerPage: string;
+	dataItPageOf: string;
+};
+
 
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
@@ -11787,7 +11853,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
 	PersonnelProcessAndDocumentTranslation &
 	PersonnelWorktimeGroupTranslation &
-	DataItDashboardTranslation;
+	DataItDashboardTranslation &
+	DataItOverviewAndDetailTranslation;
 
 export type TranslationKeys = keyof Translation;
 
