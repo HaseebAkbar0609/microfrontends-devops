@@ -11,7 +11,6 @@ import {
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItSystemItem } from "../../types/dataItOverview.types";
-import { dataItRepository } from "../../utils/dataItRepository";
 
 interface DataItAddSystemDialogProps {
 	open: boolean;
@@ -71,13 +70,7 @@ export function DataItAddSystemDialog({
 			return;
 		}
 
-		// Calculate collision-free sequential ID across all repository systems
-		const allSystems = dataItRepository.getAll().flatMap((e) => e.systems);
-		const maxNum = allSystems.reduce((max, item) => {
-			const match = item.id.match(/\d+/);
-			return match ? Math.max(max, parseInt(match[0], 10)) : max;
-		}, 200);
-		const newId = `SYS-${maxNum + 1}`;
+		const newId = crypto.randomUUID();
 
 		onAdd({
 			id: newId,
@@ -111,7 +104,7 @@ export function DataItAddSystemDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemProgram)} *
+								{t(localizationConstants.dataItColSystemProgram)}
 							</label>
 							<input
 								type="text"
@@ -133,7 +126,7 @@ export function DataItAddSystemDialog({
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemCategory)} *
+								{t(localizationConstants.dataItColSystemCategory)}
 							</label>
 							<input
 								type="text"
@@ -157,7 +150,7 @@ export function DataItAddSystemDialog({
 
 					<div>
 						<label className="text-xs font-medium text-slate-500">
-							{t(localizationConstants.dataItColSystemEmail)} *
+							{t(localizationConstants.dataItColSystemEmail)}
 						</label>
 						<input
 							type="email"
@@ -180,7 +173,7 @@ export function DataItAddSystemDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemPassword)} *
+								{t(localizationConstants.dataItColSystemPassword)}
 							</label>
 							<input
 								type="text"
@@ -202,7 +195,7 @@ export function DataItAddSystemDialog({
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColSystemMonthlyCost)} (SEK) *
+								{t(localizationConstants.dataItColSystemMonthlyCost)} (SEK)
 							</label>
 							<input
 								type="number"

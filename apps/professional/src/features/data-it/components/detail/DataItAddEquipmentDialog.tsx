@@ -11,7 +11,6 @@ import {
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { DataItEquipmentItem } from "../../types/dataItOverview.types";
-import { dataItRepository } from "../../utils/dataItRepository";
 
 interface DataItAddEquipmentDialogProps {
 	open: boolean;
@@ -71,13 +70,7 @@ export function DataItAddEquipmentDialog({
 			return;
 		}
 
-		// Calculate collision-free sequential ID across all repository equipment
-		const allEquipment = dataItRepository.getAll().flatMap((e) => e.equipment);
-		const maxNum = allEquipment.reduce((max, item) => {
-			const match = item.id.match(/\d+/);
-			return match ? Math.max(max, parseInt(match[0], 10)) : max;
-		}, 1000);
-		const newId = `EQ-${maxNum + 1}`;
+		const newId = crypto.randomUUID();
 
 		onAdd({
 			id: newId,
@@ -112,7 +105,7 @@ export function DataItAddEquipmentDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentCategory)} *
+								{t(localizationConstants.dataItColEquipmentCategory)}
 							</label>
 							<input
 								type="text"
@@ -133,7 +126,7 @@ export function DataItAddEquipmentDialog({
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentType)} *
+								{t(localizationConstants.dataItColEquipmentType)}
 							</label>
 							<input
 								type="text"
@@ -157,7 +150,7 @@ export function DataItAddEquipmentDialog({
 					<div className="grid grid-cols-2 gap-3">
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentBrand)} *
+								{t(localizationConstants.dataItColEquipmentBrand)}
 							</label>
 							<input
 								type="text"
@@ -178,7 +171,7 @@ export function DataItAddEquipmentDialog({
 						</div>
 						<div>
 							<label className="text-xs font-medium text-slate-500">
-								{t(localizationConstants.dataItColEquipmentModel)} *
+								{t(localizationConstants.dataItColEquipmentModel)}
 							</label>
 							<input
 								type="text"
@@ -201,7 +194,7 @@ export function DataItAddEquipmentDialog({
 
 					<div>
 						<label className="text-xs font-medium text-slate-500">
-							{t(localizationConstants.dataItColEquipmentSerial)} *
+							{t(localizationConstants.dataItColEquipmentSerial)}
 						</label>
 						<input
 							type="text"
@@ -224,7 +217,7 @@ export function DataItAddEquipmentDialog({
 
 					<div>
 						<label className="text-xs font-medium text-slate-500">
-							{t(localizationConstants.dataItColEquipmentMonthlyCost)} (SEK) *
+							{t(localizationConstants.dataItColEquipmentMonthlyCost)} (SEK)
 						</label>
 						<input
 							type="number"
