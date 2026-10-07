@@ -85,3 +85,43 @@ Always run and pass all three commands locally before opening or updating a PR:
 ### 7. Performance (Hooks & Memoization)
 - Keep `useMemo` dependency arrays granular (e.g., `[data?.lineItems]` instead of `[data]`).
 
+---
+
+## 📌 Bilal's Strict PR Review Criteria & Pre-PR Gate Checklist
+
+Before opening any PR, verify compliance against [PR_REVIEW_CHECKLIST.md](file:///e:/Office/TFSfrontend/tfs-frontend/PR_REVIEW_CHECKLIST.md):
+
+### 1. Derived State vs Stored Numbers
+- **Never store calculated metrics**: Derivations (`total = sum()`, `percentage = Math.round(count / total * 100)`, `openTickets = tickets.length`, `daysLeft = diff(today, expiry)`) MUST be computed via `useMemo` in custom hooks.
+- **Dynamic time deltas**: Never hardcode `daysLeft` or static `"1h sedan"`. Compute against `today` and format with localized relative time keys.
+- **No fake refresh hooks**: Do not implement fake `setTimeout` spinners with dummy object mutations. Only provide `onRefresh` when backed by a real fetch.
+
+### 2. Route Architecture & Canonical URLs
+- **Single canonical route**: Never serve a dashboard at two paths (e.g. `/x` and `/x/dashboard`). Choose either the Economy pattern (base route) or Agreement pattern (redirect).
+- **Tab highlighting**: Ensure the active route tab highlights correctly without broken navigation states.
+- **Delete dead wrappers**: Remove redundant `*Page.tsx` or empty sub-route wrappers.
+
+### 3. Zero Swedish in English UI & Formatters
+- **Mock data language parity**: Timestamps must be ISO strings; mock subjects must be language-neutral English; mock lists must not contain Swedish nouns (e.g. "Skärmar").
+- **Currency formatting**: Always use `formatCurrency()` from `@/utils/formatters`, never `.toLocaleString("sv-SE")`.
+- **Quantity separation**: Quantities must come from the `quantity` field, never embedded in names like `"Item (x4)"`.
+- **Swedish spelling & compound words**: Verify compound word spelling (e.g., "Inköp utrustning", "KPI Data-IT översikt").
+- **Aria labels**: Always localize `ariaLabel` attributes (e.g. `t(localizationConstants.dataItAriaSections)`).
+- **No duplicate keys**: Reuse existing keys (`documentCenterItem`, `archiveItem`). Prune unused keys before PR.
+
+### 4. Component Decoupling & Widget Architecture
+- **Zero data in TSX**: Never hardcode data lists or system status arrays in `.tsx` files; pass via props from `*.mock.ts`.
+- **Strict TranslationKeys**: Type all translation keys with `TranslationKeys`, never `string`.
+- **No string sniffing**: Use typed numeric properties instead of `.includes("%")`.
+- **Status consistency**: Labels and statuses must never contradict (e.g., "Pending patches" cannot show "Operational").
+- **Inline empty states**: Every collection widget must render an inline fallback when empty (`length === 0`).
+
+### 5. UI Discipline & Honest Action Feedback
+- **Semantic icons**: Never reuse the same icon for unrelated concepts (e.g. `Coins` for warranty and quick actions).
+- **Honest feedback**: CTA buttons must navigate to the real destination or show a neutral "coming soon" toast—never a fake "success" toast.
+
+### 6. PR Hygiene & Git Standards
+- **Zero personal notes in `src/`**: Never commit checklists or scratch files inside `apps/*/src/...`.
+- **Commit format**: Always prefix commits with `TFS-<TICKET_ID>: imperative summary`.
+- **PR descriptions**: Accurately describe mock vs live status without claiming nonexistent live backend sources.
+
