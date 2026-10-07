@@ -651,6 +651,7 @@ export const enSupplierModule: SupplierModule = {
 	supplierCreatedSuccess: "Supplier created successfully",
 	supplierCreateError: "Failed to create supplier",
 	validationSupplierCompanyNameRequired: "Company name is required",
+	validationSupplierCompanyNameInvalid: "The company name cannot contain < or >.",
 	validationSupplierCompanyNameTooShort: "The company name must be at least 2 characters.",
 	validationSupplierCompanyNameTooLong: "The company name cannot exceed 255 characters.",
 	validationSupplierCategoryRequired: "Category is required",

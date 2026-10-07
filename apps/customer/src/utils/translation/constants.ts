@@ -634,6 +634,7 @@ export type SupplierModule = {
 	supplierCreatedSuccess: string;
 	supplierCreateError: string;
 	validationSupplierCompanyNameRequired: string;
+	validationSupplierCompanyNameInvalid: string;
 	validationSupplierCompanyNameTooShort: string;
 	validationSupplierCompanyNameTooLong: string;
 	validationSupplierCategoryRequired: string;

@@ -667,6 +667,7 @@ export const svSupplierModule: SupplierModule = {
 	supplierCreatedSuccess: "Leverantören har skapats",
 	supplierCreateError: "Kunde inte skapa leverantören",
 	validationSupplierCompanyNameRequired: "Företagsnamn krävs",
+	validationSupplierCompanyNameInvalid: "Företagsnamnet får inte innehålla < eller >.",
 	validationSupplierCompanyNameTooShort: "Företagsnamnet måste vara minst 2 tecken.",
 	validationSupplierCompanyNameTooLong: "Företagsnamnet får vara högst 255 tecken.",
 	validationSupplierCategoryRequired: "Kategori krävs",
