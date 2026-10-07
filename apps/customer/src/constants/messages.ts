@@ -86,12 +86,40 @@ export const projectMessages = {
 			return t(localizationConstants.projectArchiveFailed);
 		},
 	},
+	load: {
+		get projectFailed() {
+			return t(localizationConstants.projectLoadFailed);
+		},
+		get documentsFailed() {
+			return t(localizationConstants.projectDocumentsLoadFailed);
+		},
+	},
 	delete: {
 		get success() {
 			return t(localizationConstants.projectDeletedSuccess);
 		},
 		get failed() {
 			return t(localizationConstants.projectDeleteFailed);
+		},
+	},
+};
+
+export const kmaMessages = {
+	load: {
+		get documentsFailed() {
+			return t(localizationConstants.kmaDocumentsLoadFailed);
+		},
+		get controlsFailed() {
+			return t(localizationConstants.kmaControlsLoadFailed);
+		},
+		get foldersFailed() {
+			return t(localizationConstants.kmaFoldersLoadFailed);
+		},
+		get secureChecksFailed() {
+			return t(localizationConstants.kmaSecureChecksLoadFailed);
+		},
+		get deviationsFailed() {
+			return t(localizationConstants.kmaDeviationsLoadFailed);
 		},
 	},
 };

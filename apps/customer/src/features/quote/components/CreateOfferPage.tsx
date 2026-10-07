@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { projectMessages } from "@/constants/messages";
 import { MODAL_CONSTANTS, type ModalType } from "@/constants/constant";
 import {
 	createOfferSchema,
@@ -336,7 +337,7 @@ export default function CreateOfferPage() {
 			);
 			if (cancelled) return;
 			if (!result.success || !result.data) {
-				showToast("error", result.error || "Failed to load project");
+				showToast("error", result.error || projectMessages.load.projectFailed);
 				setResumeReady(true);
 				return;
 			}

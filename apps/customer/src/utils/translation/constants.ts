@@ -1017,6 +1017,13 @@ export type ProjectsModule = {
 	mediaUploadMissingId: string;
 	projectDetailsUpdateFailed: string;
 	documentDeleteFailed: string;
+	projectLoadFailed: string;
+	projectDocumentsLoadFailed: string;
+	kmaDocumentsLoadFailed: string;
+	kmaControlsLoadFailed: string;
+	kmaFoldersLoadFailed: string;
+	kmaSecureChecksLoadFailed: string;
+	kmaDeviationsLoadFailed: string;
 	fileUploadFailedNamed: string;
 	contractSaveFailed: string;
 	budgetSaveFailed: string;

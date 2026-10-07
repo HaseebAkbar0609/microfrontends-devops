@@ -6,6 +6,7 @@ import { ChevronDown, Trash2, ArrowUpDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { projectMessages } from "@/constants/messages";
 import type { ProjectDocument } from "../../types";
 import {
   getProjectDocumentsAPIAction,
@@ -57,7 +58,7 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
       );
       setDocuments(mapped);
     } else {
-      showToast("error", res.error || "Failed to fetch project documents");
+      showToast("error", res.error || projectMessages.load.documentsFailed);
     }
     setLoading(false);
   }, [projectId]);

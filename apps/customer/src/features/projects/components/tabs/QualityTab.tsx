@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { kmaMessages } from "@/constants/messages";
 import { showToast } from "@/lib/toast";
 import {
   getProjectQualityDocumentsAPIAction,
@@ -299,7 +300,7 @@ function KMADocTable({
       if (res.success && res.data) {
         setDocuments(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load documents");
+        showToast("error", res.error || kmaMessages.load.documentsFailed);
       }
       setLoading(false);
     }
@@ -496,7 +497,7 @@ function ControlTableRows({
         const newCreators = res.data.map((c) => c.createdBy).filter(Boolean);
         setAllCreators((prev) => Array.from(new Set([...prev, ...newCreators])));
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load controls");
+        showToast("error", res.error || kmaMessages.load.controlsFailed);
       }
       setLoading(false);
     }
@@ -723,7 +724,7 @@ function SplitView({
           setSelectedFolder((prev) => prev || res.data?.[0]?.id || null);
         }
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load folders");
+        showToast("error", res.error || kmaMessages.load.foldersFailed);
       }
       setLoadingFolders(false);
     }
@@ -1065,7 +1066,7 @@ function SecureCheckListView({
       if (res.success && res.data) {
         setChecks(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load secure checks");
+        showToast("error", res.error || kmaMessages.load.secureChecksFailed);
       }
       setLoading(false);
     }
@@ -1381,7 +1382,7 @@ function DeviationsSubTab({ projectId }: { projectId?: string }) {
       if (res.success && res.data) {
         setDeviations(res.data);
       } else if (!res.success) {
-        showToast("error", res.error || "Failed to load deviations");
+        showToast("error", res.error || kmaMessages.load.deviationsFailed);
       }
       setLoading(false);
     }

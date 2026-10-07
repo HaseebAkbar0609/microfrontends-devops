@@ -6,6 +6,7 @@ import { DocumentUpload } from "./documents/DocumentUpload";
 import { DocumentList } from "./documents/DocumentList";
 
 import localizationConstants from "@/utils/translation/constants";
+import { projectMessages } from "@/constants/messages";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import type { ProjectDocument } from "../types/types";
 import { getProjectDocumentsAPIAction, deleteProjectDocumentAPIAction, type ApiProjectDocumentItem } from "@/api-actions";
@@ -36,7 +37,7 @@ export function ProjectDocumentsTab({ projectId }: ProjectDocumentsTabProps) {
 			}));
 			setDocuments(mapped);
 		} else {
-			showToast("error", res.error || "Failed to fetch project documents");
+			showToast("error", res.error || projectMessages.load.documentsFailed);
 		}
 		setLoading(false);
 	}, [projectId]);
