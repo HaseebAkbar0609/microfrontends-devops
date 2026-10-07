@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { withOptionalSuffix } from "./OptionalLabelSuffix";
 
 export interface FormTextareaProps<
 	TFieldValues extends FieldValues = FieldValues,
@@ -19,6 +20,8 @@ export interface FormTextareaProps<
 	control: Control<TFieldValues>;
 	name: TName;
 	label?: React.ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	placeholder?: string;
 	disabled?: boolean;
 	rows?: number;
@@ -44,6 +47,7 @@ export function FormTextarea<
 	control,
 	name,
 	label,
+	optional,
 	placeholder,
 	disabled,
 	rows,
@@ -66,7 +70,7 @@ export function FormTextarea<
 				>
 					{label && (
 						<FormLabel className={labelClassName}>
-							{label}
+							{withOptionalSuffix(label, optional)}
 						</FormLabel>
 					)}
 					<FormControl>

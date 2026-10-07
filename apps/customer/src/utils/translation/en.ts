@@ -158,6 +158,7 @@ export const enAuth: AuthTranslation = {
 	lastName: "Surname",
 };
 export const enCommonFiles: CommonFiles = {
+	optionalFieldLabelSuffix: "(Optional)",
 	upload: "Upload",
 	noFileChosen: "No file chosen",
 	unsupportedFileType: "Only PNG and JPG files are allowed.",

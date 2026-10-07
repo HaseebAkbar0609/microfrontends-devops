@@ -19,3 +19,5 @@ export type { FormCitySelectProps } from "./FormCitySelect";
 
 export { FormFileUpload } from "./FormFileUpload";
 export type { FormFileUploadProps } from "./FormFileUpload";
+
+export { OptionalLabelSuffix } from "./OptionalLabelSuffix";

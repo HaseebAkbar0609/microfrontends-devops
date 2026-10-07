@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { ChevronDown, ChevronRight, Plus, Check, Trash2, Sigma, CircleUserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { OptionalLabelSuffix } from "@/components/form";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BudgetItem, BudgetRow, BudgetSection, SectionType } from "./types";
@@ -317,6 +318,7 @@ export function BudgetCreateForm({ onBack, budget, project }: { onBack: () => vo
         <div className="p-4">
           <label className="block text-xs font-medium text-[#374151] mb-1.5">
             <Translate text={localizationConstants.financeBudgetNameLabel} />
+            <OptionalLabelSuffix />
           </label>
           <Input value={budgetName} onChange={(e) => setBudgetName(e.target.value)} className="h-9 w-72 text-sm border-[#E2E8F0]" />
         </div>

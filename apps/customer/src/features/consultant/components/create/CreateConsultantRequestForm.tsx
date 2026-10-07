@@ -28,7 +28,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { FormInput, FormSelect, FormTextarea } from "@/components/form";
+import { FormInput, FormSelect, FormTextarea, OptionalLabelSuffix } from "@/components/form";
 import type { FormSelectOption } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { Translate } from "@/utils/translation/translate";
@@ -369,6 +369,7 @@ export default function CreateConsultantRequestForm() {
 												localizationConstants.uploadYourFilesLabel
 											}
 										/>
+										<OptionalLabelSuffix />
 									</label>
 									<p className="text-xs text-slate-500">
 										<Translate

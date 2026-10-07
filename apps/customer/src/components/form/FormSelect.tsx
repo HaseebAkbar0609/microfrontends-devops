@@ -28,6 +28,7 @@ import {
 import { ChevronDownIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
+import { withOptionalSuffix } from "./OptionalLabelSuffix";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
@@ -62,6 +63,8 @@ export interface FormSelectProps<
 	control: Control<TFieldValues>;
 	name: TName;
 	label?: React.ReactNode;
+	/** Appends " (Valfritt)" / " (Optional)" to the label. */
+	optional?: boolean;
 	placeholder?: string;
 	options: FormSelectOption[];
 	disabled?: boolean;
@@ -91,6 +94,7 @@ export function FormSelect<
 	control,
 	name,
 	label,
+	optional,
 	placeholder,
 	options,
 	disabled,
@@ -302,7 +306,7 @@ export function FormSelect<
 						<FormItem className={cn("grid gap-2 ", className)}>
 							{label && (
 								<FormLabel className={labelClassName}>
-									{resolvedLabel}
+									{withOptionalSuffix(resolvedLabel, optional)}
 								</FormLabel>
 							)}
 							<DropdownMenu
@@ -480,7 +484,7 @@ export function FormSelect<
 					<FormItem className={cn("grid gap-2 ", className)}>
 						{label && (
 							<FormLabel className={labelClassName}>
-								{resolvedLabel}
+								{withOptionalSuffix(resolvedLabel, optional)}
 							</FormLabel>
 						)}
 						<Select
