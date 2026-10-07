@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Plus, Loader2, ArrowUpDown, MoreVertical, Pencil } from "lucide-react";
+import { Plus, Loader2, ArrowUpDown } from "lucide-react";
 import { PageHeader } from "@/components/common";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -17,6 +16,7 @@ import {
 import type { ActiveProjectItem } from "@/api-actions/project/active";
 import { resolveCompanyName } from "../utils/activeProject";
 import { normalizeProjectStatus } from "@/utils/statusNormalizer";
+import { ActiveProjectRowActions } from "./ActiveProjectRowActions";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -114,17 +114,12 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
 }
 
 export function ProjectList() {
-	const router = useRouter();
 	const [projects, setProjects] = useState<ActiveProject[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [sortKey, setSortKey] = useState<SortKey>("referenceNo");
 	const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-	const [openMenu, setOpenMenu] = useState<string | null>(null);
-	const [menuAnchor, setMenuAnchor] = useState<{
-		top: number;
-		right: number;
-	} | null>(null);
+	const [reloadKey, setReloadKey] = useState(0);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -206,41 +201,7 @@ export function ProjectList() {
 		return () => {
 			cancelled = true;
 		};
-	}, [sortKey, sortDir]);
-
-	useEffect(() => {
-		if (!openMenu) return;
-		const close = () => {
-			setOpenMenu(null);
-			setMenuAnchor(null);
-		};
-		document.addEventListener("click", close);
-		window.addEventListener("resize", close);
-		window.addEventListener("scroll", close, true);
-		return () => {
-			document.removeEventListener("click", close);
-			window.removeEventListener("resize", close);
-			window.removeEventListener("scroll", close, true);
-		};
-	}, [openMenu]);
-
-	function handleMenuOpen(
-		e: React.MouseEvent<HTMLButtonElement>,
-		id: string,
-	) {
-		e.stopPropagation();
-		if (openMenu === id) {
-			setOpenMenu(null);
-			setMenuAnchor(null);
-			return;
-		}
-		const rect = e.currentTarget.getBoundingClientRect();
-		setOpenMenu(id);
-		setMenuAnchor({
-			top: rect.bottom + 4,
-			right: window.innerWidth - rect.right,
-		});
-	}
+	}, [sortKey, sortDir, reloadKey]);
 
 	function toggleSort(key: SortKey) {
 		if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -425,18 +386,14 @@ export function ProjectList() {
 													</span>
 												</td>
 												<td className="px-4 py-3 text-right">
-													<button
-														type="button"
-														onClick={(e) =>
-															handleMenuOpen(
-																e,
-																project.id,
+													<ActiveProjectRowActions
+														projectId={project.id}
+														onStatusChanged={() =>
+															setReloadKey(
+																(k) => k + 1,
 															)
 														}
-														className="p-1 rounded hover:bg-slate-100 text-[#94A3B8] transition-colors"
-													>
-														<MoreVertical className="h-4 w-4" />
-													</button>
+													/>
 												</td>
 											</tr>
 										);
@@ -447,33 +404,6 @@ export function ProjectList() {
 					</div>
 				</div>
 			</div>
-
-			{/* Row actions dropdown — fixed portal */}
-			{openMenu && menuAnchor && (
-				<div
-					style={{
-						position: "fixed",
-						top: menuAnchor.top,
-						right: menuAnchor.right,
-						zIndex: 9999,
-					}}
-					className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
-					onClick={(e) => e.stopPropagation()}
-				>
-					<button
-						type="button"
-						onClick={() => {
-							const targetId = openMenu;
-							setOpenMenu(null);
-							router.push(`/projectmanagement/${targetId}`);
-						}}
-						className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
-					>
-						<Pencil className="h-3.5 w-3.5" />
-						Edit
-					</button>
-				</div>
-			)}
 		</div>
 	);
 }

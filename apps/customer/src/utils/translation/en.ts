@@ -1055,6 +1055,7 @@ export const enProjects: ProjectsModule = {
 	deleteOrgConfirmDescription:
 		"Are you sure you want to remove this company from the organization plan? This action cannot be undone.",
 	projectActivateAction: "Activate",
+	projectRowActionsLabel: "More actions",
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:
 		"Are you sure you want to delete this project? This action cannot be undone.",
