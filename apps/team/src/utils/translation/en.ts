@@ -1790,7 +1790,7 @@ export const enContent: ContentTranslation = {
 	contentVideoSuffix: "videos",
 	contentVideoSuffixSingular: "video",
 	contentConsultantTypeNameLabel: "Name",
-	contentConsultantTypeNamePlaceholder: "E.g. Architect",
+	contentConsultantTypeNamePlaceholder: "E.g. Acoustics consultant",
 	contentConsultantTypeSectionsLabel: "Sections",
 	contentConsultantTypeSectionsHint: "Each section has a heading and bullet points. Customers see them in this order under Find assistance › Consultant.",
 	contentConsultantTypeSectionNumber: "Section {{number}}",

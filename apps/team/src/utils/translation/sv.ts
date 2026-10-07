@@ -1788,7 +1788,7 @@ export const sweContent: ContentTranslation = {
 	contentVideoSuffix: "filmer",
 	contentVideoSuffixSingular: "film",
 	contentConsultantTypeNameLabel: "Namn",
-	contentConsultantTypeNamePlaceholder: "T.ex. Arkitekt",
+	contentConsultantTypeNamePlaceholder: "T.ex. Akustikkonsult",
 	contentConsultantTypeSectionsLabel: "Avsnitt",
 	contentConsultantTypeSectionsHint: "Varje avsnitt har en rubrik och punkter. Kunden ser dem i den här ordningen under Hitta hjälp › Konsult.",
 	contentConsultantTypeSectionNumber: "Avsnitt {{number}}",

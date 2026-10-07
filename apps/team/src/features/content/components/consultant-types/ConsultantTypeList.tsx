@@ -23,7 +23,7 @@ export function ConsultantTypeList({
 }: ConsultantTypeListProps) {
 	const { types, isLoading, isError, refetch, deleteType, deletingId } =
 		consultantTypes;
-	const { startEditing, reset, editingId } = typeForm;
+	const { startEditing, reset, editingId, isSaving } = typeForm;
 	const t = useTranslate();
 
 	const handleDelete = async (id: string) => {
@@ -63,7 +63,9 @@ export function ConsultantTypeList({
 				key={type.id}
 				type={type}
 				isEditing={editingId === type.id}
-				isDeleting={deletingId === type.id}
+				// Locked while a save is in flight, so its response lands on the
+				// draft it belongs to.
+				isBusy={isSaving || deletingId === type.id}
 				onEdit={() => startEditing(type)}
 				onDelete={() => void handleDelete(type.id)}
 			/>

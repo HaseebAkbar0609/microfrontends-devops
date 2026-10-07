@@ -12,7 +12,8 @@ import type { ConsultantType } from "../../types";
 type ConsultantTypeListItemProps = {
 	type: ConsultantType;
 	isEditing: boolean;
-	isDeleting: boolean;
+	/** Saving the form or deleting this type: edit and delete wait. */
+	isBusy: boolean;
 	onEdit: () => void;
 	onDelete: () => void;
 };
@@ -24,7 +25,7 @@ type ConsultantTypeListItemProps = {
 export function ConsultantTypeListItem({
 	type,
 	isEditing,
-	isDeleting,
+	isBusy,
 	onEdit,
 	onDelete,
 }: ConsultantTypeListItemProps) {
@@ -73,6 +74,7 @@ export function ConsultantTypeListItem({
 						size="icon"
 						aria-label={`${t(localizationConstants.contentEditAction)}: ${type.name}`}
 						onClick={onEdit}
+						disabled={isBusy}
 						className="size-8"
 					>
 						<Pencil className="size-4" aria-hidden />
@@ -90,7 +92,7 @@ export function ConsultantTypeListItem({
 								size="icon"
 								aria-label={`${t(localizationConstants.contentDeleteAction)}: ${type.name}`}
 								aria-describedby={type.in_use ? inUseHintId : undefined}
-								disabled={type.in_use || isDeleting}
+								disabled={type.in_use || isBusy}
 								className="size-8"
 							>
 								<Trash2 className="size-4" aria-hidden />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/lib/toast";
@@ -23,6 +23,8 @@ import type { ConsultantTypesState } from "./useConsultantTypes";
  */
 export function useConsultantTypeForm({ create, update }: ConsultantTypesState) {
 	const [editingId, setEditingId] = useState<string | null>(null);
+	// Read after a save resolves: the form may have moved on to another type.
+	const editingIdRef = useRef<string | null>(null);
 	const t = useTranslate();
 
 	const form = useForm<ConsultantTypeFormValues>({
@@ -31,33 +33,42 @@ export function useConsultantTypeForm({ create, update }: ConsultantTypesState) 
 		mode: "onSubmit",
 	});
 
+	const edit = useCallback((id: string | null) => {
+		editingIdRef.current = id;
+		setEditingId(id);
+	}, []);
+
 	const reset = useCallback(() => {
 		form.reset(EMPTY_CONSULTANT_TYPE);
-		setEditingId(null);
-	}, [form]);
+		edit(null);
+	}, [form, edit]);
 
 	const startEditing = useCallback(
 		(type: ConsultantType) => {
 			form.reset(toConsultantTypeForm(type));
-			setEditingId(type.id);
+			edit(type.id);
 		},
-		[form],
+		[form, edit],
 	);
 
 	const submit = form.handleSubmit(async (values) => {
 		const input = toConsultantTypeInput(values);
+		const savingId = editingId;
+		// A late response must never reset or flag another record's draft.
+		const isStillOpen = () => editingIdRef.current === savingId;
 		try {
-			if (editingId) {
-				await update.mutateAsync({ id: editingId, input });
+			if (savingId) {
+				await update.mutateAsync({ id: savingId, input });
 				showToast("success", t(localizationConstants.contentConsultantTypeUpdatedToast));
 			} else {
 				await create.mutateAsync(input);
 				showToast("success", t(localizationConstants.contentConsultantTypeCreatedToast));
 			}
-			reset();
+			if (isStillOpen()) reset();
 		} catch (error) {
 			const status = apiErrorStatus(error);
 			if (status === 409) {
+				if (!isStillOpen()) return;
 				form.setError(
 					"name",
 					{
@@ -71,17 +82,24 @@ export function useConsultantTypeForm({ create, update }: ConsultantTypesState) 
 				);
 				return;
 			}
-			if (status === 404 && editingId) {
+			if (status === 404 && savingId) {
 				// Deleted in another tab: the draft has nothing left to save into.
 				showToast("error", apiErrorText(error, t(localizationConstants.contentConsultantTypeNotFound)));
-				reset();
+				if (isStillOpen()) reset();
 				return;
 			}
 			showToast("error", apiErrorText(error, t(localizationConstants.contentConsultantTypeSaveFailed)));
 		}
 	});
 
-	return { form, submit, reset, startEditing, editingId };
+	return {
+		form,
+		submit,
+		reset,
+		startEditing,
+		editingId,
+		isSaving: form.formState.isSubmitting,
+	};
 }
 
 export type ConsultantTypeFormState = ReturnType<typeof useConsultantTypeForm>;

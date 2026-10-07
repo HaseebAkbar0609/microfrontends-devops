@@ -21,9 +21,8 @@ export function ConsultantTypeFormCard({
 	section,
 	typeForm,
 }: ConsultantTypeFormCardProps) {
-	const { form, submit, reset, editingId } = typeForm;
+	const { form, submit, reset, editingId, isSaving } = typeForm;
 	const { t, i18n } = useTranslation();
-	const isSaving = form.formState.isSubmitting;
 
 	const title = `${t(
 		editingId
