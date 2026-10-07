@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError } from "@/types/api";
@@ -5,6 +6,7 @@ import type {
 	CustomerCategoriesListResponse,
 	CustomerCategory,
 } from "@/types/category";
+import localizationConstants from "@/utils/translation/constants";
 import { normalizeCategory } from "./normalizeCategory";
 
 /** The endpoint defaults to 10 items per page, so ask for more and follow total_pages. */
@@ -34,7 +36,7 @@ export async function getProfessionalsSubcategoriesListAPIAction(): Promise<
 				return {
 					success: false,
 					data: null,
-					error: body?.message || "Failed to fetch categories",
+					error: body?.message || t(localizationConstants.categoriesLoadFailed),
 				};
 			}
 
@@ -59,7 +61,8 @@ export async function getProfessionalsSubcategoriesListAPIAction(): Promise<
 	} catch (error: unknown) {
 		const apiError = error as ApiError;
 		const errorMessage =
-			apiError.response?.data?.message || "Failed to fetch categories";
+			apiError.response?.data?.message ||
+			t(localizationConstants.categoriesLoadFailed);
 		return { success: false, data: null, error: errorMessage };
 	}
 }

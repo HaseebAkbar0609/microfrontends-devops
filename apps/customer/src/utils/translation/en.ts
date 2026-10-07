@@ -624,6 +624,7 @@ export const enSupplierModule: SupplierModule = {
 	errorTitle: "An error occurred",
 	errorDetailsFailed: "Could not load details",
 	errorInvalidServerResponse: "Invalid response from server",
+	categoriesLoadFailed: "Failed to load the categories",
 	errorStatusUpdateFailed: "Failed to update status",
 	errorDetailsDesc:
 		"Could not retrieve information from server. Please check your connection.",

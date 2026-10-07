@@ -609,6 +609,7 @@ export type SupplierModule = {
 	errorTitle: string;
 	errorDetailsFailed: string;
 	errorInvalidServerResponse: string;
+	categoriesLoadFailed: string;
 	errorStatusUpdateFailed: string;
 	errorDetailsDesc: string;
 	errorRetry: string;
