@@ -7,7 +7,6 @@ import {
 	ArrowDown,
 	MoreVertical,
 	Pencil,
-	Archive,
 	Trash2,
 } from "lucide-react";
 import Link from "next/link";
@@ -36,10 +35,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { MODAL_CONSTANTS, ModalType } from "@/constants/constant";
-import {
-	patchProjectStatusAPIAction,
-	type ProjectStatusPatchValue,
-} from "@/api-actions";
+import { patchProjectStatusAPIAction } from "@/api-actions";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -53,7 +49,7 @@ import {
 
 interface QuoteTableProps {
 	data: Quote[];
-	/** Called after archive/delete succeeds so the list can reload */
+	/** Called after delete succeeds so the list can reload */
 	onRefresh?: () => void;
 }
 
@@ -167,18 +163,11 @@ const ActionsDropdown = ({
 	const [isPending, setIsPending] = useState(false);
 
 	const handleConfirm = async () => {
-		if (!type || !modalId) return;
-		const status: ProjectStatusPatchValue | null =
-			type === MODAL_CONSTANTS.ARCHIVE
-				? "archived"
-				: type === MODAL_CONSTANTS.DELETE
-					? "deleted"
-					: null;
-		if (!status) return;
+		if (type !== MODAL_CONSTANTS.DELETE || !modalId) return;
 
 		setIsPending(true);
 		try {
-			const result = await patchProjectStatusAPIAction(modalId, status);
+			const result = await patchProjectStatusAPIAction(modalId, "deleted");
 			if (result.success) {
 				onRefresh?.();
 				closeModal();
@@ -187,9 +176,6 @@ const ActionsDropdown = ({
 			setIsPending(false);
 		}
 	};
-
-	const isArchive = type === MODAL_CONSTANTS.ARCHIVE;
-	const isDelete = type === MODAL_CONSTANTS.DELETE;
 
 	return (
 		<>
@@ -221,15 +207,6 @@ const ActionsDropdown = ({
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
-						className="gap-2 cursor-pointer py-2 group"
-						onClick={() =>
-							openModal(MODAL_CONSTANTS.ARCHIVE, _quote.id)
-						}
-					>
-						<Archive className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
-						<Translate text={localizationConstants.archive} />
-					</DropdownMenuItem>
-					<DropdownMenuItem
 						className="gap-2 cursor-pointer py-2 text-red-600 focus:text-red-700 group"
 						onClick={() =>
 							openModal(MODAL_CONSTANTS.DELETE, _quote.id)
@@ -246,23 +223,13 @@ const ActionsDropdown = ({
 					<AlertDialogHeader>
 						<AlertDialogTitle className="text-lg font-semibold text-slate-800">
 							<Translate
-								text={
-									isArchive
-										? localizationConstants.archiveConfirmTitle
-										: isDelete
-											? localizationConstants.deleteQuoteConfirmTitle
-											: localizationConstants.archiveConfirmTitle
-								}
+								text={localizationConstants.deleteQuoteConfirmTitle}
 							/>
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-sm text-slate-500">
 							<Translate
 								text={
-									isArchive
-										? localizationConstants.archiveConfirmDescription
-										: isDelete
-											? localizationConstants.deleteQuoteConfirmDescription
-											: localizationConstants.archiveConfirmDescription
+									localizationConstants.deleteQuoteConfirmDescription
 								}
 							/>
 						</AlertDialogDescription>
@@ -280,21 +247,9 @@ const ActionsDropdown = ({
 								e.preventDefault();
 								void handleConfirm();
 							}}
-							className={`min-w-24 ${
-								isDelete
-									? "bg-red-600 hover:bg-red-700 text-white"
-									: "bg-slate-800 hover:bg-slate-900 text-white"
-							}`}
+							className="min-w-24 bg-red-600 hover:bg-red-700 text-white"
 						>
-							<Translate
-								text={
-									isArchive
-										? localizationConstants.archive
-										: isDelete
-											? localizationConstants.delete
-											: localizationConstants.save
-								}
-							/>
+							<Translate text={localizationConstants.delete} />
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
