@@ -29,6 +29,8 @@ import {
 } from "../types/form";
 import useModal from "@/features/auth/hooks/useModal";
 import { CreateOfferForm } from "./CreateOfferForm";
+import { CancelOfferDialog } from "./CancelOfferDialog";
+import { useStepHistory } from "../hooks/useStepHistory";
 import {
 	NewInvitationForm,
 	NewInvitationFormValues,
@@ -71,6 +73,8 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 };
 
 const CUSTOMER_CATEGORY_PAGE_SIZE = 40;
+/** Where Send and Cancel return to */
+const OFFER_LIST_PATH = "/business/offer";
 
 export default function CreateOfferPage() {
 	const router = useRouter();
@@ -85,6 +89,9 @@ export default function CreateOfferPage() {
 	const [isNextLoading, setIsNextLoading] = useState(false);
 	const [isSaveLoading, setIsSaveLoading] = useState(false);
 	const { isOpen, openModal, closeModal, type } = useModal<ModalType>();
+	const [isCancelOpen, setIsCancelOpen] = useState(false);
+	// Back (browser or wizard) keeps the input; Cancel asks, then drops it (TFS-1208)
+	const pushStep = useStepHistory(currentStep, setCurrentStep);
 	const totalSteps = 5;
 
 	const [customerCategoryRows, setCustomerCategoryRows] = useState<
@@ -439,7 +446,7 @@ export default function CreateOfferPage() {
 		setIsNextLoading(true);
 		try {
 			if (await persistSteps(4, true)) {
-				router.push("/business/offer");
+				router.push(OFFER_LIST_PATH);
 			}
 		} finally {
 			setIsNextLoading(false);
@@ -477,7 +484,7 @@ export default function CreateOfferPage() {
 		if (isValid) {
 			if (activeStep < totalSteps) {
 				// Next only moves between steps; nothing is saved until Save or Send
-				setCurrentStep(activeStep + 1);
+				pushStep(activeStep + 1);
 				setFurthestStep((step) => Math.max(step, activeStep + 1));
 			} else {
 				void form.handleSubmit(onSubmit, () => {
@@ -489,14 +496,20 @@ export default function CreateOfferPage() {
 
 	const handleBack = () => {
 		if (currentStep > 1) {
-			setCurrentStep(currentStep - 1);
+			pushStep(currentStep - 1);
 		} else {
-			router.back();
+			// Back from the first step leaves the wizard, like Cancel
+			setIsCancelOpen(true);
 		}
 	};
 
 	const handleEditStep = (step: number) => {
-		setCurrentStep(step);
+		pushStep(step);
+	};
+
+	const handleConfirmCancel = () => {
+		setIsCancelOpen(false);
+		router.push(OFFER_LIST_PATH);
 	};
 
 	const handleSave = async () => {
@@ -514,7 +527,7 @@ export default function CreateOfferPage() {
 			const invalidStep = steps.find((step) =>
 				draftFields(step).some((field) => form.getFieldState(field).invalid),
 			);
-			if (invalidStep) setCurrentStep(invalidStep);
+			if (invalidStep) pushStep(invalidStep);
 			return;
 		}
 
@@ -756,6 +769,12 @@ export default function CreateOfferPage() {
 				categoriesLoading={professionalSubcategoriesLoading}
 			/>
 
+			<CancelOfferDialog
+				open={isCancelOpen}
+				onOpenChange={setIsCancelOpen}
+				onConfirm={handleConfirmCancel}
+			/>
+
 			{/* Sticky Footer */}
 			<footer className="p-4 bg-white border-t z-10">
 				<div className="flex items-center justify-end gap-3 px-2">
@@ -763,7 +782,7 @@ export default function CreateOfferPage() {
 						type="button"
 						variant="outline"
 						className="min-w-[160px] border-slate-200 text-slate-600 h-10 bg-transparent"
-						onClick={() => router.back()}
+						onClick={() => setIsCancelOpen(true)}
 					>
 						<Translate text={localizationConstants.cancel} />
 					</Button>
