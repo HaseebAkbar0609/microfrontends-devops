@@ -20,10 +20,7 @@ export function ActiveSupportWidget({ tickets }: ActiveSupportWidgetProps) {
 			1,
 			Math.round((now.getTime() - created.getTime()) / (1000 * 60 * 60)),
 		);
-		return t(localizationConstants.dataItHoursAgo).replace(
-			"{count}",
-			String(diffHours),
-		);
+		return t(localizationConstants.dataItHoursAgo, { count: diffHours });
 	};
 
 	if (tickets.length === 0) {

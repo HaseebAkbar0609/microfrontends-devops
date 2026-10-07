@@ -49,7 +49,12 @@ export function useDataItDashboard() {
 
 		const openTickets = rawState.supportTickets.length;
 		const activeSystems = rawState.systemStatusItems.length;
-		const securityScore = 98;
+		const mfaItem = rawState.securityItems.find(
+			(item) => typeof item.percentage === "number",
+		);
+		const securityScore = mfaItem?.percentage
+			? Math.round(mfaItem.percentage)
+			: 98;
 
 		return {
 			kpi: {
