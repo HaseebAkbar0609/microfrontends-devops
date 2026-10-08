@@ -1,6 +1,6 @@
-import { DataItSectionPlaceholder } from "@/features/data-it/components/placeholder/DataItSectionPlaceholder";
-import localizationConstants from "@/utils/translation/constants";
+import { DataItSystemOverviewView } from "@/features/data-it/components/system/DataItSystemOverviewView";
 
 export default function SystemPage() {
-	return <DataItSectionPlaceholder titleKey={localizationConstants.dataItSystem} />;
+	return <DataItSystemOverviewView />;
 }
+

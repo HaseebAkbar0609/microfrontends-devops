@@ -11494,6 +11494,86 @@ export type DataItOverviewAndDetailTranslation = {
 	dataItAriaDetailTabs: string;
 };
 
+// Business Support / Data IT / System (TFS-1154)
+export type DataItSystemTranslation = {
+	dataItSystemTitle: string;
+	dataItSystemBreadcrumb: string;
+	dataItTabSystemList: string;
+	dataItRegisterNewSystem: string;
+	dataItSystemColSystemId: string;
+	dataItSystemColCategory: string;
+	dataItSystemColProgram: string;
+	dataItSystemColStatus: string;
+	dataItSystemColPrice: string;
+	dataItSystemColActions: string;
+	dataItSystemStatusActive: string;
+	dataItSystemStatusPaused: string;
+	dataItSystemStatusInactive: string;
+	dataItSystemCategoryCalculation: string;
+	dataItSystemCategoryOverhead: string;
+	dataItSystemCategoryEconomy: string;
+	dataItSystemCategoryContinuous: string;
+	dataItSystemCategoryProject: string;
+	dataItSystemCategoryOperations: string;
+	dataItSystemCategoryOther: string;
+	dataItSystemPricePerMonthUnit: string;
+	dataItSystemEmptyTitle: string;
+	dataItSystemEmptyDesc: string;
+	dataItSystemSearchPlaceholder: string;
+	dataItSystemFilterBtn: string;
+	dataItSystemFilterCategory: string;
+	dataItSystemFilterStatus: string;
+	dataItSystemAllCategories: string;
+	dataItSystemAllStatuses: string;
+	dataItSystemClearFilters: string;
+	dataItSystemDetailBack: string;
+	dataItSystemTabBasicInfo: string;
+	dataItSystemTabAssignment: string;
+	dataItSystemBasicInfoTitle: string;
+	dataItSystemFieldSystemId: string;
+	dataItSystemFieldCategory: string;
+	dataItSystemFieldProgramName: string;
+	dataItSystemFieldEmail: string;
+	dataItSystemFieldPassword: string;
+	dataItSystemFieldDescription: string;
+	dataItSystemFieldPricePerMonth: string;
+	dataItSystemDocumentsTitle: string;
+	dataItSystemColDocDate: string;
+	dataItSystemColDocName: string;
+	dataItSystemColDocType: string;
+	dataItSystemActionViewFile: string;
+	dataItSystemEmptyDocuments: string;
+	dataItSystemAssignmentTitle: string;
+	dataItSystemColAssigneeName: string;
+	dataItSystemColAssigneeRole: string;
+	dataItSystemColAssigneeEmail: string;
+	dataItSystemColAssigneePhone: string;
+	dataItSystemEmptyAssignments: string;
+	dataItSystemEditTitle: string;
+	dataItSystemEditDesc: string;
+	dataItSystemRegisterTitle: string;
+	dataItSystemRegisterDesc: string;
+	dataItSystemToastSaved: string;
+	dataItSystemToastCreated: string;
+	dataItSystemValidationRequired: string;
+	dataItSystemValidationEmail: string;
+	dataItSystemAriaTabs: string;
+	dataItSystemAriaClearSearch: string;
+	dataItSystemAriaActions: string;
+	dataItSystemShowPassword: string;
+	dataItSystemHidePassword: string;
+	dataItSystemNotFoundTitle: string;
+	dataItSystemNotFoundDesc: string;
+	dataItSystemDeleteConfirmTitle: string;
+	dataItSystemDeleteConfirmDesc: string;
+	dataItSystemToastDeleted: string;
+	dataItSystemBtnEdit: string;
+	dataItSystemBtnSave: string;
+	dataItSystemBtnCancel: string;
+	dataItSystemActionView: string;
+};
+
+
 
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
@@ -11873,7 +11953,9 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelProcessAndDocumentTranslation &
 	PersonnelWorktimeGroupTranslation &
 	DataItDashboardTranslation &
-	DataItOverviewAndDetailTranslation;
+	DataItOverviewAndDetailTranslation &
+	DataItSystemTranslation;
+
 
 export type TranslationKeys = keyof Translation;
 
