@@ -23,12 +23,11 @@ export function ConsultantTypeList({
 }: ConsultantTypeListProps) {
 	const { types, isLoading, isError, refetch, deleteType, deletingId } =
 		consultantTypes;
-	const { startEditing, reset, editingId, isSaving } = typeForm;
+	const { startEditing, resetIfEditing, editingId, isSaving } = typeForm;
 	const t = useTranslate();
 
 	const handleDelete = async (id: string) => {
-		const deleted = await deleteType(id);
-		if (deleted && editingId === id) reset();
+		if (await deleteType(id)) resetIfEditing(id);
 	};
 
 	const renderBody = () => {

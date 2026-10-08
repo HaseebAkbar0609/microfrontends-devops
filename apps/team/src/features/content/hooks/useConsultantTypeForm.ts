@@ -43,6 +43,14 @@ export function useConsultantTypeForm({ create, update }: ConsultantTypesState) 
 		edit(null);
 	}, [form, edit]);
 
+	// For a delete that resolves after the user may have opened another type.
+	const resetIfEditing = useCallback(
+		(id: string) => {
+			if (editingIdRef.current === id) reset();
+		},
+		[reset],
+	);
+
 	const startEditing = useCallback(
 		(type: ConsultantType) => {
 			form.reset(toConsultantTypeForm(type));
@@ -96,6 +104,7 @@ export function useConsultantTypeForm({ create, update }: ConsultantTypesState) 
 		form,
 		submit,
 		reset,
+		resetIfEditing,
 		startEditing,
 		editingId,
 		isSaving: form.formState.isSubmitting,
