@@ -15,6 +15,7 @@ export const DataItSystemOverviewView: React.FC = () => {
 	const t = useTranslate();
 	const router = useRouter();
 	const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+	const [activeTab] = useState("system-list");
 
 	const {
 		items,
@@ -40,74 +41,60 @@ export const DataItSystemOverviewView: React.FC = () => {
 	};
 
 	return (
-		<div className="space-y-6">
-			{/* Breadcrumbs & Title */}
-			<div>
-				<div className="flex items-center gap-1.5 text-xs text-slate-500">
-					<span>Home</span>
-					<span>&gt;</span>
-					<span>Modul</span>
-					<span>&gt;</span>
-					<span>Data-it</span>
-					<span>&gt;</span>
-					<span className="font-medium text-slate-700">
-						{t(localizationConstants.dataItSystemBreadcrumb)}
-					</span>
-				</div>
-				<h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-					{t(localizationConstants.dataItSystemTitle)}
-				</h1>
-			</div>
-
-			{/* Sub-tab navigation */}
-			<div
-				className="border-b border-slate-200"
-				role="tablist"
-				aria-label={t(localizationConstants.dataItSystemAriaTabs)}
-			>
-				<nav className="-mb-px flex space-x-8">
+		<div className="flex flex-1 flex-col">
+			{/* Sub-tab navigation matching Figma Screenshot 1 */}
+			<div className="border-b border-slate-200 bg-white px-6">
+				<nav
+					className="-mb-px flex space-x-6"
+					aria-label={t(localizationConstants.dataItSystemAriaTabs)}
+				>
 					<button
 						type="button"
-						role="tab"
-						aria-selected="true"
-						className="border-b-2 border-slate-900 pb-3 text-sm font-semibold text-slate-900"
+						className={`border-b-2 py-3 text-sm font-semibold transition-colors ${
+							activeTab === "system-list"
+								? "border-slate-900 text-slate-900"
+								: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700"
+						}`}
 					>
 						{t(localizationConstants.dataItTabSystemList)}
 					</button>
 				</nav>
 			</div>
 
-			{/* Filter Toolbar */}
-			<SystemFilterToolbar
-				searchQuery={searchQuery}
-				onSearchChange={setSearchQuery}
-				selectedCategory={selectedCategory}
-				onCategoryChange={setSelectedCategory}
-				selectedStatus={selectedStatus}
-				onStatusChange={setSelectedStatus}
-				onRegisterClick={() => setIsRegisterOpen(true)}
-			/>
-
-			{/* Main Systems Table */}
-			<SystemTable
-				items={items}
-				sortField={sortField}
-				sortDir={sortDir}
-				onSort={handleSort}
-				onViewDetail={handleViewDetail}
-				onEdit={(item) => handleViewDetail(item.id)}
-			/>
-
-			{/* Pagination */}
-			{totalPages > 0 && (
-				<TablePagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-					pageSize={pageSize}
-					onPageChange={setPage}
-					onPageSizeChange={setPageSize}
+			{/* Main Content Area with proper page padding */}
+			<div className="flex flex-col gap-5 px-6 py-5">
+				{/* Filter & Action Toolbar */}
+				<SystemFilterToolbar
+					searchQuery={searchQuery}
+					onSearchChange={setSearchQuery}
+					selectedCategory={selectedCategory}
+					onCategoryChange={setSelectedCategory}
+					selectedStatus={selectedStatus}
+					onStatusChange={setSelectedStatus}
+					onRegisterClick={() => setIsRegisterOpen(true)}
 				/>
-			)}
+
+				{/* Main Systems Table */}
+				<SystemTable
+					items={items}
+					sortField={sortField}
+					sortDir={sortDir}
+					onSort={handleSort}
+					onViewDetail={handleViewDetail}
+					onEdit={(item) => handleViewDetail(item.id)}
+				/>
+
+				{/* Pagination */}
+				{totalPages > 0 && (
+					<TablePagination
+						currentPage={currentPage}
+						totalPages={totalPages}
+						pageSize={pageSize}
+						onPageChange={setPage}
+						onPageSizeChange={setPageSize}
+					/>
+				)}
+			</div>
 
 			{/* Register Dialog */}
 			<SystemRegisterDialog
