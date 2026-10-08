@@ -11987,6 +11987,13 @@ export const svDataItSystem: DataItSystemTranslation = {
 	dataItSystemBtnSave: "Spara",
 	dataItSystemBtnCancel: "Avbryt",
 	dataItSystemActionView: "Visa detaljer",
+	dataItSystemPreview: "Förhandsgranskning:",
+	dataItSystemClose: "Stäng",
+	dataItSystemAssigneesEditTitle: "Hantera tilldelning",
+	dataItSystemAssigneesEditDesc: "Lägg till eller ta bort användare som tilldelats detta system.",
+	dataItSystemAssigneesAddBtn: "Lägg till användare",
+	dataItSystemAssigneesRemoveBtn: "Ta bort",
+	dataItSystemAssigneesPlaceholderUser: "Välj eller ange användare...",
 };
 
 export const sv: Translation = {

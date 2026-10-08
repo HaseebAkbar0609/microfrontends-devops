@@ -54,14 +54,15 @@ export const SystemDocumentsCard: React.FC<SystemDocumentsCardProps> = ({
 			{activeFilePreview && (
 				<div className="mt-4 flex items-center justify-between rounded-lg bg-slate-50 border border-slate-200 px-4 py-2.5 text-xs text-slate-700">
 					<span>
-						Förhandsgranskning: <strong>{activeFilePreview}</strong>
+						{t(localizationConstants.dataItSystemPreview)}{" "}
+						<strong>{activeFilePreview}</strong>
 					</span>
 					<button
 						type="button"
 						onClick={() => setActiveFilePreview(null)}
 						className="font-medium text-slate-500 hover:text-slate-800"
 					>
-						Stäng
+						{t(localizationConstants.dataItSystemClose)}
 					</button>
 				</div>
 			)}

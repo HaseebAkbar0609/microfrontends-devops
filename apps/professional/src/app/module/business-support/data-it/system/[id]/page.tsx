@@ -1,4 +1,4 @@
-import { use } from "react";
+import { Suspense, use } from "react";
 import { DataItSystemDetailView } from "@/features/data-it";
 
 export default function SystemDetailPage({
@@ -7,5 +7,9 @@ export default function SystemDetailPage({
 	params: Promise<{ id: string }>;
 }) {
 	const unwrappedParams = use(params);
-	return <DataItSystemDetailView id={unwrappedParams.id} />;
+	return (
+		<Suspense fallback={null}>
+			<DataItSystemDetailView id={unwrappedParams.id} />
+		</Suspense>
+	);
 }

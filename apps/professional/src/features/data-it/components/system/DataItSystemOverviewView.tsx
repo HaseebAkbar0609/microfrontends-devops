@@ -37,6 +37,16 @@ export const DataItSystemOverviewView: React.FC = () => {
 		router.push(`${DATA_IT_SYSTEM_BASE_URL}/${encodeURIComponent(id)}`);
 	};
 
+	const handleEdit = (id: string) => {
+		router.push(`${DATA_IT_SYSTEM_BASE_URL}/${encodeURIComponent(id)}?edit=1`);
+	};
+
+	const handleClearFilters = () => {
+		setSearchQuery("");
+		setSelectedCategory("ALL");
+		setSelectedStatus("ALL");
+	};
+
 	return (
 		<div className="flex flex-1 flex-col">
 			{/* Sub-tab navigation matching Figma Screenshot 1 */}
@@ -77,7 +87,8 @@ export const DataItSystemOverviewView: React.FC = () => {
 					sortDir={sortDir}
 					onSort={handleSort}
 					onViewDetail={handleViewDetail}
-					onEdit={(item) => handleViewDetail(item.id)}
+					onEdit={(item) => handleEdit(item.id)}
+					onClearFilters={handleClearFilters}
 				/>
 
 				{/* Pagination */}

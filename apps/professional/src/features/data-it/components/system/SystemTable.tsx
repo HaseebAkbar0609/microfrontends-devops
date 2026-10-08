@@ -17,6 +17,7 @@ interface SystemTableProps {
 	onSort: (field: SystemSortField) => void;
 	onViewDetail: (id: string) => void;
 	onEdit?: (item: SystemItem) => void;
+	onClearFilters?: () => void;
 }
 
 export const SystemTable: React.FC<SystemTableProps> = ({
@@ -26,6 +27,7 @@ export const SystemTable: React.FC<SystemTableProps> = ({
 	onSort,
 	onViewDetail,
 	onEdit,
+	onClearFilters,
 }) => {
 	const t = useTranslate();
 
@@ -126,6 +128,15 @@ export const SystemTable: React.FC<SystemTableProps> = ({
 										<p className="mt-1 text-xs text-slate-500">
 											{t(localizationConstants.dataItSystemEmptyDesc)}
 										</p>
+										{onClearFilters && (
+											<button
+												type="button"
+												onClick={onClearFilters}
+												className="mt-3.5 inline-flex items-center rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+											>
+												{t(localizationConstants.dataItSystemClearFilters)}
+											</button>
+										)}
 									</div>
 								</td>
 							</tr>

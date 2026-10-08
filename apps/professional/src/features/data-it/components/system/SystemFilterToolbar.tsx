@@ -36,6 +36,33 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 	const t = useTranslate();
 
 	const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+	const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+	React.useEffect(() => {
+		if (!showFilterDropdown) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node)
+			) {
+				setShowFilterDropdown(false);
+			}
+		};
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				setShowFilterDropdown(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [showFilterDropdown]);
 
 	const hasActiveFilters =
 		selectedCategory !== "ALL" || selectedStatus !== "ALL";
@@ -69,7 +96,7 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 				</div>
 
 				{/* Filter Dropdown trigger */}
-				<div className="relative">
+				<div ref={dropdownRef} className="relative">
 					<button
 						type="button"
 						onClick={() => setShowFilterDropdown((prev) => !prev)}
@@ -99,18 +126,12 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 									</label>
 									<select
 										value={selectedCategory}
-										onChange={(e) =>
-											onCategoryChange(e.target.value as SystemCategory | "ALL")
-										}
+										onChange={(e) => onCategoryChange(e.target.value as SystemCategory | "ALL")}
 										className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-slate-400 focus:outline-hidden"
 									>
-										<option value="ALL">
-											{t(localizationConstants.dataItSystemAllCategories)}
-										</option>
+										<option value="ALL">{t(localizationConstants.dataItSystemAllCategories)}</option>
 										{SYSTEM_CATEGORY_OPTIONS.map((cat) => (
-											<option key={cat} value={cat}>
-												{t(SYSTEM_CATEGORY_TRANSLATION_MAP[cat])}
-											</option>
+											<option key={cat} value={cat}>{t(SYSTEM_CATEGORY_TRANSLATION_MAP[cat])}</option>
 										))}
 									</select>
 								</div>
@@ -122,18 +143,12 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 									</label>
 									<select
 										value={selectedStatus}
-										onChange={(e) =>
-											onStatusChange(e.target.value as SystemStatus | "ALL")
-										}
+										onChange={(e) => onStatusChange(e.target.value as SystemStatus | "ALL")}
 										className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-slate-400 focus:outline-hidden"
 									>
-										<option value="ALL">
-											{t(localizationConstants.dataItSystemAllStatuses)}
-										</option>
+										<option value="ALL">{t(localizationConstants.dataItSystemAllStatuses)}</option>
 										{SYSTEM_STATUS_OPTIONS.map((st) => (
-											<option key={st} value={st}>
-												{t(SYSTEM_STATUS_BADGE_CONFIG[st].labelKey)}
-											</option>
+											<option key={st} value={st}>{t(SYSTEM_STATUS_BADGE_CONFIG[st].labelKey)}</option>
 										))}
 									</select>
 								</div>
@@ -146,7 +161,7 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 											onCategoryChange("ALL");
 											onStatusChange("ALL");
 										}}
-										className="w-full rounded-lg border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+										className="w-full rounded-lg border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
 									>
 										{t(localizationConstants.dataItSystemClearFilters)}
 									</button>

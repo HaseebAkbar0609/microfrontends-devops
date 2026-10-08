@@ -11966,6 +11966,13 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemBtnSave: "Save",
 	dataItSystemBtnCancel: "Cancel",
 	dataItSystemActionView: "View details",
+	dataItSystemPreview: "Preview:",
+	dataItSystemClose: "Close",
+	dataItSystemAssigneesEditTitle: "Manage assignment",
+	dataItSystemAssigneesEditDesc: "Add or remove users assigned to this system.",
+	dataItSystemAssigneesAddBtn: "Add user",
+	dataItSystemAssigneesRemoveBtn: "Remove",
+	dataItSystemAssigneesPlaceholderUser: "Select or enter user...",
 };
 
 export const en: Translation = {

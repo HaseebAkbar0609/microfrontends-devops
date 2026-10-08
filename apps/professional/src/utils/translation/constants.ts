@@ -11571,6 +11571,13 @@ export type DataItSystemTranslation = {
 	dataItSystemBtnSave: string;
 	dataItSystemBtnCancel: string;
 	dataItSystemActionView: string;
+	dataItSystemPreview: string;
+	dataItSystemClose: string;
+	dataItSystemAssigneesEditTitle: string;
+	dataItSystemAssigneesEditDesc: string;
+	dataItSystemAssigneesAddBtn: string;
+	dataItSystemAssigneesRemoveBtn: string;
+	dataItSystemAssigneesPlaceholderUser: string;
 };
 
 

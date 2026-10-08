@@ -23,21 +23,19 @@ export const SystemDetailHeader: React.FC<SystemDetailHeaderProps> = ({
 	};
 
 	return (
-		<div className="space-y-1">
-			{/* Back Button */}
+		<div className="flex flex-col gap-0.5">
+			{/* Back Button & Title matching Figma Node 13350-66392 */}
 			<button
 				type="button"
 				onClick={handleBack}
-				className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-slate-600 transition-colors"
+				className="group inline-flex items-center gap-2.5 text-xl font-bold text-slate-900 hover:text-slate-600 transition-colors w-fit"
 			>
-				<ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-				<span className="capitalize">
-					{t(localizationConstants.dataItSystemDetailBack)}
-				</span>
+				<ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+				<span>{t(localizationConstants.dataItSystemDetailBack)}</span>
 			</button>
 
 			{/* System ID display */}
-			<p className="text-xs font-normal text-slate-500 pl-6">
+			<p className="text-xs font-normal text-slate-500">
 				{system.systemId}
 			</p>
 		</div>

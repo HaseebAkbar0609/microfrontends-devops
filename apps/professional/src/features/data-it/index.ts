@@ -41,6 +41,7 @@ export * from "./components/system/detail/SystemDetailTabs";
 export * from "./components/system/detail/SystemBasicInfoCard";
 export * from "./components/system/detail/SystemDocumentsCard";
 export * from "./components/system/detail/SystemAssignmentCard";
+export * from "./components/system/detail/SystemAssigneeDialog";
 export * from "./components/system/detail/SystemEditDialog";
 export * from "./utils/dataItSystemRepository";
 

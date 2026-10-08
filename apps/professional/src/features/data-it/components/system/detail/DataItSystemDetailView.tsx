@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -15,6 +15,7 @@ import { SystemDetailTabs } from "./SystemDetailTabs";
 import { SystemBasicInfoCard } from "./SystemBasicInfoCard";
 import { SystemDocumentsCard } from "./SystemDocumentsCard";
 import { SystemAssignmentCard } from "./SystemAssignmentCard";
+import { SystemAssigneeDialog } from "./SystemAssigneeDialog";
 import { SystemEditDialog } from "./SystemEditDialog";
 
 interface DataItSystemDetailViewProps {
@@ -26,7 +27,11 @@ export const DataItSystemDetailView: React.FC<DataItSystemDetailViewProps> = ({
 }) => {
 	const t = useTranslate();
 	const router = useRouter();
-	const [isEditOpen, setIsEditOpen] = useState(false);
+	const searchParams = useSearchParams();
+	const [isEditOpen, setIsEditOpen] = useState(
+		() => searchParams?.get("edit") === "1",
+	);
+	const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
 
 	const {
 		system,
@@ -36,6 +41,13 @@ export const DataItSystemDetailView: React.FC<DataItSystemDetailViewProps> = ({
 		togglePasswordVisibility,
 		updateSystem,
 	} = useDataItSystemDetail(id);
+
+	const handleCloseEdit = () => {
+		setIsEditOpen(false);
+		if (searchParams?.get("edit") === "1") {
+			router.replace(`${DATA_IT_SYSTEM_BASE_URL}/${encodeURIComponent(id)}`);
+		}
+	};
 
 	if (!system) {
 		return (
@@ -86,19 +98,29 @@ export const DataItSystemDetailView: React.FC<DataItSystemDetailViewProps> = ({
 				<div className="flex flex-col gap-6">
 					<SystemAssignmentCard
 						assignedUsers={system.assignedUsers}
-						onEdit={() => setIsEditOpen(true)}
+						onEdit={() => setIsAssigneeOpen(true)}
 					/>
 				</div>
 			)}
 
-			{/* Edit System Dialog */}
+			{/* Edit System Dialog (Basic info / credentials) */}
 			{isEditOpen && (
 				<SystemEditDialog
 					key={system.id}
 					isOpen={isEditOpen}
 					system={system}
-					onClose={() => setIsEditOpen(false)}
+					onClose={handleCloseEdit}
 					onSave={updateSystem}
+				/>
+			)}
+
+			{/* Assignee Management Dialog */}
+			{isAssigneeOpen && (
+				<SystemAssigneeDialog
+					isOpen={isAssigneeOpen}
+					assignedUsers={system.assignedUsers}
+					onClose={() => setIsAssigneeOpen(false)}
+					onSave={(users) => updateSystem({ assignedUsers: users })}
 				/>
 			)}
 		</div>
