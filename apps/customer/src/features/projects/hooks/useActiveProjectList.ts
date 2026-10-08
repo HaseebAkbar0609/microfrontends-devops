@@ -18,7 +18,8 @@ import {
 	type SortDirection,
 } from "../utils/activeProject";
 
-const PROJECT_LIST_QUERY = { page: 1, pageSize: 10 } as const;
+/** Same size as Få offert: accepted offers leave that list, so a smaller page here would hide them */
+const PROJECT_LIST_QUERY = { page: 1, pageSize: 100 } as const;
 /** Backend max for /project/active, which also returns requests whose offer is not yet accepted */
 const ACTIVE_PROJECTS_LIMIT = 100;
 

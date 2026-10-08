@@ -29,7 +29,11 @@ import { Badge } from "@/components/ui/badge";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { Quote, QuoteColumnField } from "../types/types";
 import { formatProjectTypeLabel } from "../utils/formatProjectType";
-import { QUOTE_COLUMNS, PROJECT_STATUS_VALUE_TO_LABEL_KEY } from "../constants";
+import {
+	QUOTE_COLUMNS,
+	PROJECT_STATUS_VALUE_TO_LABEL_KEY,
+	resumeDraftPath,
+} from "../constants";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -197,7 +201,7 @@ const ActionsDropdown = ({
 						<Link
 							href={
 								_quote.is_completed === false
-									? `/business/offer/create?projectId=${encodeURIComponent(_quote.id)}`
+									? resumeDraftPath(_quote.id)
 									: `/business/offer/${_quote.id}`
 							}
 							className="flex items-center w-full"
