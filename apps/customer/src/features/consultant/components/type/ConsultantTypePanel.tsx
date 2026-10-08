@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import { Building2, Loader2, Search } from "lucide-react";
 import { getConsultantTypesAPIAction } from "@/api-actions";
 import type { ConsultantTypeItem } from "../../types/consultantType";
 import { ConsultantTypeList } from "./ConsultantTypeList";
 import { ConsultantTypeDetail } from "./ConsultantTypeDetail";
 import { FindMyConsultantButton } from "../FindMyConsultantButton";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
 export function ConsultantTypePanel() {
@@ -24,6 +24,7 @@ export function ConsultantTypePanel() {
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);
+		setLoadError(null);
 
 		void getConsultantTypesAPIAction({ search: debouncedSearch || undefined }).then((result) => {
 			if (cancelled) return;
@@ -64,6 +65,25 @@ export function ConsultantTypePanel() {
 			<p className="p-5 text-sm text-red-600" role="alert">
 				{loadError}
 			</p>
+		);
+	}
+
+	// No types at all (not just no search hits): nothing to browse or request yet.
+	if (types.length === 0 && !debouncedSearch) {
+		return (
+			<div className="flex flex-1 flex-col items-center justify-center gap-4 bg-white py-20">
+				<div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+					<Building2 className="h-7 w-7 text-slate-400" aria-hidden />
+				</div>
+				<div className="max-w-sm text-center">
+					<p className="mb-1 text-sm font-semibold text-[#09090B]">
+						<Translate text={localizationConstants.consultantTypesEmptyTitle} />
+					</p>
+					<p className="text-sm text-[#71717A]">
+						<Translate text={localizationConstants.consultantTypesEmptySubtitle} />
+					</p>
+				</div>
+			</div>
 		);
 	}
 

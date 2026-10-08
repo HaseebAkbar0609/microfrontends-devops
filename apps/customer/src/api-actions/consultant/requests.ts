@@ -14,6 +14,12 @@ export interface RequestItem {
   created_at: string | number | Date;
 }
 
+// The backend's pagination_response puts the totals next to `data`, not under `meta`.
+interface RequestsListResponse {
+  data?: RequestItem[];
+  total_items?: number;
+}
+
 export interface GetConsultantRequestsParams {
   page?: number;
   pageSize?: number;
@@ -51,14 +57,14 @@ export async function getConsultantRequestsAPIAction(
     if (sortBy) query.append("sort_by", sortBy);
     if (sortOrder) query.append("sort_order", sortOrder);
 
-    const response = await axiosInstance.get(
+    const response = await axiosInstance.get<RequestsListResponse>(
       `${API_PATH.CONSULTATION.LIST}?${query.toString()}`,
     );
 
     const data = response.data?.data || [];
 
     // Map backend response to frontend ConsultantRequest interface
-    const requests: ConsultantRequest[] = (data as RequestItem[]).map((item) => ({
+    const requests: ConsultantRequest[] = data.map((item) => ({
       id: item.id,
       project_id: item.project_id || "",
       project: item.selected_options?.project || "Unknown Project",
@@ -72,7 +78,7 @@ export async function getConsultantRequestsAPIAction(
       success: true, 
       data: { 
         requests, 
-        totalItems: response.data?.meta?.total_items || requests.length 
+        totalItems: response.data?.total_items ?? requests.length
       }, 
       error: null 
     };

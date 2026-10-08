@@ -1315,6 +1315,8 @@ export type ConsultantModule = {
 	findMyConsultant: string;
 	consultantTypeSearchPlaceholder: string;
 	noConsultantsFound: string;
+	consultantTypesEmptyTitle: string;
+	consultantTypesEmptySubtitle: string;
 	consultantListNav: string;
 	consultantsTitle: string;
 	consultantSearchPlaceholder: string;

@@ -1387,6 +1387,8 @@ export const enConsultant: ConsultantModule = {
 	findMyConsultant: "Find my consultant",
 	consultantTypeSearchPlaceholder: "Search consultant...",
 	noConsultantsFound: "No consultants found",
+	consultantTypesEmptyTitle: "No consultant types are available yet",
+	consultantTypesEmptySubtitle: "We'll be adding consultants soon.",
 	consultantListNav: "Consultant List",
 	consultantsTitle: "Consultants",
 	consultantSearchPlaceholder: "Search by name, specialty, or project",

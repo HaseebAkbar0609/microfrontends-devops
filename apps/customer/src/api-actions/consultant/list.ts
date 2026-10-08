@@ -29,6 +29,12 @@ interface ApplicationItem {
 	company?: { company_name?: string; email?: string; phone?: string };
 }
 
+// The backend's pagination_response puts the totals next to `data`, not under `meta`.
+interface ApplicationsListResponse {
+	data?: ApplicationItem[];
+	total_items?: number;
+}
+
 export async function getConsultantListAPIAction(
 	params: GetConsultantListParams = {},
 ): Promise<ActionResult<ConsultantListPayload>> {
@@ -58,13 +64,13 @@ export async function getConsultantListAPIAction(
 		if (sortBy) query.append("sort_by", sortBy);
 		if (sortOrder) query.append("sort_order", sortOrder);
 
-		const response = await axiosInstance.get(
+		const response = await axiosInstance.get<ApplicationsListResponse>(
 			`${API_PATH.CONSULTATION.APPLICATIONS_LIST}?${query.toString()}`,
 		);
 
 		const data = response.data?.data || [];
 
-		const consultants: Consultant[] = (data as ApplicationItem[]).map((item) => ({
+		const consultants: Consultant[] = data.map((item) => ({
 			id: item.id,
 			name: item.company?.company_name || "Unknown Company",
 			type: (item.consultant_type_id || "architect") as Consultant["type"],
@@ -75,10 +81,7 @@ export async function getConsultantListAPIAction(
 			updatedAt: new Date(item.created_at).toISOString().split("T")[0],
 		}));
 
-		const totalItems =
-			typeof response.data?.meta?.total_items === "number"
-				? response.data.meta.total_items
-				: 0;
+		const totalItems = response.data?.total_items ?? consultants.length;
 
 		return {
 			success: true,

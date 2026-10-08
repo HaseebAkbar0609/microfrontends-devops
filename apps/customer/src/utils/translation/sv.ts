@@ -1388,6 +1388,8 @@ export const svConsultant: ConsultantModule = {
 	findMyConsultant: "Hitta min konsult",
 	consultantTypeSearchPlaceholder: "Sök konsult...",
 	noConsultantsFound: "Inga konsulter hittades",
+	consultantTypesEmptyTitle: "Inga konsulttyper finns tillgängliga ännu",
+	consultantTypesEmptySubtitle: "Vi lägger till konsulter inom kort.",
 	consultantListNav: "Kontaktlista",
 	consultantsTitle: "Konsulter",
 	consultantSearchPlaceholder: "Förfrågan",
