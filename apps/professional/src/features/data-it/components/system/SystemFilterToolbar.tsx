@@ -22,7 +22,7 @@ interface SystemFilterToolbarProps {
 	onCategoryChange: (category: SystemCategory | "ALL") => void;
 	selectedStatus: SystemStatus | "ALL";
 	onStatusChange: (status: SystemStatus | "ALL") => void;
-	onRegisterClick: () => void;
+	onRegisterClick?: () => void;
 }
 
 export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
@@ -32,9 +32,9 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 	onCategoryChange,
 	selectedStatus,
 	onStatusChange,
-	onRegisterClick,
 }) => {
 	const t = useTranslate();
+
 	const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
 	const hasActiveFilters =
@@ -157,11 +157,12 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 				</div>
 			</div>
 
-			{/* Register System Action Button */}
+			{/* Register System Action Button (Pending next ticket) */}
 			<button
 				type="button"
-				onClick={onRegisterClick}
-				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs hover:bg-slate-800 transition-colors"
+				disabled
+				aria-disabled="true"
+				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs cursor-default select-none"
 			>
 				<Plus className="h-4 w-4" />
 				<span>{t(localizationConstants.dataItRegisterNewSystem)}</span>
@@ -171,3 +172,4 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 };
 
 export default SystemFilterToolbar;
+

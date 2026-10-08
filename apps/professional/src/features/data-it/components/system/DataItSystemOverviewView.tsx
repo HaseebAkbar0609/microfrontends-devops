@@ -9,12 +9,10 @@ import { DATA_IT_SYSTEM_BASE_URL } from "@/features/data-it/constants/dataItSyst
 import { useDataItSystem } from "@/features/data-it/hooks/useDataItSystem";
 import { SystemFilterToolbar } from "./SystemFilterToolbar";
 import { SystemTable } from "./SystemTable";
-import { SystemRegisterDialog } from "./SystemRegisterDialog";
 
 export const DataItSystemOverviewView: React.FC = () => {
 	const t = useTranslate();
 	const router = useRouter();
-	const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 	const [activeTab] = useState("system-list");
 
 	const {
@@ -33,7 +31,6 @@ export const DataItSystemOverviewView: React.FC = () => {
 		sortField,
 		sortDir,
 		handleSort,
-		createSystem,
 	} = useDataItSystem();
 
 	const handleViewDetail = (id: string) => {
@@ -71,7 +68,6 @@ export const DataItSystemOverviewView: React.FC = () => {
 					onCategoryChange={setSelectedCategory}
 					selectedStatus={selectedStatus}
 					onStatusChange={setSelectedStatus}
-					onRegisterClick={() => setIsRegisterOpen(true)}
 				/>
 
 				{/* Main Systems Table */}
@@ -95,13 +91,6 @@ export const DataItSystemOverviewView: React.FC = () => {
 					/>
 				)}
 			</div>
-
-			{/* Register Dialog */}
-			<SystemRegisterDialog
-				isOpen={isRegisterOpen}
-				onClose={() => setIsRegisterOpen(false)}
-				onCreate={createSystem}
-			/>
 		</div>
 	);
 };
