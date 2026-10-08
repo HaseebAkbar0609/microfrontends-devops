@@ -1,5 +1,6 @@
 import type { ActiveProjectItem } from "@/api-actions/project/active";
 import {
+  PROJECT_CREATION_MODE,
   PROJECT_LIST_PATH,
   resumeDraftPath,
 } from "@/features/quote/constants";
@@ -98,7 +99,9 @@ function mapListProjectToFrontend(q: Quote): ActiveProject {
     status: normalizeProjectStatus(q.quote_status),
     statusLabel: q.quote_status,
     orderNo: "—",
-    quoteReferenceNo: refCode,
+    // A project started from Projects never had an offer
+    quoteReferenceNo:
+      q.creation_mode === PROJECT_CREATION_MODE.directOrder ? "—" : refCode,
     progressPercent: 0,
     category: q.category || "-",
     creationMode: q.creation_mode,
