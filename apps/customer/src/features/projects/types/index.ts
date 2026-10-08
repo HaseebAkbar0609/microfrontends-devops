@@ -116,8 +116,6 @@ export interface ApiQuoteItem {
 	order_no?: string;
 	category?: string;
 	created_at?: string;
-	creation_mode?: ProjectCreationMode;
-	is_completed?: boolean;
 }
 
 export interface ApiProjectDetailItem {

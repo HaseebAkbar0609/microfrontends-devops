@@ -11,7 +11,10 @@ import { projectHref, type ProjectSortKey } from "../utils/activeProject";
 import { useActiveProjectList } from "../hooks/useActiveProjectList";
 import { ActiveProjectRowActions } from "./ActiveProjectRowActions";
 import { ProjectOriginBadge } from "./ProjectOriginBadge";
-import { CREATE_DIRECT_PROJECT_PATH } from "@/features/quote/constants";
+import {
+	CREATE_DIRECT_PROJECT_PATH,
+	PROJECT_STATUS_VALUE_TO_LABEL_KEY,
+} from "@/features/quote/constants";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -163,6 +166,11 @@ export function ProjectList() {
 										const badge =
 											STATUS_STYLE[project.status] ??
 											STATUS_STYLE["draft"];
+										// List-only rows carry the raw quote_status
+										const statusKey =
+											PROJECT_STATUS_VALUE_TO_LABEL_KEY[
+												project.statusLabel ?? ""
+											];
 										return (
 											<tr
 												key={project.id}
@@ -205,8 +213,11 @@ export function ProjectList() {
 															badge.text,
 														)}
 													>
-														{project.statusLabel ??
-															project.status}
+														{statusKey ? (
+															<Translate text={statusKey} />
+														) : (
+															(project.statusLabel ?? project.status)
+														)}
 													</span>
 												</td>
 												<td className="px-4 py-3 text-right">

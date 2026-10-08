@@ -4,7 +4,8 @@ import {
   resumeDraftPath,
 } from "@/features/quote/constants";
 import { normalizeProjectStatus } from "@/utils/statusNormalizer";
-import type { ActiveProject, ApiQuoteItem } from "../types";
+import type { Quote } from "@/features/quote/types/types";
+import type { ActiveProject } from "../types";
 
 export interface ActiveProjectCompanySource {
   companyName?: string | null;
@@ -98,25 +99,15 @@ function mapActiveProjectToFrontend(item: ActiveProjectItem): ActiveProject {
   };
 }
 
-function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
-  const projName =
-    q.projectName || q.project_name || q.name || "Untitled Project";
-  const rawId = q.project_id || q.id || "";
-  const rawRef = q.refNo || q.ref_no || q.project_code || q.projectCode;
+/** List rows are already mapped by mapProjectRowToQuote, which has no supplier or order number */
+function mapListProjectToFrontend(q: Quote): ActiveProject {
   const refCode =
-    rawRef && rawRef !== "-"
-      ? rawRef
-      : rawId
-        ? rawId.substring(0, 8).toUpperCase()
-        : "-";
-  const normStatus = normalizeProjectStatus(q.quote_status || q.status);
-  const rawOrderNo = q.orderNo || q.order_no;
-  const orderNo = rawOrderNo && rawOrderNo !== "-" ? rawOrderNo : "—";
+    q.refNo && q.refNo !== "-" ? q.refNo : q.id.substring(0, 8).toUpperCase();
   return {
-    id: rawId,
-    name: projName,
+    id: q.id,
+    name: q.projectName,
     referenceNo: refCode,
-    clientNo: q.clientNo || q.client_no || "-",
+    clientNo: "-",
     projectNo: refCode,
     startDate: "-",
     endDate: "-",
@@ -125,11 +116,10 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
     email: "-",
     address: "-",
     postalCode: "-",
-    companyName:
-      q.companyName || q.company_name || resolveCompanyName({}, projName),
-    status: normStatus,
-    statusLabel: q.quote_status || q.status || "Active",
-    orderNo: orderNo,
+    companyName: "-",
+    status: normalizeProjectStatus(q.quote_status),
+    statusLabel: q.quote_status,
+    orderNo: "—",
     quoteReferenceNo: refCode,
     progressPercent: 0,
     category: q.category || "-",
@@ -143,7 +133,7 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
  * /project/active returns every sent request, so it only enriches those rows.
  */
 export function mergeProjectRows(
-  listRows: ApiQuoteItem[],
+  listRows: Quote[],
   activeItems: ActiveProjectItem[],
 ): ActiveProject[] {
   const activeById = new Map<string, ActiveProject>();
