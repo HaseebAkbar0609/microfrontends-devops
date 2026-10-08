@@ -5,12 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
 import { CircleUserRound } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { createSupplierAPIAction } from "@/api-actions";
 import { getProfessionalsSubcategoriesListAPIAction } from "@/api-actions/category/professionals-subcategories-list";
@@ -32,6 +33,7 @@ export function CreateSupplierView({
   onBack,
   onSuccess,
 }: CreateSupplierViewProps) {
+  const t = useTranslate();
   const [submitting, setSubmitting] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
 
@@ -67,7 +69,12 @@ export function CreateSupplierView({
     try {
       const result = await createSupplierAPIAction(values);
       if (result.success) {
+        toast.success(t(localizationConstants.supplierCreatedSuccess));
         onSuccess();
+      } else {
+        toast.error(
+          result.error || t(localizationConstants.supplierCreateError),
+        );
       }
     } finally {
       setSubmitting(false);

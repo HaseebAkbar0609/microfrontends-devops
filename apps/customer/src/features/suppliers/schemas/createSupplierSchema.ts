@@ -5,7 +5,8 @@ export const createSupplierSchema = z.object({
 		.string()
 		.trim()
 		.min(1, "validationSupplierCompanyNameRequired")
-		.max(255, "Company name cannot exceed 255 characters")
+		.min(2, "validationSupplierCompanyNameTooShort")
+		.max(255, "validationSupplierCompanyNameTooLong")
 		.regex(/^[^<>]+$/, "validationSupplierCompanyNameInvalid"),
 	category: z.string().min(1, "validationSupplierCategoryRequired"),
 	orgNo: z

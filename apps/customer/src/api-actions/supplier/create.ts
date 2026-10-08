@@ -1,8 +1,10 @@
+import { t } from "i18next";
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import type { Supplier } from "@/features/suppliers/types/types";
 import { handleApiError } from "@/utils/apiError";
+import localizationConstants from "@/utils/translation/constants";
 
 export interface CreateSupplierPayload {
 	companyName: string;
@@ -36,7 +38,7 @@ export async function createSupplierAPIAction(
 			return {
 				success: false,
 				data: null,
-				error: res?.message || "Failed to create supplier",
+				error: res?.message || t(localizationConstants.supplierCreateError),
 			};
 		}
 
@@ -51,6 +53,6 @@ export async function createSupplierAPIAction(
 
 		return { success: true, data: newSupplier, error: null };
 	} catch (error: unknown) {
-		return handleApiError(error, "Failed to create supplier");
+		return handleApiError(error, t(localizationConstants.supplierCreateError));
 	}
 }
