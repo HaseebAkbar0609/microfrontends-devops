@@ -566,7 +566,7 @@ export const svSupplierModule: SupplierModule = {
 	supplierTabDocuments: "Dokument",
 	supplierTabReviews: "Omdömen",
 	supplierVerified: "Verifierad",
-	supplierTopSupplier: "Top Supplier",
+	supplierTopSupplier: "Toppleverantör",
 	supplierReviewCount: "recensioner",
 	supplierInviteToProject: "Bjud in till projekt",
 	supplierMessage: "Meddela",
@@ -657,7 +657,7 @@ export const svSupplierModule: SupplierModule = {
 	pageLabel: "Sida",
 	ofLabel: "av",
 	// Create/Edit supplier form
-	supplierDetailsSection: "Supplier detaljer",
+	supplierDetailsSection: "Leverantörsinformation",
 	supplierCreateTitle: "Skapa ny",
 	supplierCreateSubtitle: "Lägg till detaljerad information",
 	supplierEditTitle: "Redigera leverantör",
