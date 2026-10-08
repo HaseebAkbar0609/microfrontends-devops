@@ -130,6 +130,9 @@ export function mergeProjectRows(
       existing
         ? {
             ...existing,
+            // /project/active sends no project code, so the reference comes from the list row
+            referenceNo: item.referenceNo,
+            projectNo: item.projectNo,
             clientNo:
               existing.clientNo !== "-" ? existing.clientNo : item.clientNo,
             quoteReferenceNo:
