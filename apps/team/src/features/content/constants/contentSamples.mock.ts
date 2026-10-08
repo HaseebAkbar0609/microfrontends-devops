@@ -87,32 +87,6 @@ export const CONTENT_ROWS_SEED: ContentRowsBySection = {
 			},
 		},
 	],
-	"kund:konsulter": [
-		{
-			id: "kund-consultant-1",
-			values: {
-				name: "Anna Lind",
-				role: "Byggkonsult",
-				email: "anna@exempel.se",
-				phone: "070-123 45 67",
-				photo: [],
-				description:
-					"Stöttar kunder vid upphandling och besiktning av byggprojekt.",
-			},
-		},
-		{
-			id: "kund-consultant-2",
-			values: {
-				name: "Omar Haddad",
-				role: "Elprojektering",
-				email: "omar@exempel.se",
-				phone: "070-987 65 43",
-				photo: [],
-				description:
-					"Granskar elritningar och tar fram underlag för elinstallationer.",
-			},
-		},
-	],
 	"kund:kategorier": [
 		{
 			id: "kund-category-1",

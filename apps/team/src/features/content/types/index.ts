@@ -40,8 +40,11 @@ export type ContentSection = {
 	itemLabelKey: TranslationKeys;
 	/** Explicit plural; the prototype appended "er" and produced "inlägger". */
 	itemLabelPluralKey: TranslationKeys;
-	/** Renders the help-guide editor instead of the generic list and form. */
-	variant?: "support";
+	/**
+	 * Swaps the generic list and form for a dedicated screen: "support" is the
+	 * help-guide editor, "consultantTypes" the API-backed consultant type manager.
+	 */
+	variant?: "support" | "consultantTypes";
 	/** Adds the video field to each guide entry. */
 	guideMedia?: boolean;
 	fields: ContentField[];
@@ -61,6 +64,24 @@ export type ContentRow = {
 
 /** Rows are stored per section, keyed `${group}:${slug}`. */
 export type ContentRowsBySection = Record<string, ContentRow[]>;
+
+/** One heading on the customer's "Hitta hjälp › Konsult" page and its bullets. */
+export type ConsultantTypeSection = {
+	title: string;
+	bullets: string[];
+};
+
+/** A consultant type as `/api/v1/teams/consultant-types` returns it. */
+export type ConsultantType = {
+	id: string;
+	name: string;
+	sections: ConsultantTypeSection[];
+	/** A consultation request uses it, so the server refuses to delete it. */
+	in_use: boolean;
+};
+
+/** The body of a create, and of an update that sends every field. */
+export type ConsultantTypeInput = Pick<ConsultantType, "name" | "sections">;
 
 export type GuideEntry = {
 	id: string;

@@ -10,6 +10,7 @@ import {
 } from "../constants/contentGroups";
 import type { ContentGroupId } from "../types";
 import { ContentModuleShell } from "./ContentModuleShell";
+import { ConsultantTypesWorkbench } from "./consultant-types/ConsultantTypesWorkbench";
 import { SectionWorkbench } from "./SectionWorkbench";
 import { SupportWorkbench } from "./support/SupportWorkbench";
 
@@ -39,9 +40,13 @@ export function ContentSectionPage({
 				{ label: group.titleKey, href: getContentGroupHref(group.id) },
 			]}
 		>
-			{section.variant === "support" ? (
+			{section.variant === "support" && (
 				<SupportWorkbench groupId={group.id} section={section} />
-			) : (
+			)}
+			{section.variant === "consultantTypes" && (
+				<ConsultantTypesWorkbench section={section} />
+			)}
+			{!section.variant && (
 				// Keyed so switching sections rebuilds the form against the new field
 				// config; the rows themselves live in the provider and are untouched.
 				<SectionWorkbench
