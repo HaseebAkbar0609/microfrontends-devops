@@ -11410,6 +11410,90 @@ export type DataItDashboardTranslation = {
 	dataItHoursAgo: string;
 };
 
+// TFS-1150: Data IT Overview & Detail View
+export type DataItOverviewAndDetailTranslation = {
+	dataItSearchPlaceholder: string;
+	dataItFilterAll: string;
+	dataItFilterActive: string;
+	dataItFilterInactive: string;
+	dataItAddEmployeeBtn: string;
+	dataItColId: string;
+	dataItColName: string;
+	dataItColEmail: string;
+	dataItColRole: string;
+	dataItColEquipment: string;
+	dataItColSystem: string;
+	dataItColTotalCost: string;
+	dataItColStatus: string;
+	dataItStatusActive: string;
+	dataItStatusInactive: string;
+	dataItActionView: string;
+	dataItActionEdit: string;
+	dataItActionDelete: string;
+	dataItActionArchive: string;
+	dataItActionActivate: string;
+	dataItMonthUnit: string;
+	dataItEmptyOverview: string;
+	dataItEmptyOverviewDesc: string;
+	dataItDeleteConfirmTitle: string;
+	dataItDeleteConfirmDesc: string;
+	dataItArchiveConfirmTitle: string;
+	dataItArchiveConfirmDesc: string;
+	dataItActivateConfirmTitle: string;
+	dataItActivateConfirmDesc: string;
+	dataItConfirm: string;
+	dataItCancel: string;
+	dataItToastDeleted: string;
+	dataItToastArchived: string;
+	dataItToastActivated: string;
+	dataItToastComingSoon: string;
+	dataItDetails: string;
+	dataItBackToOverview: string;
+	dataItTabBasicInfo: string;
+	dataItTabEquipment: string;
+	dataItTabSystem: string;
+	dataItBtnEdit: string;
+	dataItBasicInfoCardTitle: string;
+	dataItFieldId: string;
+	dataItFieldPerson: string;
+	dataItFieldName: string;
+	dataItFieldEmail: string;
+	dataItFieldRole: string;
+	dataItFieldPhone: string;
+	dataItEquipmentCardTitle: string;
+	dataItColEquipmentId: string;
+	dataItColEquipmentCategory: string;
+	dataItColEquipmentType: string;
+	dataItColEquipmentBrand: string;
+	dataItColEquipmentModel: string;
+	dataItColEquipmentSerial: string;
+	dataItColEquipmentMonthlyCost: string;
+	dataItEmptyEquipment: string;
+	dataItEmptyEquipmentDesc: string;
+	dataItSystemCardTitle: string;
+	dataItColSystemCategory: string;
+	dataItColSystemProgram: string;
+	dataItColSystemEmail: string;
+	dataItColSystemPassword: string;
+	dataItColSystemMonthlyCost: string;
+	dataItEmptySystem: string;
+	dataItEmptySystemDesc: string;
+	dataItBtnSave: string;
+	dataItBtnCancel: string;
+	dataItToastSaveSuccess: string;
+	dataItValidationRequired: string;
+	dataItValidationEmailInvalid: string;
+	dataItAddEquipmentBtn: string;
+	dataItAddEquipmentModalTitle: string;
+	dataItAddSystemBtn: string;
+	dataItAddSystemModalTitle: string;
+	dataItEmployeeNotFound: string;
+	dataItEmployeeNotFoundDesc: string;
+	dataItCurrencyPerMonth: string;
+	dataItAriaSortBy: string;
+	dataItAriaDetailTabs: string;
+};
+
 
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
@@ -11788,7 +11872,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
 	PersonnelProcessAndDocumentTranslation &
 	PersonnelWorktimeGroupTranslation &
-	DataItDashboardTranslation;
+	DataItDashboardTranslation &
+	DataItOverviewAndDetailTranslation;
 
 export type TranslationKeys = keyof Translation;
 

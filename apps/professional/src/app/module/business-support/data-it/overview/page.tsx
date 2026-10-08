@@ -1,6 +1,5 @@
-import { DataItSectionPlaceholder } from "@/features/data-it/components/placeholder/DataItSectionPlaceholder";
-import localizationConstants from "@/utils/translation/constants";
+import { DataItOverviewView } from "@/features/data-it";
 
 export default function OverviewPage() {
-	return <DataItSectionPlaceholder titleKey={localizationConstants.dataItOverview} />;
+	return <DataItOverviewView />;
 }
