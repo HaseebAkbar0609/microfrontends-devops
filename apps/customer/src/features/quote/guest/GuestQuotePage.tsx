@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FormCitySelect } from "@/components/form/FormCitySelect";
 import { useAuthStatus } from "@/context/AuthContext";
+import { resumeDraftPath } from "../constants";
 import {
   clearGuestQuote, guestQuoteDefaults, guestQuoteValuesSchema,
   readGuestQuote, writeGuestQuote, type GuestQuoteValues,
@@ -102,7 +103,7 @@ export default function GuestQuotePage() {
       } }, { showSuccessToast: false });
       if (!third.success) throw new Error(third.error || "Could not import your description.");
       clearGuestQuote();
-      router.replace(`/business/offer/create?projectId=${encodeURIComponent(id)}`);
+      router.replace(resumeDraftPath(id));
     })().catch((cause: unknown) => {
       setError(cause instanceof Error ? cause.message : "Could not import your request.");
       setImporting(false);

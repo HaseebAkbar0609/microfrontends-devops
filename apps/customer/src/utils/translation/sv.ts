@@ -1098,6 +1098,7 @@ export const svProjects: ProjectsModule = {
 	projectDetailsUpdateFailed: "Det gick inte att uppdatera projektuppgifterna",
 	documentDeleteFailed: "Det gick inte att ta bort dokumentet",
 	projectLoadFailed: "Det gick inte att hämta projektet",
+	projectListLoadFailed: "Det gick inte att hämta projekten",
 	projectDocumentsLoadFailed: "Det gick inte att hämta projektets dokument",
 	kmaDocumentsLoadFailed: "Det gick inte att hämta dokumenten",
 	kmaControlsLoadFailed: "Det gick inte att hämta kontrollerna",
@@ -1138,6 +1139,8 @@ export const svProjects: ProjectsModule = {
 	projectMyProjects: "Mina projekt",
 	projectNewOrderDirect: "Order Direkt",
 	projectNewProject: "Nytt projekt",
+	projectOriginAcceptedOffer: "Accepterad offert",
+	projectOriginDirect: "Direktprojekt",
 	// Contract tab
 	contractSubTabList: "Kontraktslista",
 	contractSubTabContract: "Kontrakt",

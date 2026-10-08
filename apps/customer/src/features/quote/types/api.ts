@@ -1,3 +1,5 @@
+import type { ProjectCreationMode } from "./types";
+
 export interface SaveProjectPayload {
 	project_id?: string;
 	step: number;
@@ -14,6 +16,8 @@ export interface SaveProjectPayload {
 		postal_code?: string;
 		directions?: string;
 		project_type?: "express" | "b2c";
+		/** Steps 1 and 2; step 1 only reads it when it creates the project */
+		creation_mode?: ProjectCreationMode;
 		// Step 1 fields (if needed by API)
 		first_name?: string;
 		last_name?: string;

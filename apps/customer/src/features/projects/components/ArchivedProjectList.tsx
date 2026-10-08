@@ -10,7 +10,6 @@ import type { BreadcrumbItem } from "@/types/user";
 import type { ArchivedProject, ApiQuoteItem } from "../types";
 import { ArchivedProjectsTable } from "./ArchivedProjectsTable";
 import { getProjectListAPIAction } from "@/api-actions";
-import { resolveCompanyName } from "../utils/activeProject";
 import { Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -67,7 +66,7 @@ export function ArchivedProjectList() {
             companyName:
               q.company_name ||
               q.companyName ||
-              resolveCompanyName({}, q.project_name || q.projectName),
+              "-",
             status: "archived",
             category: q.category || "-",
             archivedDate: q.created_at || "-",

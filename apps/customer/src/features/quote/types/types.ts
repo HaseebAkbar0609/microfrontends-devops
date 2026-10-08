@@ -17,6 +17,9 @@ export interface Offer {
 }
 
 
+/** API `creation_mode`: `quote_first` starts from Get offer, `direct_order` from Projects */
+export type ProjectCreationMode = "quote_first" | "direct_order";
+
 export interface Quote {
 	id: string;
 	refNo: string;
@@ -35,6 +38,7 @@ export interface Quote {
 	quote_status: string;
 	/** When false, "Open" resumes the create-offer flow instead of project detail */
 	is_completed?: boolean;
+	creation_mode?: ProjectCreationMode;
 }
 
 export type QuoteColumnField = keyof Quote | "actions";

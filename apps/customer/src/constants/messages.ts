@@ -90,6 +90,9 @@ export const projectMessages = {
 		get projectFailed() {
 			return t(localizationConstants.projectLoadFailed);
 		},
+		get listFailed() {
+			return t(localizationConstants.projectListLoadFailed);
+		},
 		get documentsFailed() {
 			return t(localizationConstants.projectDocumentsLoadFailed);
 		},

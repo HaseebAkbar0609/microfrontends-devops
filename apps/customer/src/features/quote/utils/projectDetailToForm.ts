@@ -1,4 +1,6 @@
 import type { CreateOfferFormValues, QuoteDocument, QuoteSupplier } from "../types/form";
+import type { ProjectCreationMode } from "../types/types";
+import { isProjectCreationMode } from "../constants";
 
 function s(v: unknown): string {
 	if (v == null || v === "") return "";
@@ -293,6 +295,8 @@ export interface ProjectFormHydration {
 	values: Partial<CreateOfferFormValues>;
 	/** Wizard step 1–5 (UI uses 5 for overview) */
 	step: number;
+	/** Stored mode, so saving a resumed draft keeps it */
+	creationMode?: ProjectCreationMode;
 }
 
 /**
@@ -388,5 +392,10 @@ export function mapProjectDetailToFormHydration(
 		invitedSuppliers: suppliersFromRow(row),
 	};
 
-	return { values, step };
+	const creationMode = projectRowForStep2.creation_mode;
+	return {
+		values,
+		step,
+		...(isProjectCreationMode(creationMode) ? { creationMode } : {}),
+	};
 }

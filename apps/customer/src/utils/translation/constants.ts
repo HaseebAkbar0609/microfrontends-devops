@@ -1025,6 +1025,7 @@ export type ProjectsModule = {
 	projectDetailsUpdateFailed: string;
 	documentDeleteFailed: string;
 	projectLoadFailed: string;
+	projectListLoadFailed: string;
 	projectDocumentsLoadFailed: string;
 	kmaDocumentsLoadFailed: string;
 	kmaControlsLoadFailed: string;
@@ -1060,6 +1061,8 @@ export type ProjectsModule = {
 	projectMyProjects: string;
 	projectNewOrderDirect: string;
 	projectNewProject: string;
+	projectOriginAcceptedOffer: string;
+	projectOriginDirect: string;
 	// Contract tab
 	contractSubTabList: string;
 	contractSubTabContract: string;

@@ -1,5 +1,8 @@
 import type { Quote } from "@/features/quote/types/types";
-import { PROJECT_STATUS_FILTER_OPTIONS } from "@/features/quote/constants";
+import {
+	isProjectCreationMode,
+	PROJECT_STATUS_FILTER_OPTIONS,
+} from "@/features/quote/constants";
 import { formatProjectTypeLabel } from "@/features/quote/utils/formatProjectType";
 
 const VALID_QUOTE_STATUS = new Set<string>(
@@ -112,6 +115,9 @@ export function mapProjectRowToQuote(row: Record<string, unknown>): Quote | null
 		),
 		quote_status: normalizeQuoteStatus(row),
 		...(is_completed !== undefined ? { is_completed } : {}),
+		...(isProjectCreationMode(row.creation_mode)
+			? { creation_mode: row.creation_mode }
+			: {}),
 	};
 }
 

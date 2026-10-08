@@ -1098,6 +1098,7 @@ export const enProjects: ProjectsModule = {
 	projectDetailsUpdateFailed: "Failed to update project details",
 	documentDeleteFailed: "Failed to delete document",
 	projectLoadFailed: "Failed to load the project",
+	projectListLoadFailed: "Failed to load the projects",
 	projectDocumentsLoadFailed: "Failed to load the project documents",
 	kmaDocumentsLoadFailed: "Failed to load documents",
 	kmaControlsLoadFailed: "Failed to load controls",
@@ -1138,6 +1139,8 @@ export const enProjects: ProjectsModule = {
 	projectMyProjects: "My Projects",
 	projectNewOrderDirect: "New Order Direct",
 	projectNewProject: "New Project",
+	projectOriginAcceptedOffer: "Accepted offer",
+	projectOriginDirect: "Direct project",
 	// Contract tab
 	contractSubTabList: "Contract List",
 	contractSubTabContract: "Contract",
