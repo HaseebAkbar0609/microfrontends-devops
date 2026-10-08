@@ -44,6 +44,7 @@ export function useActiveProjectList() {
 				getProjectListAPIAction({
 					...PROJECT_LIST_QUERY,
 					quote_status: ACCEPTED_OFFER_QUOTE_STATUS,
+					creation_mode: PROJECT_CREATION_MODE.quoteFirst,
 				}),
 				getProjectListAPIAction({
 					...PROJECT_LIST_QUERY,
