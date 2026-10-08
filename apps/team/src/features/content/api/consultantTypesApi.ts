@@ -26,7 +26,7 @@ export async function createConsultantType(body: ConsultantTypeInput) {
 	return (await axios.post<Single>(ROOT, body, languageHeaders())).data.data;
 }
 
-export async function patchConsultantType(id: string, patch: Partial<ConsultantTypeInput>) {
+export async function patchConsultantType(id: string, patch: ConsultantTypeInput) {
 	return (await axios.patch<Single>(`${ROOT}/${encodeURIComponent(id)}`, patch, languageHeaders())).data.data;
 }
 
