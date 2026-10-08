@@ -92,7 +92,8 @@ export function useConsultantTypes() {
 	return {
 		types: query.data ?? EMPTY_TYPES,
 		isLoading: query.isPending,
-		isError: query.isError,
+		// Only a failed first load: a failed background refetch keeps the cached list.
+		isError: query.isLoadingError,
 		refetch: query.refetch,
 		create,
 		update,
