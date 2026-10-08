@@ -1025,6 +1025,7 @@ export type ProjectsModule = {
 	projectDetailsUpdateFailed: string;
 	documentDeleteFailed: string;
 	projectLoadFailed: string;
+	projectListLoadFailed: string;
 	projectDocumentsLoadFailed: string;
 	kmaDocumentsLoadFailed: string;
 	kmaControlsLoadFailed: string;

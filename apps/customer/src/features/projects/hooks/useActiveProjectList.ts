@@ -5,6 +5,7 @@ import {
 	getActiveProjectsAPIAction,
 	getProjectListAPIAction,
 } from "@/api-actions";
+import { projectMessages } from "@/constants/messages";
 import {
 	ACCEPTED_OFFER_QUOTE_STATUS,
 	PROJECT_CREATION_MODE,
@@ -55,7 +56,7 @@ export function useActiveProjectList() {
 				(res) => !res.success || !res.data?.quotes,
 			);
 			if (failed) {
-				setError(failed.error || "Failed to load projects list");
+				setError(failed.error || projectMessages.load.listFailed);
 			} else {
 				// /project/active only enriches rows, so its failure still shows the list
 				setRows(
