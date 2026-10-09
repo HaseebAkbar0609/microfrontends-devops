@@ -2,9 +2,10 @@ import type { SystemItem } from "../types/dataItSystem.types";
 import { initialSystemItems } from "../constants/dataItSystem.mock";
 
 /**
- * Data IT System In-Memory Repository (Security Standard #6)
- * System records and credentials are maintained in-memory across client-side navigation.
- * No plain-text passwords or PII are written to browser storage (localStorage/sessionStorage).
+ * Data IT System In-Memory Mock Repository
+ * Ephemeral client-side prototype store for mockup data.
+ * Does not write credentials to persistent browser storage (localStorage/sessionStorage).
+ * Real production credentials will be managed and masked by backend APIs.
  */
 
 type SystemListener = (items: SystemItem[]) => void;

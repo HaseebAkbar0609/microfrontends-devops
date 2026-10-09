@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import React from "react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -14,6 +13,7 @@ import type {
 	SystemCategory,
 	SystemStatus,
 } from "@/features/data-it/types/dataItSystem.types";
+import { SystemPasswordFormField } from "./SystemPasswordFormField";
 
 export interface SystemFormValues {
 	systemId?: string;
@@ -40,7 +40,6 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 	isCreate = false,
 }) => {
 	const t = useTranslate();
-	const [showPassword, setShowPassword] = useState(false);
 
 	return (
 		<div className="space-y-4 py-2">
@@ -54,7 +53,6 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 							type="text"
 							value={values.systemId || ""}
 							onChange={(e) => onChange({ systemId: e.target.value })}
-							placeholder="#5010"
 							className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-hidden"
 						/>
 						{errors.systemId && (
@@ -71,7 +69,6 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 						type="text"
 						value={values.program}
 						onChange={(e) => onChange({ program: e.target.value })}
-						placeholder="Fortnox / Autodesk"
 						className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-hidden"
 					/>
 					{errors.program && (
@@ -132,6 +129,9 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 						}
 						className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-hidden"
 					/>
+					{errors.pricePerMonth && (
+						<p className="mt-1 text-xs text-rose-500">{errors.pricePerMonth}</p>
+					)}
 				</div>
 			</div>
 
@@ -144,7 +144,6 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 						type="email"
 						value={values.email}
 						onChange={(e) => onChange({ email: e.target.value })}
-						placeholder="admin@system.se"
 						className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-hidden"
 					/>
 					{errors.email && (
@@ -152,35 +151,11 @@ export const SystemFormFields: React.FC<SystemFormFieldsProps> = ({
 					)}
 				</div>
 
-				<div>
-					<label className="block text-xs font-semibold text-slate-700">
-						{t(localizationConstants.dataItSystemFieldPassword)}
-					</label>
-					<div className="relative mt-1">
-						<input
-							type={showPassword ? "text" : "password"}
-							value={values.password}
-							onChange={(e) => onChange({ password: e.target.value })}
-							className="w-full rounded-lg border border-slate-200 px-3 py-2 pr-10 text-sm text-slate-900 focus:border-slate-400 focus:outline-hidden"
-						/>
-						<button
-							type="button"
-							onClick={() => setShowPassword((prev) => !prev)}
-							className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-							aria-label={
-								showPassword
-									? t(localizationConstants.dataItSystemHidePassword)
-									: t(localizationConstants.dataItSystemShowPassword)
-							}
-						>
-							{showPassword ? (
-								<EyeOff className="h-4 w-4" />
-							) : (
-								<Eye className="h-4 w-4" />
-							)}
-						</button>
-					</div>
-				</div>
+				<SystemPasswordFormField
+					value={values.password}
+					onChange={(password) => onChange({ password })}
+					error={errors.password}
+				/>
 			</div>
 
 			<div>

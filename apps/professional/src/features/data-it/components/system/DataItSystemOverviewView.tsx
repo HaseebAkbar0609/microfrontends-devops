@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -16,10 +16,10 @@ import { SystemTable } from "./SystemTable";
 export const DataItSystemOverviewView: React.FC = () => {
 	const t = useTranslate();
 	const router = useRouter();
-	const [activeTab] = useState("system-list");
 
 	const {
 		items,
+		totalItems,
 		currentPage,
 		totalPages,
 		pageSize,
@@ -34,6 +34,7 @@ export const DataItSystemOverviewView: React.FC = () => {
 		sortField,
 		sortDir,
 		handleSort,
+		clearFilters,
 	} = useDataItSystem();
 
 	const handleViewDetail = (id: string) => {
@@ -42,12 +43,6 @@ export const DataItSystemOverviewView: React.FC = () => {
 
 	const handleEdit = (id: string) => {
 		router.push(`${DATA_IT_SYSTEM_BASE_URL}/${encodeURIComponent(id)}?edit=1`);
-	};
-
-	const handleClearFilters = () => {
-		setSearchQuery("");
-		setSelectedCategory("ALL");
-		setSelectedStatus("ALL");
 	};
 
 	return (
@@ -60,11 +55,7 @@ export const DataItSystemOverviewView: React.FC = () => {
 				>
 					<button
 						type="button"
-						className={`border-b-2 py-3 text-sm font-semibold transition-colors ${
-							activeTab === "system-list"
-								? "border-slate-900 text-slate-900"
-								: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700"
-						}`}
+						className="border-b-2 border-slate-900 py-3 text-sm font-semibold text-slate-900"
 					>
 						{t(localizationConstants.dataItTabSystemList)}
 					</button>
@@ -92,11 +83,11 @@ export const DataItSystemOverviewView: React.FC = () => {
 					onSort={handleSort}
 					onViewDetail={handleViewDetail}
 					onEdit={(item) => handleEdit(item.id)}
-					onClearFilters={handleClearFilters}
+					onClearFilters={clearFilters}
 				/>
 
 				{/* Pagination */}
-				{totalPages > 0 && (
+				{totalItems > 0 && (
 					<TablePagination
 						currentPage={currentPage}
 						totalPages={totalPages}

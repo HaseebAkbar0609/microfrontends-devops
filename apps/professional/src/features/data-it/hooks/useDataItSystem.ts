@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslate } from "@/utils/translation/translate";
 import type {
 	SystemCategory,
 	SystemItem,
@@ -8,10 +9,14 @@ import type {
 	SystemSortState,
 	SystemStatus,
 } from "../types/dataItSystem.types";
-import { DEFAULT_SYSTEM_PAGE_SIZE } from "../constants/dataItSystem.constants";
+import {
+	DEFAULT_SYSTEM_PAGE_SIZE,
+	SYSTEM_CATEGORY_TRANSLATION_MAP,
+} from "../constants/dataItSystem.constants";
 import { dataItSystemRepository } from "../utils/dataItSystemRepository";
 
 export function useDataItSystem() {
+	const t = useTranslate();
 	const [items, setItems] = useState<SystemItem[]>(() =>
 		dataItSystemRepository.getAll(),
 	);
@@ -53,15 +58,19 @@ export function useDataItSystem() {
 
 		if (searchQuery.trim()) {
 			const query = searchQuery.toLowerCase().trim();
-			result = result.filter(
-				(item) =>
+			result = result.filter((item) => {
+				const localizedCategory = SYSTEM_CATEGORY_TRANSLATION_MAP[item.category]
+					? t(SYSTEM_CATEGORY_TRANSLATION_MAP[item.category]).toLowerCase()
+					: "";
+				return (
 					item.systemId.toLowerCase().includes(query) ||
 					item.program.toLowerCase().includes(query) ||
 					item.category.toLowerCase().includes(query) ||
-					item.categoryLabel.toLowerCase().includes(query) ||
+					localizedCategory.includes(query) ||
 					(item.email && item.email.toLowerCase().includes(query)) ||
-					(item.description && item.description.toLowerCase().includes(query)),
-			);
+					(item.description && item.description.toLowerCase().includes(query))
+				);
+			});
 		}
 
 		result.sort((a, b) => {
@@ -112,6 +121,7 @@ export function useDataItSystem() {
 		searchQuery,
 		sortState.field,
 		sortState.dir,
+		t,
 	]);
 
 	// Pagination calculations
@@ -167,10 +177,6 @@ export function useDataItSystem() {
 		setPage(1);
 	}, []);
 
-	const getSystemById = useCallback((id: string) => {
-		return dataItSystemRepository.getById(id);
-	}, []);
-
 	const updateSystem = useCallback(
 		(id: string, updates: Partial<SystemItem>) => {
 			dataItSystemRepository.update(id, updates);
@@ -178,17 +184,8 @@ export function useDataItSystem() {
 		[],
 	);
 
-	const createSystem = useCallback((item: SystemItem) => {
-		dataItSystemRepository.create(item);
-	}, []);
-
-	const deleteSystem = useCallback((id: string) => {
-		dataItSystemRepository.delete(id);
-	}, []);
-
 	return {
 		items: paginatedItems,
-		allItems: filteredAndSortedItems,
 		totalItems,
 		totalPages,
 		currentPage: safeCurrentPage,
@@ -205,9 +202,6 @@ export function useDataItSystem() {
 		sortDir: sortState.dir,
 		handleSort,
 		clearFilters,
-		getSystemById,
 		updateSystem,
-		createSystem,
-		deleteSystem,
 	};
 }

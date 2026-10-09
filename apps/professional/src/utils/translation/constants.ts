@@ -11496,8 +11496,6 @@ export type DataItOverviewAndDetailTranslation = {
 
 // Business Support / Data IT / System (TFS-1154)
 export type DataItSystemTranslation = {
-	dataItSystemTitle: string;
-	dataItSystemBreadcrumb: string;
 	dataItTabSystemList: string;
 	dataItRegisterNewSystem: string;
 	dataItSystemColSystemId: string;
@@ -11553,20 +11551,15 @@ export type DataItSystemTranslation = {
 	dataItSystemEditDesc: string;
 	dataItSystemRegisterTitle: string;
 	dataItSystemRegisterDesc: string;
-	dataItSystemToastSaved: string;
-	dataItSystemToastCreated: string;
 	dataItSystemValidationRequired: string;
 	dataItSystemValidationEmail: string;
+	dataItSystemValidationPrice: string;
 	dataItSystemAriaTabs: string;
 	dataItSystemAriaClearSearch: string;
 	dataItSystemAriaActions: string;
 	dataItSystemShowPassword: string;
 	dataItSystemHidePassword: string;
 	dataItSystemNotFoundTitle: string;
-	dataItSystemNotFoundDesc: string;
-	dataItSystemDeleteConfirmTitle: string;
-	dataItSystemDeleteConfirmDesc: string;
-	dataItSystemToastDeleted: string;
 	dataItSystemBtnEdit: string;
 	dataItSystemBtnSave: string;
 	dataItSystemBtnCancel: string;
@@ -11578,6 +11571,7 @@ export type DataItSystemTranslation = {
 	dataItSystemAssigneesAddBtn: string;
 	dataItSystemAssigneesRemoveBtn: string;
 	dataItSystemAssigneesPlaceholderUser: string;
+	dataItSystemDefaultRole: string;
 	dataItSystemCreateTitle: string;
 	dataItSystemCreateTabBasic: string;
 	dataItSystemCreateTabAssignment: string;
@@ -11601,6 +11595,7 @@ export type DataItSystemTranslation = {
 	dataItSystemCreateUploadStagedUploadedToast: string;
 	dataItSystemAriaDocumentsTable: string;
 	dataItSystemAriaAssignmentsTable: string;
+	dataItSystemToastCreated: string;
 };
 
 

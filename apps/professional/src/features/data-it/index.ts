@@ -33,6 +33,7 @@ export * from "./components/system/SystemFilterToolbar";
 export * from "./components/system/SystemTable";
 export * from "./components/system/SystemTableRow";
 export * from "./components/system/SystemFormFields";
+export * from "./components/system/SystemPasswordFormField";
 
 export * from "./components/system/detail/DataItSystemDetailView";
 export * from "./components/system/detail/SystemDetailHeader";

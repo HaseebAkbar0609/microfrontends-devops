@@ -37,7 +37,7 @@ export const SystemAssigneeDialog: React.FC<SystemAssigneeDialogProps> = ({
 		const newAssignee: SystemAssignee = {
 			id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
 			name: name.trim(),
-			role: role.trim() || "Användare",
+			role: role.trim() || t(localizationConstants.dataItSystemDefaultRole),
 			email: email.trim() || "-",
 			phone: phone.trim() || "-",
 		};
