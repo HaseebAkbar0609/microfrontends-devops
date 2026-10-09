@@ -58,3 +58,7 @@ export const SYSTEM_DETAIL_TAB_ASSIGNMENT = "assignment" as const;
 export type SystemDetailTabId =
 	| typeof SYSTEM_DETAIL_TAB_BASIC
 	| typeof SYSTEM_DETAIL_TAB_ASSIGNMENT;
+
+export const DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK = 5008;
+export const DEFAULT_NEW_SYSTEM_CATEGORY: SystemCategory = "CALCULATION";
+export const DEFAULT_NEW_SYSTEM_STATUS: SystemStatus = "ACTIVE";

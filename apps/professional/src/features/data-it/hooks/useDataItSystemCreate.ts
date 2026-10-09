@@ -11,6 +11,9 @@ import {
 	SYSTEM_DETAIL_TAB_ASSIGNMENT,
 	type SystemDetailTabId,
 	SYSTEM_CATEGORY_TRANSLATION_MAP,
+	DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK,
+	DEFAULT_NEW_SYSTEM_CATEGORY,
+	DEFAULT_NEW_SYSTEM_STATUS,
 } from "../constants/dataItSystem.constants";
 import {
 	AVAILABLE_SYSTEM_ASSIGNEES,
@@ -48,15 +51,15 @@ export function useDataItSystemCreate() {
 		const ids = existing
 			.map((item) => parseInt(item.id.replace(/\D/g, ""), 10))
 			.filter((n) => !isNaN(n));
-		const maxId = ids.length > 0 ? Math.max(...ids) : 5008;
+		const maxId = ids.length > 0 ? Math.max(...ids) : DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK;
 		return `#${maxId + 1}`;
 	}, []);
 
 	const [form, setForm] = useState<SystemCreateFormState>({
 		systemId: initialSystemId,
 		program: "",
-		category: "CALCULATION",
-		status: "ACTIVE",
+		category: DEFAULT_NEW_SYSTEM_CATEGORY,
+		status: DEFAULT_NEW_SYSTEM_STATUS,
 		pricePerMonth: 0,
 		email: "",
 		password: "",

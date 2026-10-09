@@ -26,11 +26,15 @@ export const SystemCreateAssignmentCard: React.FC<
 
 			{/* Assignee Selection matching Figma View 2 */}
 			<div className="mt-5 max-w-md space-y-1.5">
-				<label className="block text-xs font-semibold text-slate-700">
+				<label
+					htmlFor="system-create-assignee-select"
+					className="block text-xs font-semibold text-slate-700"
+				>
 					{t(localizationConstants.dataItSystemCreateAssignedTo)}
 				</label>
 				<div className="relative">
 					<select
+						id="system-create-assignee-select"
 						onChange={(e) => {
 							if (e.target.value) {
 								onAssignUser(e.target.value);
@@ -53,7 +57,10 @@ export const SystemCreateAssignmentCard: React.FC<
 									value={user.id}
 									disabled={isAlreadyAssigned}
 								>
-									{user.name} &bull; {user.role} {isAlreadyAssigned ? "(Redan tilldelad)" : ""}
+									{user.name} &bull; {user.role}{" "}
+									{isAlreadyAssigned
+										? `(${t(localizationConstants.dataItSystemAlreadyAssigned)})`
+										: ""}
 								</option>
 							);
 						})}
@@ -63,7 +70,10 @@ export const SystemCreateAssignmentCard: React.FC<
 
 			{/* Assignees Table */}
 			<div className="mt-6 overflow-x-auto">
-				<table className="w-full text-left border-collapse">
+				<table
+					className="w-full text-left border-collapse"
+					aria-label={t(localizationConstants.dataItSystemAriaAssignmentsTable)}
+				>
 					<thead>
 						<tr className="border-b border-slate-200 text-xs font-semibold text-slate-500">
 							<th className="py-3 pr-4">
@@ -122,6 +132,7 @@ export const SystemCreateAssignmentCard: React.FC<
 											type="button"
 											onClick={() => onRemoveAssignee(user.id)}
 											className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+											aria-label={`${t(localizationConstants.dataItSystemAssigneesRemoveBtn)} ${user.name}`}
 										>
 											<Trash2 className="h-4 w-4" />
 										</button>

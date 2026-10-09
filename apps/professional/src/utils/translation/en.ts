@@ -11989,6 +11989,13 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemCreateConfirmCancelDesc: "Are you sure you want to cancel? All unsaved changes will be lost.",
 	dataItSystemCreateDocRemovedToast: "Document removed",
 	dataItSystemCreateAssigneeRemovedToast: "User removed",
+	dataItSystemBtnDiscardConfirm: "Discard changes",
+	dataItSystemAlreadyAssigned: "Already assigned",
+	dataItSystemPlaceholderInfo: "info",
+	dataItSystemCreateUploadStagedNone: "Select document template or upload files...",
+	dataItSystemCreateUploadStagedUploadedToast: "Files uploaded successfully",
+	dataItSystemAriaDocumentsTable: "Uploaded documents",
+	dataItSystemAriaAssignmentsTable: "Assigned users",
 };
 
 export const en: Translation = {

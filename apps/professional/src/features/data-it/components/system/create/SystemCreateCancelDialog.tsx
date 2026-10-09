@@ -48,7 +48,7 @@ export const SystemCreateCancelDialog: React.FC<
 						onClick={onConfirm}
 						className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 transition-colors"
 					>
-						{t(localizationConstants.dataItSystemBtnCancel)}
+						{t(localizationConstants.dataItSystemBtnDiscardConfirm)}
 					</button>
 				</div>
 			</div>

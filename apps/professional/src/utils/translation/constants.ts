@@ -11594,6 +11594,13 @@ export type DataItSystemTranslation = {
 	dataItSystemCreateConfirmCancelDesc: string;
 	dataItSystemCreateDocRemovedToast: string;
 	dataItSystemCreateAssigneeRemovedToast: string;
+	dataItSystemBtnDiscardConfirm: string;
+	dataItSystemAlreadyAssigned: string;
+	dataItSystemPlaceholderInfo: string;
+	dataItSystemCreateUploadStagedNone: string;
+	dataItSystemCreateUploadStagedUploadedToast: string;
+	dataItSystemAriaDocumentsTable: string;
+	dataItSystemAriaAssignmentsTable: string;
 };
 
 

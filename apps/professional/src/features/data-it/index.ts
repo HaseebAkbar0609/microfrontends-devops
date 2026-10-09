@@ -52,6 +52,8 @@ export * from "./components/system/create/SystemCreateHeader";
 export * from "./components/system/create/SystemCreateTabs";
 export * from "./components/system/create/SystemCreateBasicInfoCard";
 export * from "./components/system/create/SystemCreateDocumentsCard";
+export * from "./components/system/create/SystemCreateDocumentUpload";
+export * from "./components/system/create/SystemCreateDocumentTable";
 export * from "./components/system/create/SystemCreateAssignmentCard";
 export * from "./components/system/create/SystemCreateActionBar";
 export * from "./components/system/create/SystemCreateCancelDialog";

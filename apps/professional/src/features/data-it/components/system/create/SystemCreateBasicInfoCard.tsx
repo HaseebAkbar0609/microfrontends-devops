@@ -26,6 +26,7 @@ export const SystemCreateBasicInfoCard: React.FC<
 	SystemCreateBasicInfoCardProps
 > = ({ form, errors, showPassword, onTogglePassword, onFieldChange }) => {
 	const t = useTranslate();
+	const placeholderInfo = t(localizationConstants.dataItSystemPlaceholderInfo);
 
 	return (
 		<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs">
@@ -34,17 +35,21 @@ export const SystemCreateBasicInfoCard: React.FC<
 			</h2>
 
 			<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
-				{/* Row 1 Left: System-ID */}
+				{/* Row 1 Left: System-ID (Styled with muted read-only fill matching Figma M005) */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-id"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldSystemId)} *
 					</label>
 					<input
+						id="system-create-id"
 						type="text"
 						value={form.systemId}
 						onChange={(e) => onFieldChange("systemId", e.target.value)}
-						placeholder="#5009"
-						className={`mt-1.5 h-10 w-full rounded-lg border bg-white px-3.5 text-sm text-slate-900 transition-colors focus:outline-hidden ${
+						placeholder={placeholderInfo}
+						className={`mt-1.5 h-10 w-full rounded-lg border bg-slate-50/80 px-3.5 text-sm font-medium text-slate-600 transition-colors focus:bg-white focus:outline-hidden ${
 							errors.systemId
 								? "border-rose-300 focus:border-rose-500"
 								: "border-slate-200 focus:border-slate-400"
@@ -57,10 +62,14 @@ export const SystemCreateBasicInfoCard: React.FC<
 
 				{/* Row 1 Right: Kategori */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-category"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldCategory)}
 					</label>
 					<select
+						id="system-create-category"
 						value={form.category}
 						onChange={(e) =>
 							onFieldChange("category", e.target.value as SystemCategory)
@@ -77,14 +86,18 @@ export const SystemCreateBasicInfoCard: React.FC<
 
 				{/* Row 2 Left: Program namn */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-program"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldProgramName)} *
 					</label>
 					<input
+						id="system-create-program"
 						type="text"
 						value={form.program}
 						onChange={(e) => onFieldChange("program", e.target.value)}
-						placeholder="Wikelss / Autodesk"
+						placeholder={placeholderInfo}
 						className={`mt-1.5 h-10 w-full rounded-lg border bg-white px-3.5 text-sm text-slate-900 transition-colors focus:outline-hidden ${
 							errors.program
 								? "border-rose-300 focus:border-rose-500"
@@ -98,14 +111,18 @@ export const SystemCreateBasicInfoCard: React.FC<
 
 				{/* Row 2 Right: Email */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-email"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldEmail)}
 					</label>
 					<input
+						id="system-create-email"
 						type="email"
 						value={form.email}
 						onChange={(e) => onFieldChange("email", e.target.value)}
-						placeholder="admin@system.se"
+						placeholder={placeholderInfo}
 						className={`mt-1.5 h-10 w-full rounded-lg border bg-white px-3.5 text-sm text-slate-900 transition-colors focus:outline-hidden ${
 							errors.email
 								? "border-rose-300 focus:border-rose-500"
@@ -119,15 +136,19 @@ export const SystemCreateBasicInfoCard: React.FC<
 
 				{/* Row 3 Left: Lösenord */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-password"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldPassword)}
 					</label>
 					<div className="relative mt-1.5">
 						<input
+							id="system-create-password"
 							type={showPassword ? "text" : "password"}
 							value={form.password}
 							onChange={(e) => onFieldChange("password", e.target.value)}
-							placeholder="••••••••"
+							placeholder={placeholderInfo}
 							className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-3.5 pr-10 text-sm text-slate-900 transition-colors focus:border-slate-400 focus:outline-hidden"
 						/>
 						<button
@@ -151,16 +172,21 @@ export const SystemCreateBasicInfoCard: React.FC<
 
 				{/* Row 3 Right: Beskrivning */}
 				<div>
-					<label className="block text-xs font-semibold text-slate-700">
+					<label
+						htmlFor="system-create-description"
+						className="block text-xs font-semibold text-slate-700"
+					>
 						{t(localizationConstants.dataItSystemFieldDescription)}
 					</label>
 					<input
+						id="system-create-description"
 						type="text"
 						value={form.description}
 						onChange={(e) => onFieldChange("description", e.target.value)}
-						placeholder="Beskrivning av systemet..."
+						placeholder={placeholderInfo}
 						className="mt-1.5 h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition-colors focus:border-slate-400 focus:outline-hidden"
-					/>
+					>
+					</input>
 				</div>
 			</div>
 		</div>

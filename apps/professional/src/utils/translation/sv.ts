@@ -12010,6 +12010,13 @@ export const svDataItSystem: DataItSystemTranslation = {
 	dataItSystemCreateConfirmCancelDesc: "Är du säker på att du vill avbryta? Alla osparade ändringar går förlorade.",
 	dataItSystemCreateDocRemovedToast: "Dokument borttaget",
 	dataItSystemCreateAssigneeRemovedToast: "Användare borttagen",
+	dataItSystemBtnDiscardConfirm: "Kasta bort ändringar",
+	dataItSystemAlreadyAssigned: "Redan tilldelad",
+	dataItSystemPlaceholderInfo: "info",
+	dataItSystemCreateUploadStagedNone: "Välj dokumentmall eller ladda upp filer...",
+	dataItSystemCreateUploadStagedUploadedToast: "Filer har laddats upp",
+	dataItSystemAriaDocumentsTable: "Uppladdade dokument",
+	dataItSystemAriaAssignmentsTable: "Tilldelade användare",
 };
 
 export const sv: Translation = {
