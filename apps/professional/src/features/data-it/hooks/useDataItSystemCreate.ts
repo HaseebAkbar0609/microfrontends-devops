@@ -15,10 +15,7 @@ import {
 	DEFAULT_NEW_SYSTEM_CATEGORY,
 	DEFAULT_NEW_SYSTEM_STATUS,
 } from "../constants/dataItSystem.constants";
-import {
-	AVAILABLE_SYSTEM_ASSIGNEES,
-	AVAILABLE_SYSTEM_DOCUMENT_TEMPLATES,
-} from "../constants/dataItSystem.mock";
+import { AVAILABLE_SYSTEM_ASSIGNEES } from "../constants/dataItSystem.mock";
 import { dataItSystemRepository } from "../utils/dataItSystemRepository";
 import type {
 	SystemCategory,
@@ -51,7 +48,8 @@ export function useDataItSystemCreate() {
 		const ids = existing
 			.map((item) => parseInt(item.id.replace(/\D/g, ""), 10))
 			.filter((n) => !isNaN(n));
-		const maxId = ids.length > 0 ? Math.max(...ids) : DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK;
+		const maxId =
+			ids.length > 0 ? Math.max(...ids) : DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK;
 		return `#${maxId + 1}`;
 	}, []);
 
@@ -68,24 +66,29 @@ export function useDataItSystemCreate() {
 		assignedUsers: [],
 	});
 
+	// Staged files lifted to hook so they persist across tab switches
+	const [stagedFiles, setStagedFiles] = useState<SystemDocument[]>([]);
 	const [activeTab, setActiveTab] =
 		useState<SystemDetailTabId>(SYSTEM_DETAIL_TAB_BASIC);
 	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
-	const [previewFile, setPreviewFile] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const isDirty = useMemo(() => {
 		return (
 			form.program.trim() !== "" ||
+			form.pricePerMonth !== 0 ||
+			form.category !== DEFAULT_NEW_SYSTEM_CATEGORY ||
+			form.status !== DEFAULT_NEW_SYSTEM_STATUS ||
 			form.email.trim() !== "" ||
 			form.password.trim() !== "" ||
 			form.description.trim() !== "" ||
 			form.documents.length > 0 ||
-			form.assignedUsers.length > 0 ||
-			form.systemId !== initialSystemId
+			stagedFiles.length > 0 ||
+			form.assignedUsers.length > 0
 		);
-	}, [form, initialSystemId]);
+	}, [form, stagedFiles]);
 
 	const updateField = useCallback(
 		<K extends keyof SystemCreateFormState>(
@@ -118,18 +121,6 @@ export function useDataItSystemCreate() {
 		}));
 	}, []);
 
-	const addDocumentFromTemplate = useCallback(
-		(templateId: string) => {
-			const template = AVAILABLE_SYSTEM_DOCUMENT_TEMPLATES.find(
-				(item) => item.id === templateId,
-			);
-			if (template) {
-				addDocument(template);
-			}
-		},
-		[addDocument],
-	);
-
 	const removeDocument = useCallback(
 		(id: string) => {
 			setForm((prev) => ({
@@ -143,6 +134,23 @@ export function useDataItSystemCreate() {
 		},
 		[t],
 	);
+
+	const addStagedFiles = useCallback((docs: SystemDocument[]) => {
+		setStagedFiles((prev) => [...prev, ...docs]);
+	}, []);
+
+	const removeStagedFile = useCallback((id: string) => {
+		setStagedFiles((prev) => prev.filter((item) => item.id !== id));
+	}, []);
+
+	const commitStagedFiles = useCallback(() => {
+		if (stagedFiles.length === 0) return;
+		setForm((prev) => ({
+			...prev,
+			documents: [...prev.documents, ...stagedFiles],
+		}));
+		setStagedFiles([]);
+	}, [stagedFiles]);
 
 	const addAssigneeFromCandidate = useCallback((candidateId: string) => {
 		const candidate = AVAILABLE_SYSTEM_ASSIGNEES.find(
@@ -182,11 +190,6 @@ export function useDataItSystemCreate() {
 
 	const validateBasicInfo = useCallback((): boolean => {
 		const nextErrors: Record<string, string> = {};
-		if (!form.systemId.trim()) {
-			nextErrors.systemId = t(
-				localizationConstants.dataItSystemValidationRequired,
-			);
-		}
 		if (!form.program.trim()) {
 			nextErrors.program = t(
 				localizationConstants.dataItSystemValidationRequired,
@@ -206,14 +209,32 @@ export function useDataItSystemCreate() {
 	}, [validateBasicInfo]);
 
 	const handleSave = useCallback(() => {
+		if (isSubmitting) return;
+
 		if (!validateBasicInfo()) {
 			setActiveTab(SYSTEM_DETAIL_TAB_BASIC);
 			return;
 		}
 
+		setIsSubmitting(true);
+
 		const rawId = form.systemId.trim();
-		const cleanId = rawId.replace(/^#/, "");
-		const displaySystemId = rawId.startsWith("#") ? rawId : `#${rawId}`;
+		let cleanId = rawId.replace(/^#/, "").trim();
+		const existingItems = dataItSystemRepository.getAll();
+
+		// Prevent duplicate System-ID collision
+		if (!cleanId || existingItems.some((item) => item.id === cleanId)) {
+			const ids = existingItems
+				.map((item) => parseInt(item.id.replace(/\D/g, ""), 10))
+				.filter((n) => !isNaN(n));
+			const maxId =
+				ids.length > 0 ? Math.max(...ids) : DEFAULT_SYSTEM_ID_NUMERIC_FALLBACK;
+			cleanId = String(maxId + 1);
+		}
+		const displaySystemId = `#${cleanId}`;
+
+		// Automatically include any uncommitted staged files so user never loses them
+		const finalDocuments = [...form.documents, ...stagedFiles];
 
 		const newItem: SystemItem = {
 			id: cleanId,
@@ -222,11 +243,11 @@ export function useDataItSystemCreate() {
 			category: form.category,
 			categoryLabel: t(SYSTEM_CATEGORY_TRANSLATION_MAP[form.category]),
 			status: form.status,
-			pricePerMonth: Number(form.pricePerMonth) || 0,
+			pricePerMonth: Math.max(0, Number(form.pricePerMonth) || 0),
 			email: form.email.trim() || undefined,
 			password: form.password.trim() || undefined,
 			description: form.description.trim() || undefined,
-			documents: form.documents,
+			documents: finalDocuments,
 			assignedUsers: form.assignedUsers,
 		};
 
@@ -236,7 +257,7 @@ export function useDataItSystemCreate() {
 			t(localizationConstants.dataItSystemToastCreated),
 		);
 		router.push(`${DATA_IT_SYSTEM_BASE_URL}/${encodeURIComponent(newItem.id)}`);
-	}, [form, validateBasicInfo, t, router]);
+	}, [isSubmitting, form, stagedFiles, validateBasicInfo, t, router]);
 
 	const handleCancel = useCallback(() => {
 		if (isDirty) {
@@ -261,11 +282,13 @@ export function useDataItSystemCreate() {
 		isDirty,
 		isCancelDialogOpen,
 		setIsCancelDialogOpen,
-		previewFile,
-		setPreviewFile,
+		isSubmitting,
+		stagedFiles,
+		addStagedFiles,
+		removeStagedFile,
+		commitStagedFiles,
 		updateField,
 		addDocument,
-		addDocumentFromTemplate,
 		removeDocument,
 		addAssigneeFromCandidate,
 		removeAssignee,

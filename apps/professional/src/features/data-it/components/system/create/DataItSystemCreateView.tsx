@@ -24,8 +24,11 @@ export const DataItSystemCreateView: React.FC = () => {
 		errors,
 		isCancelDialogOpen,
 		setIsCancelDialogOpen,
+		stagedFiles,
+		addStagedFiles,
+		removeStagedFile,
+		commitStagedFiles,
 		updateField,
-		addDocument,
 		removeDocument,
 		addAssigneeFromCandidate,
 		removeAssignee,
@@ -35,11 +38,11 @@ export const DataItSystemCreateView: React.FC = () => {
 		confirmCancel,
 	} = useDataItSystemCreate();
 
-	const hasBasicErrors = Boolean(errors.program || errors.systemId || errors.email);
+	const hasBasicErrors = Boolean(errors.program || errors.email);
 
 	return (
 		<div className="flex flex-1 flex-col gap-6 px-6 py-5">
-			{/* Top Header: ← Ny system */}
+			{/* Top Header: ← Nytt system */}
 			<SystemCreateHeader onBack={handleCancel} />
 
 			{/* Sub Tabs: Grundläggande info | Tilldelning */}
@@ -61,8 +64,11 @@ export const DataItSystemCreateView: React.FC = () => {
 					/>
 					<SystemCreateDocumentsCard
 						documents={form.documents}
-						onAddDocument={addDocument}
+						stagedFiles={stagedFiles}
 						onRemoveDocument={removeDocument}
+						onAddStagedFiles={addStagedFiles}
+						onRemoveStagedFile={removeStagedFile}
+						onCommitStagedFiles={commitStagedFiles}
 					/>
 				</div>
 			)}

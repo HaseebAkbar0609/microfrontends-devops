@@ -96,7 +96,13 @@ export const SystemCreateDocumentTable: React.FC<
 										<div className="inline-flex items-center justify-end gap-2">
 											<button
 												type="button"
-												onClick={() => setActivePreview(doc.name)}
+												onClick={() => {
+													if (doc.url && doc.url !== "#") {
+														window.open(doc.url, "_blank", "noopener,noreferrer");
+													} else {
+														setActivePreview(doc.name);
+													}
+												}}
 												className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
 											>
 												{t(localizationConstants.dataItSystemActionViewFile)}

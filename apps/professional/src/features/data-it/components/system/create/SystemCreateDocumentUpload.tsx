@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { ChevronDown, Upload, X } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -8,55 +8,62 @@ import { AVAILABLE_SYSTEM_DOCUMENT_TEMPLATES } from "@/features/data-it/constant
 import { showToast } from "@/lib/toast";
 import type { SystemDocument } from "@/features/data-it/types/dataItSystem.types";
 
+const ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf"];
+
 interface SystemCreateDocumentUploadProps {
-	onCommitDocuments: (docs: SystemDocument[]) => void;
+	stagedFiles: SystemDocument[];
+	onAddStagedFiles: (docs: SystemDocument[]) => void;
+	onRemoveStagedFile: (id: string) => void;
+	onCommitStagedFiles: () => void;
 }
 
 export const SystemCreateDocumentUpload: React.FC<
 	SystemCreateDocumentUploadProps
-> = ({ onCommitDocuments }) => {
+> = ({
+	stagedFiles,
+	onAddStagedFiles,
+	onRemoveStagedFile,
+	onCommitStagedFiles,
+}) => {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-
-	// Staged pills matching Figma View 1: [Document 1.pdf ✕] [Document 2.doc ✕]
-	const [stagedFiles, setStagedFiles] = useState<SystemDocument[]>([
-		{
-			id: "staged_1",
-			name: "Document 1.pdf",
-			date: new Date().toISOString().split("T")[0],
-			fileType: "PDF",
-			url: "#",
-		},
-		{
-			id: "staged_2",
-			name: "Document 2.doc",
-			date: new Date().toISOString().split("T")[0],
-			fileType: "DOC",
-			url: "#",
-		},
-	]);
-
-	const removeStaged = (id: string) => {
-		setStagedFiles((prev) => prev.filter((item) => item.id !== id));
-	};
 
 	const handleNativeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (!files || files.length === 0) return;
 		const today = new Date().toISOString().split("T")[0];
 
-		const added: SystemDocument[] = Array.from(files).map((file) => {
-			const ext = file.name.split(".").pop()?.toUpperCase() || "PDF";
-			return {
+		const validFiles: SystemDocument[] = [];
+		let hasInvalid = false;
+
+		Array.from(files).forEach((file) => {
+			const ext = file.name.split(".").pop()?.toLowerCase() || "";
+			if (!ALLOWED_EXTENSIONS.includes(ext)) {
+				hasInvalid = true;
+				return;
+			}
+
+			const objectUrl = URL.createObjectURL(file);
+			validFiles.push({
 				id: `staged_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
 				name: file.name,
 				date: today,
-				fileType: ext,
-				url: "#",
-			};
+				fileType: ext.toUpperCase(),
+				url: objectUrl,
+			});
 		});
 
-		setStagedFiles((prev) => [...prev, ...added]);
+		if (hasInvalid) {
+			showToast(
+				"error",
+				t(localizationConstants.dataItSystemCreateUploadHintDesc),
+			);
+		}
+
+		if (validFiles.length > 0) {
+			onAddStagedFiles(validFiles);
+		}
+
 		if (fileInputRef.current) fileInputRef.current.value = "";
 	};
 
@@ -65,8 +72,7 @@ export const SystemCreateDocumentUpload: React.FC<
 			fileInputRef.current?.click();
 			return;
 		}
-		onCommitDocuments(stagedFiles);
-		setStagedFiles([]);
+		onCommitStagedFiles();
 		showToast(
 			"success",
 			t(localizationConstants.dataItSystemCreateUploadStagedUploadedToast),
@@ -102,7 +108,10 @@ export const SystemCreateDocumentUpload: React.FC<
 								<span className="truncate max-w-[140px]">{doc.name}</span>
 								<button
 									type="button"
-									onClick={() => removeStaged(doc.id)}
+									onClick={(e) => {
+										e.stopPropagation();
+										onRemoveStagedFile(doc.id);
+									}}
 									className="text-slate-400 hover:text-slate-700 transition-colors"
 									aria-label={`${t(localizationConstants.dataItSystemClose)} ${doc.name}`}
 								>
@@ -112,8 +121,8 @@ export const SystemCreateDocumentUpload: React.FC<
 						))
 					)}
 
-					{/* Template picker quick trigger */}
-					<div className="ml-auto flex items-center gap-1 pl-2">
+					{/* Template picker trigger properly scoped to chevron */}
+					<div className="relative ml-auto flex h-7 w-7 items-center justify-center">
 						<select
 							onChange={(e) => {
 								if (e.target.value) {
@@ -121,8 +130,7 @@ export const SystemCreateDocumentUpload: React.FC<
 										(item: SystemDocument) => item.id === e.target.value,
 									);
 									if (tpl) {
-										setStagedFiles((prev) => [
-											...prev,
+										onAddStagedFiles([
 											{
 												...tpl,
 												id: `staged_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
@@ -133,11 +141,15 @@ export const SystemCreateDocumentUpload: React.FC<
 								}
 							}}
 							defaultValue=""
-							className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
-							aria-label={t(localizationConstants.dataItSystemCreateUploadSelectPlaceholder)}
+							className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-10"
+							aria-label={t(
+								localizationConstants.dataItSystemCreateUploadSelectPlaceholder,
+							)}
 						>
 							<option value="" disabled>
-								{t(localizationConstants.dataItSystemCreateUploadSelectPlaceholder)}
+								{t(
+									localizationConstants.dataItSystemCreateUploadSelectPlaceholder,
+								)}
 							</option>
 							{AVAILABLE_SYSTEM_DOCUMENT_TEMPLATES.map((tpl: SystemDocument) => (
 								<option key={tpl.id} value={tpl.id}>

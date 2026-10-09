@@ -9,18 +9,24 @@ import type { SystemDocument } from "@/features/data-it/types/dataItSystem.types
 
 interface SystemCreateDocumentsCardProps {
 	documents: SystemDocument[];
-	onAddDocument: (doc: SystemDocument) => void;
+	stagedFiles: SystemDocument[];
 	onRemoveDocument: (id: string) => void;
+	onAddStagedFiles: (docs: SystemDocument[]) => void;
+	onRemoveStagedFile: (id: string) => void;
+	onCommitStagedFiles: () => void;
 }
 
 export const SystemCreateDocumentsCard: React.FC<
 	SystemCreateDocumentsCardProps
-> = ({ documents, onAddDocument, onRemoveDocument }) => {
+> = ({
+	documents,
+	stagedFiles,
+	onRemoveDocument,
+	onAddStagedFiles,
+	onRemoveStagedFile,
+	onCommitStagedFiles,
+}) => {
 	const t = useTranslate();
-
-	const handleCommitDocuments = (docs: SystemDocument[]) => {
-		docs.forEach((doc) => onAddDocument(doc));
-	};
 
 	return (
 		<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs">
@@ -31,7 +37,10 @@ export const SystemCreateDocumentsCard: React.FC<
 			<div className="space-y-6">
 				{/* Multi-pill document selector & upload area */}
 				<SystemCreateDocumentUpload
-					onCommitDocuments={handleCommitDocuments}
+					stagedFiles={stagedFiles}
+					onAddStagedFiles={onAddStagedFiles}
+					onRemoveStagedFile={onRemoveStagedFile}
+					onCommitStagedFiles={onCommitStagedFiles}
 				/>
 
 				{/* Uploaded documents table */}

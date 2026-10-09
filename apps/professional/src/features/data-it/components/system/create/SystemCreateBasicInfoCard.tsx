@@ -35,7 +35,7 @@ export const SystemCreateBasicInfoCard: React.FC<
 			</h2>
 
 			<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
-				{/* Row 1 Left: System-ID (Styled with muted read-only fill matching Figma M005) */}
+				{/* Row 1 Left: System-ID (Muted read-only display matching Figma M005) */}
 				<div>
 					<label
 						htmlFor="system-create-id"
@@ -47,17 +47,10 @@ export const SystemCreateBasicInfoCard: React.FC<
 						id="system-create-id"
 						type="text"
 						value={form.systemId}
-						onChange={(e) => onFieldChange("systemId", e.target.value)}
+						readOnly
 						placeholder={placeholderInfo}
-						className={`mt-1.5 h-10 w-full rounded-lg border bg-slate-50/80 px-3.5 text-sm font-medium text-slate-600 transition-colors focus:bg-white focus:outline-hidden ${
-							errors.systemId
-								? "border-rose-300 focus:border-rose-500"
-								: "border-slate-200 focus:border-slate-400"
-						}`}
+						className="mt-1.5 h-10 w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed px-3.5 text-sm font-medium select-none focus:outline-hidden"
 					/>
-					{errors.systemId && (
-						<p className="mt-1 text-xs text-rose-500">{errors.systemId}</p>
-					)}
 				</div>
 
 				{/* Row 1 Right: Kategori */}
@@ -109,7 +102,31 @@ export const SystemCreateBasicInfoCard: React.FC<
 					)}
 				</div>
 
-				{/* Row 2 Right: Email */}
+				{/* Row 2 Right: Pris (kr / månad) */}
+				<div>
+					<label
+						htmlFor="system-create-price"
+						className="block text-xs font-semibold text-slate-700"
+					>
+						{t(localizationConstants.dataItSystemFieldPricePerMonth)}
+					</label>
+					<input
+						id="system-create-price"
+						type="number"
+						min="0"
+						value={form.pricePerMonth || ""}
+						onChange={(e) =>
+							onFieldChange(
+								"pricePerMonth",
+								Math.max(0, Number(e.target.value) || 0),
+							)
+						}
+						placeholder={placeholderInfo}
+						className="mt-1.5 h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition-colors focus:border-slate-400 focus:outline-hidden"
+					/>
+				</div>
+
+				{/* Row 3 Left: Email */}
 				<div>
 					<label
 						htmlFor="system-create-email"
@@ -134,7 +151,7 @@ export const SystemCreateBasicInfoCard: React.FC<
 					)}
 				</div>
 
-				{/* Row 3 Left: Lösenord */}
+				{/* Row 3 Right: Lösenord */}
 				<div>
 					<label
 						htmlFor="system-create-password"
@@ -170,8 +187,8 @@ export const SystemCreateBasicInfoCard: React.FC<
 					</div>
 				</div>
 
-				{/* Row 3 Right: Beskrivning */}
-				<div>
+				{/* Row 4: Beskrivning */}
+				<div className="md:col-span-2">
 					<label
 						htmlFor="system-create-description"
 						className="block text-xs font-semibold text-slate-700"
@@ -185,8 +202,7 @@ export const SystemCreateBasicInfoCard: React.FC<
 						onChange={(e) => onFieldChange("description", e.target.value)}
 						placeholder={placeholderInfo}
 						className="mt-1.5 h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition-colors focus:border-slate-400 focus:outline-hidden"
-					>
-					</input>
+					/>
 				</div>
 			</div>
 		</div>
