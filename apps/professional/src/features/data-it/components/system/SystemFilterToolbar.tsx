@@ -32,6 +32,7 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 	onCategoryChange,
 	selectedStatus,
 	onStatusChange,
+	onRegisterClick,
 }) => {
 	const t = useTranslate();
 
@@ -172,12 +173,11 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 				</div>
 			</div>
 
-			{/* Register System Action Button (Pending next ticket) */}
+			{/* Register System Action Button */}
 			<button
 				type="button"
-				disabled
-				aria-disabled="true"
-				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs cursor-default select-none"
+				onClick={onRegisterClick}
+				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs hover:bg-slate-800 transition-colors"
 			>
 				<Plus className="h-4 w-4" />
 				<span>{t(localizationConstants.dataItRegisterNewSystem)}</span>

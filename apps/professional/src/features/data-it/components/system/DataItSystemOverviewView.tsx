@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { TablePagination } from "@/components/table/TablePagination";
-import { DATA_IT_SYSTEM_BASE_URL } from "@/features/data-it/constants/dataItSystem.constants";
+import {
+	DATA_IT_SYSTEM_BASE_URL,
+	DATA_IT_SYSTEM_CREATE_URL,
+} from "@/features/data-it/constants/dataItSystem.constants";
 import { useDataItSystem } from "@/features/data-it/hooks/useDataItSystem";
 import { SystemFilterToolbar } from "./SystemFilterToolbar";
 import { SystemTable } from "./SystemTable";
@@ -78,6 +81,7 @@ export const DataItSystemOverviewView: React.FC = () => {
 					onCategoryChange={setSelectedCategory}
 					selectedStatus={selectedStatus}
 					onStatusChange={setSelectedStatus}
+					onRegisterClick={() => router.push(DATA_IT_SYSTEM_CREATE_URL)}
 				/>
 
 				{/* Main Systems Table */}

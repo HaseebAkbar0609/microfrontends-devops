@@ -1,4 +1,8 @@
-import type { SystemItem } from "../types/dataItSystem.types";
+import type {
+	SystemItem,
+	SystemAssignee,
+	SystemDocument,
+} from "../types/dataItSystem.types";
 
 export const initialSystemItems: SystemItem[] = [
 	{
@@ -260,3 +264,80 @@ export const initialSystemItems: SystemItem[] = [
 		assignedUsers: [],
 	},
 ];
+
+export const AVAILABLE_SYSTEM_ASSIGNEES: SystemAssignee[] = [
+	{
+		id: "cand-usr-1",
+		name: "Abram Siphron",
+		role: "Kalkylator",
+		email: "abram.siphron@foretag.se",
+		phone: "070-123 45 67",
+	},
+	{
+		id: "cand-usr-2",
+		name: "Jocelyn Gouse",
+		role: "Projektchef",
+		email: "jocelyn.gouse@foretag.se",
+		phone: "070-234 56 78",
+	},
+	{
+		id: "cand-usr-3",
+		name: "Marcus Lindqvist",
+		role: "Ekonomichef",
+		email: "marcus.lindqvist@foretag.se",
+		phone: "070-345 67 89",
+	},
+	{
+		id: "cand-usr-4",
+		name: "Sofia Berg",
+		role: "IT-ansvarig",
+		email: "sofia.berg@foretag.se",
+		phone: "070-456 78 90",
+	},
+	{
+		id: "cand-usr-5",
+		name: "Erik Johansson",
+		role: "Produktionsledare",
+		email: "erik.johansson@foretag.se",
+		phone: "070-567 89 01",
+	},
+	{
+		id: "cand-usr-6",
+		name: "Sara Nilsson",
+		role: "Projektledare",
+		email: "sara.nilsson@foretag.se",
+		phone: "070-678 90 12",
+	},
+];
+
+export const AVAILABLE_SYSTEM_DOCUMENT_TEMPLATES: SystemDocument[] = [
+	{
+		id: "tpl-doc-1",
+		name: "Document 1.pdf",
+		date: "2024-05-10",
+		fileType: "PDF",
+		url: "#",
+	},
+	{
+		id: "tpl-doc-2",
+		name: "Document 2.doc",
+		date: "2024-05-10",
+		fileType: "DOC",
+		url: "#",
+	},
+	{
+		id: "tpl-doc-3",
+		name: "licensavtal.pdf",
+		date: "2024-05-10",
+		fileType: "PDF",
+		url: "#",
+	},
+	{
+		id: "tpl-doc-4",
+		name: "systemmanual.pdf",
+		date: "2024-05-10",
+		fileType: "PDF",
+		url: "#",
+	},
+];
+

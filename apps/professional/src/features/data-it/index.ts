@@ -45,3 +45,14 @@ export * from "./components/system/detail/SystemAssigneeDialog";
 export * from "./components/system/detail/SystemEditDialog";
 export * from "./utils/dataItSystemRepository";
 
+// System Create (TFS-1155)
+export * from "./hooks/useDataItSystemCreate";
+export * from "./components/system/create/DataItSystemCreateView";
+export * from "./components/system/create/SystemCreateHeader";
+export * from "./components/system/create/SystemCreateTabs";
+export * from "./components/system/create/SystemCreateBasicInfoCard";
+export * from "./components/system/create/SystemCreateDocumentsCard";
+export * from "./components/system/create/SystemCreateAssignmentCard";
+export * from "./components/system/create/SystemCreateActionBar";
+export * from "./components/system/create/SystemCreateCancelDialog";
+

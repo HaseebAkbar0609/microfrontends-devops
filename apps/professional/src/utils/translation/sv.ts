@@ -11994,6 +11994,22 @@ export const svDataItSystem: DataItSystemTranslation = {
 	dataItSystemAssigneesAddBtn: "Lägg till användare",
 	dataItSystemAssigneesRemoveBtn: "Ta bort",
 	dataItSystemAssigneesPlaceholderUser: "Välj eller ange användare...",
+	dataItSystemCreateTitle: "Ny system",
+	dataItSystemCreateTabBasic: "Grundläggande info",
+	dataItSystemCreateTabAssignment: "Tilldelning",
+	dataItSystemCreateBasicInfoCard: "Grundläggande information",
+	dataItSystemCreateDocumentsCard: "Dokument",
+	dataItSystemCreateUploadHintTitle: "Ladda upp dina filer",
+	dataItSystemCreateUploadHintDesc: "PNG-, JPG- och PDF-filer är tillåtna.",
+	dataItSystemCreateUploadBtn: "Upload",
+	dataItSystemCreateUploadSelectPlaceholder: "Välj dokument...",
+	dataItSystemCreateAssignedTo: "Tillhördat till",
+	dataItSystemCreateAssignedToPlaceholder: "Välj användare...",
+	dataItSystemCreateBtnNext: "Nästa",
+	dataItSystemCreateConfirmCancelTitle: "Avbryt registrering?",
+	dataItSystemCreateConfirmCancelDesc: "Är du säker på att du vill avbryta? Alla osparade ändringar går förlorade.",
+	dataItSystemCreateDocRemovedToast: "Dokument borttaget",
+	dataItSystemCreateAssigneeRemovedToast: "Användare borttagen",
 };
 
 export const sv: Translation = {

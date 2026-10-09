@@ -11578,6 +11578,22 @@ export type DataItSystemTranslation = {
 	dataItSystemAssigneesAddBtn: string;
 	dataItSystemAssigneesRemoveBtn: string;
 	dataItSystemAssigneesPlaceholderUser: string;
+	dataItSystemCreateTitle: string;
+	dataItSystemCreateTabBasic: string;
+	dataItSystemCreateTabAssignment: string;
+	dataItSystemCreateBasicInfoCard: string;
+	dataItSystemCreateDocumentsCard: string;
+	dataItSystemCreateUploadHintTitle: string;
+	dataItSystemCreateUploadHintDesc: string;
+	dataItSystemCreateUploadBtn: string;
+	dataItSystemCreateUploadSelectPlaceholder: string;
+	dataItSystemCreateAssignedTo: string;
+	dataItSystemCreateAssignedToPlaceholder: string;
+	dataItSystemCreateBtnNext: string;
+	dataItSystemCreateConfirmCancelTitle: string;
+	dataItSystemCreateConfirmCancelDesc: string;
+	dataItSystemCreateDocRemovedToast: string;
+	dataItSystemCreateAssigneeRemovedToast: string;
 };
 
 

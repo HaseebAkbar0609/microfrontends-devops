@@ -11973,6 +11973,22 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemAssigneesAddBtn: "Add user",
 	dataItSystemAssigneesRemoveBtn: "Remove",
 	dataItSystemAssigneesPlaceholderUser: "Select or enter user...",
+	dataItSystemCreateTitle: "New system",
+	dataItSystemCreateTabBasic: "Basic info",
+	dataItSystemCreateTabAssignment: "Assignment",
+	dataItSystemCreateBasicInfoCard: "Basic information",
+	dataItSystemCreateDocumentsCard: "Documents",
+	dataItSystemCreateUploadHintTitle: "Upload your files",
+	dataItSystemCreateUploadHintDesc: "PNG, JPG and PDF files are allowed.",
+	dataItSystemCreateUploadBtn: "Upload",
+	dataItSystemCreateUploadSelectPlaceholder: "Select documents...",
+	dataItSystemCreateAssignedTo: "Assigned to",
+	dataItSystemCreateAssignedToPlaceholder: "Select user...",
+	dataItSystemCreateBtnNext: "Next",
+	dataItSystemCreateConfirmCancelTitle: "Cancel registration?",
+	dataItSystemCreateConfirmCancelDesc: "Are you sure you want to cancel? All unsaved changes will be lost.",
+	dataItSystemCreateDocRemovedToast: "Document removed",
+	dataItSystemCreateAssigneeRemovedToast: "User removed",
 };
 
 export const en: Translation = {

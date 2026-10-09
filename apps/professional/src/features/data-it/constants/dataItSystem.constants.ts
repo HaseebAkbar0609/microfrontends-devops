@@ -3,6 +3,7 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 
 export const DATA_IT_SYSTEM_STORAGE_KEY = "tfs_data_it_system_items";
 export const DATA_IT_SYSTEM_BASE_URL = "/module/business-support/data-it/system";
+export const DATA_IT_SYSTEM_CREATE_URL = `${DATA_IT_SYSTEM_BASE_URL}/create`;
 
 export const DEFAULT_SYSTEM_PAGE_SIZE = 10;
 export const SYSTEM_PAGE_SIZE_OPTIONS = [10, 25, 50];
