@@ -22,7 +22,6 @@ interface SystemFilterToolbarProps {
 	onCategoryChange: (category: SystemCategory | "ALL") => void;
 	selectedStatus: SystemStatus | "ALL";
 	onStatusChange: (status: SystemStatus | "ALL") => void;
-	onRegisterClick?: () => void;
 }
 
 export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
@@ -177,7 +176,8 @@ export const SystemFilterToolbar: React.FC<SystemFilterToolbarProps> = ({
 				type="button"
 				disabled
 				aria-disabled="true"
-				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs cursor-default select-none"
+				title={t(localizationConstants.dataItRegisterNewSystem)}
+				className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-medium text-white shadow-xs opacity-50 cursor-not-allowed select-none"
 			>
 				<Plus className="h-4 w-4" />
 				<span>{t(localizationConstants.dataItRegisterNewSystem)}</span>

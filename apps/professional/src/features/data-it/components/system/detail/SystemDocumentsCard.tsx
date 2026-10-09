@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { FileText, Pencil, ArrowUpDown } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { openSafeUrl } from "@/lib/safeUrl";
+import { extensionOf } from "@/features/project/shared/recordFiles";
 import type { SystemDocument } from "@/features/data-it/types/dataItSystem.types";
 
 interface SystemDocumentsCardProps {
@@ -22,7 +24,10 @@ export const SystemDocumentsCard: React.FC<SystemDocumentsCardProps> = ({
 
 	const handleViewFile = (doc: SystemDocument) => {
 		if (doc.url && doc.url !== "#") {
-			window.open(doc.url, "_blank", "noopener,noreferrer");
+			const opened = openSafeUrl(doc.url);
+			if (!opened) {
+				setActiveFilePreview(doc.name);
+			}
 		} else {
 			setActiveFilePreview(doc.name);
 		}
@@ -114,8 +119,8 @@ export const SystemDocumentsCard: React.FC<SystemDocumentsCardProps> = ({
 									<td className="py-3.5 pr-4 text-slate-600">{doc.date}</td>
 									<td className="px-4 py-3.5">
 										<div className="flex items-center gap-2 font-medium text-slate-900">
-											<span className="inline-flex items-center justify-center rounded bg-rose-100 px-1 py-0.5 text-[10px] font-bold text-rose-600">
-												PDF
+											<span className="inline-flex items-center justify-center rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-700">
+												{(extensionOf(doc.name).replace(".", "") || doc.fileType || "FIL").toUpperCase()}
 											</span>
 											<span>{doc.name}</span>
 										</div>

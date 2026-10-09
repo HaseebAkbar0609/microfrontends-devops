@@ -10,7 +10,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 168,
 		email: "admin@wikelss.se",
-		password: "Password#2024!",
+		password: "mock-secret-5000",
 		description: "Kalkyl- och produktionsplaneringssystem för byggentreprenad.",
 		documents: [
 			{
@@ -54,7 +54,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "PAUSED",
 		pricePerMonth: 220,
 		email: "it-support@foretag.se",
-		password: "M365Secure2024!",
+		password: "mock-secret-5001",
 		description: "Molnbaserad produktivitetssvit inklusive Teams, Exchange och SharePoint.",
 		documents: [
 			{
@@ -91,7 +91,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 450,
 		email: "ekonomi@foretag.se",
-		password: "FortnoxPass99!",
+		password: "mock-secret-5002",
 		description: "Affärs- och bokföringssystem för kundfakturering, leverantörsfakturor och lön.",
 		documents: [
 			{
@@ -121,7 +121,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 340,
 		email: "projekt@foretag.se",
-		password: "RenoPass#2024",
+		password: "mock-secret-5003",
 		description: "Projektstyrningsverktyg och tidsredovisning för renoveringsprojekt.",
 		documents: [
 			{
@@ -158,7 +158,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 590,
 		email: "visma-admin@foretag.se",
-		password: "VismaSecure#88",
+		password: "mock-secret-5004",
 		description: "Kompletterande ekonomisystem för anläggningsregister och skattedeklarationer.",
 		documents: [],
 		assignedUsers: [
@@ -180,7 +180,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 1250,
 		email: "cad-admin@foretag.se",
-		password: "AutoDesk#2024",
+		password: "mock-secret-5005",
 		description: "BIM- och ritningsplattform för 3D-modellering och fältkontroller.",
 		documents: [
 			{
@@ -210,7 +210,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 890,
 		email: "design@foretag.se",
-		password: "AdobePass#321",
+		password: "mock-secret-5006",
 		description: "Design- och marknadsföringsprogramvara för presentationer och visualiseringar.",
 		documents: [],
 		assignedUsers: [
@@ -232,7 +232,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "ACTIVE",
 		pricePerMonth: 110,
 		email: "slack-it@foretag.se",
-		password: "Slack#Admin90",
+		password: "mock-secret-5007",
 		description: "Internt kommunikations- och samarbetsverktyg för alla medarbetare.",
 		documents: [],
 		assignedUsers: [
@@ -254,7 +254,7 @@ export const initialSystemItems: SystemItem[] = [
 		status: "INACTIVE",
 		pricePerMonth: 280,
 		email: "jira-support@foretag.se",
-		password: "JiraPass#123",
+		password: "mock-secret-5008",
 		description: "Ärendehantering och utvecklingsspårning för interna IT-initiativ.",
 		documents: [],
 		assignedUsers: [],

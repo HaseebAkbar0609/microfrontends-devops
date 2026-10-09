@@ -11891,8 +11891,6 @@ export const enDataItOverviewAndDetail: DataItOverviewAndDetailTranslation = {
 };
 
 export const enDataItSystem: DataItSystemTranslation = {
-	dataItSystemTitle: "System",
-	dataItSystemBreadcrumb: "System",
 	dataItTabSystemList: "System list",
 	dataItRegisterNewSystem: "Register new system",
 	dataItSystemColSystemId: "System ID",
@@ -11921,7 +11919,7 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemAllCategories: "All categories",
 	dataItSystemAllStatuses: "All statuses",
 	dataItSystemClearFilters: "Clear filters",
-	dataItSystemDetailBack: "details",
+	dataItSystemDetailBack: "System details",
 	dataItSystemTabBasicInfo: "Basic info",
 	dataItSystemTabAssignment: "Assignment",
 	dataItSystemBasicInfoTitle: "Basic information",
@@ -11932,7 +11930,7 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemFieldPassword: "Password",
 	dataItSystemFieldDescription: "Description",
 	dataItSystemFieldPricePerMonth: "Price per month",
-	dataItSystemDocumentsTitle: "Basic information",
+	dataItSystemDocumentsTitle: "Documents",
 	dataItSystemColDocDate: "Date",
 	dataItSystemColDocName: "Document name",
 	dataItSystemColDocType: "File",
@@ -11948,20 +11946,15 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemEditDesc: "Update information for this IT system.",
 	dataItSystemRegisterTitle: "Register new system",
 	dataItSystemRegisterDesc: "Add a new program or IT system.",
-	dataItSystemToastSaved: "System has been updated",
-	dataItSystemToastCreated: "System has been registered",
 	dataItSystemValidationRequired: "This field is required",
 	dataItSystemValidationEmail: "Please enter a valid email address",
+	dataItSystemValidationPrice: "Please enter a valid monthly price (at least 0)",
 	dataItSystemAriaTabs: "Tabs",
 	dataItSystemAriaClearSearch: "Clear search",
 	dataItSystemAriaActions: "Actions",
 	dataItSystemShowPassword: "Show password",
 	dataItSystemHidePassword: "Hide password",
 	dataItSystemNotFoundTitle: "System not found",
-	dataItSystemNotFoundDesc: "The requested system could not be found.",
-	dataItSystemDeleteConfirmTitle: "Delete system",
-	dataItSystemDeleteConfirmDesc: "Are you sure you want to delete this system? This action cannot be undone.",
-	dataItSystemToastDeleted: "System has been deleted",
 	dataItSystemBtnEdit: "Edit",
 	dataItSystemBtnSave: "Save",
 	dataItSystemBtnCancel: "Cancel",
@@ -11972,7 +11965,7 @@ export const enDataItSystem: DataItSystemTranslation = {
 	dataItSystemAssigneesEditDesc: "Add or remove users assigned to this system.",
 	dataItSystemAssigneesAddBtn: "Add user",
 	dataItSystemAssigneesRemoveBtn: "Remove",
-	dataItSystemAssigneesPlaceholderUser: "Select or enter user...",
+	dataItSystemDefaultRole: "User",
 };
 
 export const en: Translation = {

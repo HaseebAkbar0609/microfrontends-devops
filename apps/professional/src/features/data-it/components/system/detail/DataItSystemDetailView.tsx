@@ -88,7 +88,6 @@ export const DataItSystemDetailView: React.FC<DataItSystemDetailViewProps> = ({
 					/>
 					<SystemDocumentsCard
 						documents={system.documents}
-						onEdit={() => setIsEditOpen(true)}
 					/>
 				</div>
 			)}

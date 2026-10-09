@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { SYSTEM_CATEGORY_TRANSLATION_MAP } from "@/features/data-it/constants/dataItSystem.constants";
 import type { SystemItem } from "@/features/data-it/types/dataItSystem.types";
 import {
 	SystemFormFields,
@@ -77,6 +76,11 @@ export const SystemEditDialog: React.FC<SystemEditDialogProps> = ({
 				localizationConstants.dataItSystemValidationEmail,
 			);
 		}
+		if (isNaN(values.pricePerMonth) || values.pricePerMonth < 0) {
+			validationErrors.pricePerMonth = t(
+				localizationConstants.dataItSystemValidationPrice,
+			);
+		}
 
 		if (Object.keys(validationErrors).length > 0) {
 			setErrors(validationErrors);
@@ -86,7 +90,6 @@ export const SystemEditDialog: React.FC<SystemEditDialogProps> = ({
 		onSave({
 			program: values.program.trim(),
 			category: values.category,
-			categoryLabel: t(SYSTEM_CATEGORY_TRANSLATION_MAP[values.category]),
 			status: values.status,
 			pricePerMonth: Number(values.pricePerMonth) || 0,
 			email: values.email.trim() || undefined,
