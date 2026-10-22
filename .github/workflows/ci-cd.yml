@@ -57,14 +57,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.30.0'
+      - name: Create Kind Kubernetes Cluster
+        uses: helm/kind-action@v1.12.0
 
-      - name: Dry-Run Client Validation
+      - name: Apply & Validate Kubernetes Manifests
         run: |
-          kubectl apply -f k8s/ --dry-run=client
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/
 
   # ==========================================
   # Job 3: Docker Multi-Stage Build & Scan
@@ -93,6 +92,11 @@ jobs:
         with:
           context: .
           file: apps/${{ matrix.app }}/Dockerfile
+          build-contexts: |
+            lockfile=.
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://dev.backend.timeflowsystem.com
+            NEXT_PUBLIC_API_BASE_URL=https://dev.backend.timeflowsystem.com
           push: false
           load: true
           tags: tfs-${{ matrix.app }}:latest
