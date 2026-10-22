@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfs-customer
+  namespace: tfs
+  labels:
+    app: tfs-customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tfs-customer
+  template:
+    metadata:
+      labels:
+        app: tfs-customer
+    spec:
+      containers:
+        - name: customer
+          image: tfs-customer:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tfs-customer-service
+  namespace: tfs
+spec:
+  type: NodePort
+  selector:
+    app: tfs-customer
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30082

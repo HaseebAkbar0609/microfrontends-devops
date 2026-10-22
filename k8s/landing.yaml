@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfs-landing
+  namespace: tfs
+  labels:
+    app: tfs-landing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tfs-landing
+  template:
+    metadata:
+      labels:
+        app: tfs-landing
+    spec:
+      containers:
+        - name: landing
+          image: tfs-landing:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tfs-landing-service
+  namespace: tfs
+spec:
+  type: NodePort
+  selector:
+    app: tfs-landing
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080

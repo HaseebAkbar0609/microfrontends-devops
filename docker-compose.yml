@@ -1,0 +1,64 @@
+services:
+  landing:
+    image: tfs-landing:latest
+    container_name: tfs-landing
+    build:
+      context: .
+      dockerfile: apps/landing/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - tfs-network
+
+  team:
+    image: tfs-team:latest
+    container_name: tfs-team
+    build:
+      context: .
+      dockerfile: apps/team/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - tfs-network
+
+  customer:
+    image: tfs-customer:latest
+    container_name: tfs-customer
+    build:
+      context: .
+      dockerfile: apps/customer/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - tfs-network
+
+  professional:
+    image: tfs-professional:latest
+    container_name: tfs-professional
+    build:
+      context: .
+      dockerfile: apps/professional/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "4000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - tfs-network
+
+networks:
+  tfs-network:
+    driver: bridge

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfs-team
+  namespace: tfs
+  labels:
+    app: tfs-team
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tfs-team
+  template:
+    metadata:
+      labels:
+        app: tfs-team
+    spec:
+      containers:
+        - name: team
+          image: tfs-team:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tfs-team-service
+  namespace: tfs
+spec:
+  type: NodePort
+  selector:
+    app: tfs-team
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30081
